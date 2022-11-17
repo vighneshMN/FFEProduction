@@ -1,0 +1,18 @@
+@import 'c/ffeCss'; 
+.slds-box{
+    background: #032559;
+}
+.bodyclass{
+    background: #fff;
+    padding-bottom: 10px;
+    width: 90% !important;
+    margin-left: 5% !important;
+}
+.mysearchRow{
+    /* float:left; */
+    width:100%;
+    background: #fff;
+    padding-bottom: 10px;
+    /* width: 90% !important; */
+    /* margin-left: 5% !important; */
+}

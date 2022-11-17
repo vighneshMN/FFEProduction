@@ -1,0 +1,16 @@
+<apex:page standardController="Contact" recordSetVar="contacts">
+    	<apex:includeLightning />
+    	<div id="lightningvf" style='height: 600px;' />
+
+    <script>
+        $Lightning.use("c:SendSMSApp", function() {
+        $Lightning.createComponent("c:fFE_SendSMS",
+          { 
+          },
+          "lightningvf",
+          function(cmp) {
+             console.log('LWC Componenet added in VF page');
+          });
+    });
+    </script>
+</apex:page>

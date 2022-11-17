@@ -1,0 +1,20 @@
+<template>
+    <c-ffe-popup-lwc></c-ffe-popup-lwc>
+    <header class="slds-p-around_xxx-small slds-modal__header">
+        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Student Declaration Form</h2>
+    </header>
+    <div id="dialog" class="slds-p-left_x-small" >
+        <lightning-combobox
+                   name="Sell"
+                   label="Financial year :"
+                   value={val}
+                   options={fYear}
+                   onchange={handleChange} >
+       </lightning-combobox>
+       <p>Selected value is: {val}</p>
+    </div>
+        
+    <footer class="slds-p-around_xx-small slds-modal__footer">
+        <button class="slds-button slds-button_brand" onclick={handleSend} title="send">Send</button>
+    </footer>
+</template>

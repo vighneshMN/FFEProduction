@@ -1,0 +1,16 @@
+<apex:page standardController="Business_Account_Utilization__c" recordSetVar="baus" extensions="BAUController">
+     <apex:includeLightning />    
+  <div id="LightningComponentid" style='height: 600px;' />
+  <script>
+        $Lightning.use("c:GetTransactionsApp", function() {
+            $Lightning.createComponent("c:fFE_GetTransactions",
+            { 
+               selectedBatxns : '{!baus}' 
+            },
+            "LightningComponentid", // the Id of div tag where your component will be rendered
+            function(cmp) {
+                //  console.log('Calling the LWC Component');
+            });
+        });
+    </script>
+</apex:page>

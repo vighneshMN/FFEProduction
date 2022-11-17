@@ -1,0 +1,3 @@
+<aura:component implements="force:lightningQuickAction,force:hasRecordId" >
+	<c:ffeBeneficiaryDetailsLwc recordId="{!v.recordId}" onrecordChange="{!c.refreshView}"></c:ffeBeneficiaryDetailsLwc>
+</aura:component>

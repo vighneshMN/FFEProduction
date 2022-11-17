@@ -1,0 +1,33 @@
+<template>
+    <div style="display: none;">
+        {recordId}
+    </div>
+    <div class="slds-box" style="position:relative;">
+        <div if:true={showSpinner} >
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <div if:false={showClose}>
+            <lightning-datatable
+                key-field="rowNum"
+                data={data}
+                columns={columns}
+                selected-rows={preSelectedRows}
+                onrowselection={handleSelection}>
+            </lightning-datatable>
+            <div  class="slds-align_absolute-center slds-p-top_x-small">
+                <lightning-button label="Submit" onclick={handleSubmitClick}></lightning-button>
+            </div>
+        </div>
+        
+        <div if:true={showClose}>
+            <div class="slds-notify slds-notify_alert" role="alert">
+                <h2>{message}</h2>
+            </div>
+            <div class="slds-align_absolute-center slds-p-top_x-small">
+                <lightning-button label="Close" onclick={handleCloseClick}></lightning-button>
+            </div>
+        </div>
+    </div>
+</template>

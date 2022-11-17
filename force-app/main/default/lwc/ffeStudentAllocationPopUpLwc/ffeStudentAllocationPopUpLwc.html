@@ -1,0 +1,120 @@
+<template>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <!-- <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modal/PopUp Box header LWC</h2>
+            </header> -->
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="6" padding="around-small">
+                        <lightning-combobox options={countryList} value={countryListFilter} onchange={handleCountryChange} label="Country" ></lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" padding="around-small">
+                        <h3>State</h3>
+                        <c-ffe-multi-select-picklist-lwc options={stateList} label='State' onvaluechange={handleStateChange} ></c-ffe-multi-select-picklist-lwc>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" padding="around-small">
+                        <h3>Program</h3>
+                        <c-ffe-multi-select-picklist-lwc options={listOfPrgms} label='My Label' onvaluechange={handleProgramValueChange} ></c-ffe-multi-select-picklist-lwc>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6" padding="around-small">
+                        <lightning-combobox options={donorCategoryOptions} value={donorCategoryFilter} onchange={handleDonorCategoryChange} label="Donor Category" ></lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" padding="horizontal-large">
+                        <!-- <div class="slds-align_absolute-center" style="height:5rem"> -->
+                        <div class="buttonDiv" align="center">    
+                            <button class="buttons" onclick={handleSearchClick} title="OK">Search</button>
+                            <button class="buttons" onclick={clear} title="OK">Clear</button>
+                        </div>    
+                    </lightning-layout-item>
+                </lightning-layout>
+                <template if:true={filterDonorListResult}>
+                    <div style="margin-top: 15px;">
+                        <h3 class="searchTags" style="margin-left:63%">
+                            Total Approved Scholarship Amount : {totalApprovedScholarship}
+                        </h3>
+                        <h3 class="searchTags" style="margin-left:75%">
+                            Total Amount : {totalAmount}
+                        </h3>
+                    </div>
+                    <!-- <div class="historyTable" style="margin-top: 8px;margin-bottom:25px;">
+                        <lightning-datatable 
+                            key-field="donorBalanceId" 
+                            data={filterDonorList} 
+                            columns={columnList} 
+                            onsave={handleSave}
+                            oncellchange={handleCellChange}
+                            hide-checkbox-column
+                            
+                        >
+                        </lightning-datatable>
+    
+                    </div> -->
+                    <div class="buttonDiv" align="center" style="padding-bottom: 10px;">    
+                        <button class="buttons" onclick={saveMultiDonor} title="OK">Save</button>
+                        <button class="buttons" onclick={cancel} title="OK">Cancel</button>
+                    </div>
+                    <template if:true={showerror}>
+                        <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                            <span class="slds-assistive-text">error</span>
+                            <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="Description of icon when needed">
+                              
+                            </span>
+                            <h2>{errormessage}</h2>
+                        </div>
+                    </template>
+                    <table class="historyTable" style="margin-top: 8px;margin-bottom:25px;">
+                        <thead>
+                            <tr class="rowsHistory thRow">
+                                <th>Donor Name</th>
+                                <th>Donor Id</th>
+                                <th>Donor Location</th>
+                                 <th>GAU Name</th>
+                                <th>Current Balance</th>
+                               <th>Mapped Fund</th>
+                                <th>Enter Amount to Disburse</th>
+                                <th>Donor Remarks</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <template for:each={filterDonorList} for:item="donor">
+                            <tr key={donor.donorBalanceId} align="center" class="rowsHistory">
+                                <td>{donor.Donor_Name__c}</td>
+                                <td><a href="\/{donor.donorBalanceId}" target="_blank">{donor.FFE_ID__c}</a></td>
+                                <td>{donor.MailingState}</td>
+                                <td>{donor.Gau_Name__c}</td>
+                                <td>{donor.Current_Balance__c}</td>
+                                <td>{donor.MappedFund__c}</td>
+                                <td><lightning-input type="number" data-id={donor.donorBalanceId} value={donor.Amount_To_Disburse__c} onchange={handleAmountChange}></lightning-input></td>
+                                <td><lightning-input data-id={donor.donorBalanceId} value={donor.Donor_Remark__c} onchange={handleRemarkChange}></lightning-input></td>
+                                <td><lightning-input type="checkbox" data-id={donor.donorBalanceId} value={donor.Select__c} checked={donor.Select__c} onchange={handleSelectChange}></lightning-input></td>
+                                <!-- <td ><input type="number" style="width:90%" class="inputfileds" ng-model="donordetail.Mapped_Fund__c" ng-readonly="donordetail.isReadOnly" ng-change="checkDisburseAmount(donordetail, $index)" /></td>
+                                <td><textarea class="inputfileds"  ng-model="donordetail.Donor_Remark__c"></textarea></td>
+                                <td><input type="checkbox" ng-model="donordetail.selectedDonor" ng-change="selectDonor(donordetail, $index)" /></td> -->
+                            </tr>
+                        </template>
+    
+                    </table>
+                </template>
+                
+                
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <!-- <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+            </footer> -->
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

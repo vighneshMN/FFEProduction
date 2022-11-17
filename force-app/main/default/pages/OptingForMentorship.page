@@ -1,0 +1,46 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="OptingForMentorship_Controller">
+
+    <head>
+        <c:MentorshipScripts />
+        <script> 
+            var app = angular.module('mentorshipApp', []);
+            app.controller('mentorshipCtrl', function ($scope) {
+                menteeId = "{!$CurrentPage.parameters.id}";
+                $scope.successfull = false;
+                $scope.onInit = function () {
+                    debugger;
+                    if (menteeId != "") {
+                        OptingForMentorship_Controller.optingForMentorship(menteeId, function (result, event) {
+                            if (event.status) { 
+                                debugger;
+                                if (result != null) {
+                                    $scope.successfull = true;
+                                    $scope.$apply();
+                                    Swal.fire(
+                                        '',
+                                        'You have successfully Opted for Mentorship program',
+                                        'success'
+                                    )
+                                    setTimeout(function() {window.location.replace('{!$Label.Mentorship_Site_URL}' + 'MentorLogin')}, 5000);
+                                }
+                            }
+                        }, { escape: false })
+                    } else {
+                        window.location.replace('{!$Label.Mentorship_Site_URL}' + 'MentorLogin');
+                    }
+                }
+            });
+        </script>
+    </head>
+
+    <body ng-app="mentorshipApp" ng-controller="mentorshipCtrl">
+        <div ng-init="onInit()">
+            <div class="jumbotron text-center" ng-if="successfull">
+                <h1 class="display-3">Thank You!</h1>
+                <p class="lead"><strong>Please login to mentorship portal</strong> You will be assigned a mentee soon.</p>
+                <hr/>
+              
+              </div>
+        </div>
+    </body>
+</apex:page>

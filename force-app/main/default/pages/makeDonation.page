@@ -1,0 +1,235 @@
+<apex:page showheader="false" sidebar="false" standardstylesheets="false" doctype="html-5.0">
+     <link rel="stylesheet" href="{!URLFOR($Resource.angularMaterialCss)}" />
+    <script src="{!$Resource.angularMaterialJs}">
+            </script>
+    <style>
+        .sweet-alert p{
+        float: left;
+        width: 100%;
+        }
+         .sweet-alert h2{
+        margin:2px 0;
+        }
+        .historyTable{
+            margin-top: 0;
+        }
+        .mobtable{
+        	display:none;
+        }
+        .fulldesk{
+        	display:table;
+        }
+        .mobdonorSticky{
+        	position:fixed;
+        	bottom:0%;	
+        	width:100%;
+        	left:0px;
+        	float:left;
+        	display:none;
+        }
+        .row{
+        	width:-webkit-fill-available;
+        	width:-moz-available;
+        }
+        .top{
+        	display:none;
+        	width: -webkit-fill-available;
+        	width:-moz-available;
+		    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), 0 2px 1px -1px rgb(0 0 0 / 12%);
+		}
+        .scroller{
+            border-radius: 100%;
+        	min-width:unset;
+        	width:30px;	
+        	text-align:center;
+        }
+     	table{
+        	box-shadow:none !important;
+        }
+        @media screen and (max-width:775px){
+        tr.rowsHistory:hover{
+        	box-shadow:none;
+        }
+       
+        tr.rowsHistory.ng-scope {
+        border: 23px solid #e5e7eb;
+        border-left: unset;
+        border-right: unset;
+        }
+        tr.rowsHistory:nth-child(1){
+        	border-top:unset;
+        }
+        tr td:nth-child(1) {
+        /*margin-top:7%;*/
+        }
+        tr:nth-child(1) td:nth-child(1) {
+			margin-top:0%;
+        }
+        .common{
+        	top:145px;
+        }
+        .rowHistory table,.rowHistory  th,.rowHistory  tr, .rowHistory td{
+        	display:block;
+        }
+        .mobileheader th{
+        	display:none !important;
+        }
+        .rowsHistory th, .rowsHistory td{
+        	display:block;
+        }
+        td.mobilerow:nth-of-type(1),td.mobilerow:nth-of-type(2),td.mobilerow:nth-of-type(3),td.mobilerow:nth-of-type(4){
+        display: flex;
+        justify-content: space-between;
+        padding: 2%;
+        font-weight:bold;
+        }
+        td.mobilerow:nth-of-type(1):before{
+        	content:"Program : "
+        }
+        td.mobilerow:nth-of-type(2):before{
+        	content:"Frequency : "
+        }
+        td.mobilerow:nth-of-type(3):before{
+        	content:"No. of students : "
+        }
+        td.mobilerow:nth-of-type(4):before{
+        	content:"Total : "
+        }
+        .tdInput {
+        	width:50%;
+        }
+        td.mobilerow{
+        	border: unset !important;
+        }
+        .tdInputSelection{
+        	min-width:51%;
+        	max-width:unset;
+        }
+        tr.rowsHistory.ng-scope{
+        	padding:2%;
+        	
+        }
+        td.mobilerow:nth-child(1){
+        background:#2e3192;
+        color:#fff;
+        }
+        td.mobilerow:nth-child(1) a{
+        color:#fff !important;
+        text-decoration:none !important;
+        }
+        
+        .top{
+        	display:block;
+        	margin-left:-25px;
+        	margin-top:-72px;
+        	}
+        .mobtable,.mobdonorSticky{
+        		display:none;
+        	}
+        	.mobtable{
+        		margin-left:-23px;
+        	}
+        	.fulldesk,.fulldonor{
+        		display:none;
+        	}
+        	.mobfooter{
+        		display:none;
+        	}
+        	.topmargin{
+        		display:table;
+        		margin-left:-23px;
+        		margin-top:2%;
+        		box-shadow:0 1px 3px 0 rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), 0 2px 1px -1px rgb(0 0 0 / 12%);
+        		width: -webkit-fill-available;
+        		width:-moz-available;/*for firefox*/
+        	}
+        }
+        @media screen and (max-width:600px){
+            .tdInputSelection{
+            min-width:51.5%;
+            }
+        }
+        @media screen and (max-width:300px){
+            .tdInputSelection{
+            min-width:52.5%;
+            }
+        }
+         @media screen and (max-width:400px){
+        	.top,.topmargin {
+            margin-left: -30px;
+        	}
+        }
+    </style>
+    <div align="center" ng-init="loadProgramInfo();showTabcontent(3)" style="padding-bottom:3%;"> 
+        <div class="top" style="padding-bottom:3%;background:#fff;">
+            <div class="row">
+                        <h4 class="tagnames" style="display:flex;justify-content: space-between;padding:5%;padding-bottom:2%;padding-top:2%;">
+                           <span> Total Students :</span> <span>{{getNoOfstudents();}}</span>
+                        </h4>
+                        <!--<input class=" inputfileds"  type="number" ng-model="getNoOfstudents();" ng-readonly="true"/>    -->
+                        
+                    </div>
+            <div class="row">
+                    <h4 class="tagnames" style="display:flex;justify-content: space-between;padding:5%;padding-bottom:2%;padding-top:2%;" >
+                        <span>Grand total :</span> <span>₹&nbsp; {{getTotalAmount()}}</span>
+                    </h4>
+                    <!--<input class="inputfileds" style="text-align:right"  type="text" ng-value="getTotalAmount();" ng-readonly="true"/>       -->
+                    </div>
+            <input type="button" value="Donate" style="margin-right:3%;" class="buttons"  ng-click="donate(getTotalAmount(),getNoOfstudents(),currency);moveToTop();" ng-disabled="!totalAmountForDonate || !minAmountRequired"/>
+            
+        </div>
+        <table class="historyTable topmargin" ng-if="currency">
+            <thead >
+                <tr class="rowsHistory thRow mobileheader">
+                    <th>Program</th>
+                    <th>Frequency</th> 
+                    <th>No. of Students</th>
+                    <th ng-show="donor.DN_Citizenship__c == indian">Amount [INR]</th>
+                    <th ng-show="donor.DN_Citizenship__c == nonindian">Amount [INR]</th>
+                    <th ng-show="donor.DN_Citizenship__c != indian && donor.DN_Citizenship__c != nonindian"></th>
+                </tr>
+            </thead>
+            <tbody> 
+                <tr align="center" class="rowsHistory" ng-repeat="don in makeDonations">
+                    <td align="center" class="mobilerow"><a style="text-decoration: underline;color:#0000ff;cursor: pointer;" ng-mouseover="showDesc(don);">{{don.Program__c}}</a></td>
+                    <td class="mobilerow">
+                        <select class="tdInput tdInputSelection" ng-model="values" ng-disabled="(don.Display_for_Scholar__c==false && donor.DN_Donor_Category__c=='Scholar')" ng-change="amtEM(values, $index);" ng-options="values as values.Name for values in don.Program_Frequencys__r">      
+                            <option value="" label="--Select Frequency--" selected="true"/>
+                        </select>
+                    </td>
+                    <td  class="mobilerow" ng-if="amountFixed[$index]">
+                        <input class="tdInput" type="number" ng-disabled="(values==undefined || values=='')" ng-model="don.nstudents" min="0" maxlength="4" onpaste="return isNumber(event)" onkeypress="return isNumber(event)"/>    
+                    </td >
+                    <td class="mobilerow" ng-if="!amountFixed[$index]">
+                        <input class="tdInput" type="number" ng-model="don.nstudents" min="0"  ng-disabled="true" />    
+                    </td>
+                    <td class="mobilerow" ng-if="amountFixed[$index]">
+                        <input class="tdInput" style="text-align:right"  type="text" ng-value="calc(don.nstudents, values, $index)"  min="0" ng-disabled="true" /> 
+                    </td>
+                    <td class="mobilerow" ng-if="!amountFixed[$index]">
+                        <input class="tdInput" style="text-align:right" type="text" maxlength="14" ng-disabled="(values==undefined || values=='' || values=='?'  )" ng-model="don.totalLineAmount" ng-change="amtNonEM(don.totalLineAmount,values,$index)" min="minAmount" onpaste="return isNumber(event)" onkeypress="return isNumber(event)"/> 
+                    </td>
+                </tr>
+                <tr align="center" class="rowsHistory mobfooter">
+                    <td>&nbsp;</td>
+                    <td>Total</td>
+                    <td>
+                        <input class="tdInput"  type="number" ng-model="getNoOfstudents();" ng-readonly="true"/>    
+                    </td>
+                    <td>
+                        <input class="tdInput" style="text-align:right"  type="text" ng-value="getTotalAmount();" ng-readonly="true"/>    
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="buttonsdiv fulldonor" align="right" style="margin-top:25px;">
+            <input type="button" value="Donate" class="buttons"  ng-click="donate(getTotalAmount(),getNoOfstudents(),currency);" ng-disabled="!totalAmountForDonate || !minAmountRequired"/>
+        </div>
+        <div class="buttonsdiv mobdonorSticky" align="right" style="margin-top:25px;">
+            <input type="button " value="^" style="margin-right:3%;" class="buttons scroller"  ng-click="moveToTop();" />
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+</apex:page>

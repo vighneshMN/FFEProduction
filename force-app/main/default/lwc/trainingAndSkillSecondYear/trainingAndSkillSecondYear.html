@@ -1,0 +1,107 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 12-29-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template >
+    <template if:true={preandpostasses}>
+    <table>
+        <thead>
+            <tr  class="rowsHistory thRow">
+                <th>FFE UID</th>
+                <th>Student Name</th>
+                <th>Aptitude Analytical Score</th>
+                <th>Aptitude Logical Score</th>
+                <th>English Spoken Score</th>
+                <th>English Written Score</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        <template for:each={studentlist} for:item="stud">
+            <tr key={stud.FFE_ID__c} style="padding-top: 10px;">
+                <td>{stud.FFE_ID__c}</td>
+                <td>{stud.Name}</td>
+                <td>{stud.Aptitude_Analytical_Score__c}</td>
+                <td>{stud.Aptitude_Logical_Score__c}</td>
+                <td>{stud.English_Spoken_Score__c}</td>
+                <td>{stud.English_Written_Score__c}</td>
+            </tr>
+            
+        </template></tbody> </table></template>
+        <template if:true={displayenglishdata}><table>
+            <thead>
+                <tr  class="rowsHistory thRow"> 
+                    <th>FFE UID</th>
+                    <th>Student Name</th>
+                    <!-- <th colspan="2">Location</th> -->
+                    <th>Pre-Assessment Score</th>
+                    <th>Post-Assessment Score</th>
+                    <th>Vendor</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+            <template for:each={studentwithtraininglist} for:item="studItem">
+                <tr key={studItem.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c} style="padding-top: 10px;">
+                    <td>{studItem.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}</td>
+                    <td>{studItem.students.Student_Training_Mapping__r.Student_ID__r.Name}</td>
+                    <td>{studItem.students.Pre_assessment_Scores__c}</td>
+                    <td>{studItem.students.Marks_Obtained__c}</td>
+                    <td>{studItem.vendorName}</td>
+                </tr>
+                
+            </template></tbody> </table>
+        </template>
+
+        <template if:true={displayaptitudedata}><table>
+            <thead>
+                <tr  class="rowsHistory thRow">
+                    <th>FFE UID</th>
+                        <th>Student Name</th>
+                        <th>Pre-Assessment Score</th>
+                        <th>Post-Assessment Score</th>
+                        <th>Vendor</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+            <template for:each={studentwithaptitude} for:item="studItem">
+                <tr key={studItem.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c} style="padding-top: 10px;">
+                    <td>{studItem.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}</td>
+                    <td>{studItem.students.Student_Training_Mapping__r.Student_ID__r.Name}</td>
+                    <td>{studItem.students.Pre_assessment_Scores__c}</td>
+                    <td>{studItem.students.Marks_Obtained__c}</td>
+                    <td>{studItem.vendorName}</td>
+                </tr>
+                
+            </template></tbody> </table>
+        </template>
+
+        <template if:true={displayalldata}><table>
+            <thead>
+                <tr  class="rowsHistory thRow">
+                    <th>FFE UID </th>
+                    <th>Student Name</th>
+                    <th>Aptitude Analytical</th>
+                    <th>Aptitude Logical</th>
+                    <th>English Spoken</th>
+                    <th>English Written</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+            <template for:each={studentwithall} for:item="studItem">
+                <tr key={studItem.Student_ID__r.FFE_ID__c} style="padding-top: 10px;">
+                    <td>{studItem.Student_ID__r.FFE_ID__c}</td>
+                    <td>{studItem.Student_ID__r.Aptitude_Analytical_Score__c}</td>
+                    <td>{studItem.Student_ID__r.Aptitude_Logical_Score__c}</td>
+                    <td>{studItem.Student_ID__r.English_Spoken_Score__c}</td>
+                    <td>{studItem.Student_ID__r.English_Written_Score__c}</td>
+                </tr>
+                
+            </template></tbody> </table>
+        </template>
+</template>

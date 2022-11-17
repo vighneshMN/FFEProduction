@@ -1,0 +1,17 @@
+<template>
+    <div class="slds-form-element" onmouseup={onMouseUp}>
+        <div class="slds-form-element__control">
+            <div class="slds-slider">
+            <section class="range-slider">
+                <div id="slider" class="slider" onmousemove={onMouseMove} ontouchmove={onMouseMove}
+                onmousedown={handleMouseDown}>
+                <div class="range" data-name="range"></div>
+                <div class="thumb start" data-name="start" ontouchstart={handleMouseDown} ontouchend={onMouseUp}></div>
+                <div class="thumb end" data-name="end" ontouchstart={handleMouseDown} ontouchend={onMouseUp}></div>
+                </div>
+                <span class="slds-slider__value" aria-hidden="true">{start} - {end} </span>
+            </section>
+            </div>
+        </div>
+    </div>
+  </template>

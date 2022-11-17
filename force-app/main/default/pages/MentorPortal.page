@@ -1,0 +1,2154 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="MentorDetailPageController" action="{!checkUserAuth}">
+    <head docType="html-5.0">
+        <c:MentorshipScripts />
+        <apex:stylesheet value="{!URLFOR($Resource.mentorship_resource, '/styles/w3.min.css')}"/>
+        <style>
+            body {
+            margin: 0;   
+            overflow-x: hidden;
+            }
+            .card-profile-image img {
+            box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15) !important;
+            }
+            .background{
+            background-image: url('https://devpro-ffe.cs111.force.com/mentorship/resource/1658931889000/Mask_Group_14?');
+            height: 80vh;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            padding:unset;
+            }
+            .set-back-color{
+            height:80vh;
+            background-image: linear-gradient(to right,blue, rgba(255,0,0,0));
+            opacity: 0.6;
+            }
+            .vertical-center{
+            position: relative;
+            display: table;
+            }
+            .vertical-center>*{
+            display: table-cell;
+            vertical-align: middle;
+            height: 100%;
+            }
+            .collapse.disp.navbar-collapse
+            {
+            justify-content:end;
+            }
+            .navbar-nav>*{
+            margin: 0 15px;
+            }
+            
+            .dropdown-menu{
+            left: -105px;
+            top: 135%;
+            }
+            ul.dropdown-menu.dropdown-menu-right.show>a:first-child:after{
+            position: absolute;
+            left: 75%;
+            top: -20px;
+            width: 0;
+            height: 0;
+            content: '';
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            /* border: 1px solid rgba(0,0,0,.15); */
+            border-bottom: 20px solid #551A8B;
+            }
+            .card-profile-image {
+            position: relative;
+            }
+            
+            .card-profile-image img {
+            position: absolute;
+            left: 50%;
+            max-width: 70px;
+            transition: all .15s ease;
+            transform: translate(-50%, -30%);
+            border-radius: .375rem;
+            }
+            
+            .card-profile-image img:hover {
+            transform: translate(-50%, -33%);
+            }
+            
+            .rounded-circle {
+            border-radius: 50% !important;
+            }
+            
+            .profileDetailCard {
+            box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            Fwidth: 73%;
+            }
+            
+            .card {
+            box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 100%;
+            }
+            
+            .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+            }
+            
+            .container {
+            padding: 2px 16px;
+            /* margin-left: 20%;  */
+            width: 90%;
+            }
+            
+            .cardContainer {
+            padding: 2px 16px;
+            margin-left: 20%;
+            }
+            
+            .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 300px;
+            /* Should be removed. Only for demonstration */
+            }
+            .bg-light {
+            background-color: #fff !important;
+            box-shadow: rgb(17 17 26 / 10%) 0px 0px 16px;
+            
+            }
+            
+            /* Clear floats after the columns */
+            
+            .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            }
+            
+            
+            td,
+            th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+            }
+            
+            .download {
+            background-color: #F39C12;
+            border: none;
+            color: white;
+            padding: 5px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            }
+            
+            .download:hover {
+            opacity: 0.7;
+            }
+            
+            .navButtons {
+            color: #fff;
+            background-color: #032559;
+            float: left;
+            text-align: center;
+            padding: 7px 8px;
+            font-size: 17px;
+            }
+            
+            .navButtons:hover {
+            opacity: 0.8;
+            }
+            
+            .uploadDocButton {
+            Background-color: #F39C12;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+            }
+            
+            .loadingBackground {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background: #F6F6F6;
+            z-index: 11111;
+            opacity: 0.7;
+            top: 0px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            }
+            
+            .loading {
+            top: 50%;
+            left: 50%;
+            margin: -50px 0px 0px -50px;
+            z-index: 111111;
+            position: fixed;
+            }
+            
+            .profile-pic {
+            
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            
+            }
+            
+            .upload-profile-pic {
+            width:95%;
+            border-radius: 50%;
+            /*height:170px;
+            
+            border: solid 2px;*/
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            }
+            
+            .upload-profile-pencil {
+            z-index: 2;
+            top: -50px;
+            border-radius:50%;
+            background:orange;
+            color:#fff;
+            margin-left: 75%;
+            position: relative;
+            opacity: 0.6;
+            border: 1px solid orange;
+            }
+            
+            /* table css new */
+            .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+            
+            .styled-table thead tr {
+            background-color: #2e3192;
+            color: #ffffff;
+            text-align: left;
+            }
+            
+            .styled-table th,
+            .styled-table td {
+            padding: 12px 15px;
+            }
+            
+            .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+            }
+            
+            .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+            }
+            
+            .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #2e3192;
+            }
+            
+            .styled-table tbody tr.active-row {
+            font-weight: bold;
+            color: #2e3192;
+            }
+            #toggle,.burger{
+            display:none;
+            }
+            .mobile{
+            margin-top:5%;
+            display:none;
+            }
+            .tab-full{
+            
+            display:block;
+            }
+            @media screen and (max-width:925px){
+            .tab-full{
+            margin-top:3%;
+            }
+            }
+            @media screen and (max-width:750px){
+            .tab-full{
+            margin-top:7%;
+            }
+            }
+            .table-layout{
+            display:table !important;
+            white-space: pre-wrap !important;
+            }
+            .buttonWidth{
+            padding: 7px 3px;
+            }
+            a:hover,.activeColor,.burger:hover,i.material-icons.md-light.ml-2.pmd-sm.ng-binding:hover{
+            color: #f4a52e !important;
+            }
+            .dropdown-item.active, .dropdown-item:active{
+            background:unset;
+            }
+            .navbar-brand{
+            width:40%;
+            }
+            @media screen and (max-width:1200px){
+            .col-sm-4-mentees{
+                flex: 1 1 50%;
+                max-width: 49%;
+                flex: 1 1 38%;
+                max-width: 38%;
+                
+            }
+            .full-hide{
+            display:none;
+            }
+            full-width{
+            width:100%;
+            }	
+            }
+            @media screen and (max-width: 1100px){
+            
+            .helpPage{
+            margin-top: 12%;
+            }
+            }
+            @media screen and (max-width:905px){
+            .col-sm-4-mentees{
+            max-width:42%;
+            }
+            }
+            @media screen and (max-width: 900px){
+            .helpPage{
+            margin-top: 17%;
+            }
+            .col-sm-12-900{
+            width:100%;
+            max-width:100%;
+            flex: 0 0 100%;
+            
+            }
+            .d-block-900{
+            
+            display:block !important;
+            }
+            }
+            
+            .w3-modal {
+            z-index:1040;
+            }
+            .col-sm-8-center{
+            background:#fff;
+            }
+            .badge{
+            line-weight:unset;
+            }
+            .badge-pill{
+            border-radius:5px;
+            }
+            @media screen and (min-width: 1001px){
+            .dropdown-menu.show{
+            margin-left: -33px;
+            }
+            }
+            @media screen and (max-width: 1000px){
+            .navbar-brand{
+            width:85%;
+            }
+            .dropdown-menu{
+            width:100%;
+            border:unset;
+            padding-top:unset;
+            position:inherit;
+            text-align:center;
+            }
+            .navbar-light .navbar-nav .nav-link,.dropdown-item{
+            border-bottom: 1.5px solid #efefef;
+            }
+            
+            .small-alignment{
+            display:block !important;
+            width: 100%;
+            padding: .5rem 1rem;
+            text-align: center;
+            padding-top: 1.2rem;
+            }
+            .smallheader{
+            width:100%;
+            }
+            .nav-link{
+            text-align:center;	
+            }
+            .uploadFilePopup{
+            max-width:100% !important;
+            }
+            .buttonWidth{
+            width:100% !important;
+            flex: 0 0 100%;
+            max-width: 100%;
+            }
+            .disp{
+            display:none;
+            }
+            .burger{
+            display:block;
+            }
+            .checkCss{
+            display:inline-block !important;
+            margin: -0.5rem -1rem;
+            }
+            .ml-auto, .mx-auto{
+            margin-left:unset !important;
+            }
+            .profile-pic{
+            display:none;
+            }
+            .col-sm-8-center{
+            margin-top:3%;
+            }
+            
+            .col-sm-3-right{
+            max-width: 10%;
+            width:10%;            	
+            }
+            .col-sm-3-left{
+            max-width: 10%;
+            width:10%;
+            }
+            .col-sm-6-center{
+            width:80%;	
+            max-width:100%;
+            flex: 0 0 75%;
+            
+            }
+            .programs{
+            overflow:auto;
+            
+            }
+            }
+            .popuppadding{
+            padding-top:10%;
+            }
+            @media screen and (max-width:750px){
+            .popuppadding{
+            padding-top:15%;
+            }
+            }
+            @media screen and (max-width:500px){
+            .popuppadding{
+            padding-top:100px
+            }
+            }
+            
+            @media screen and (max-width:800px){
+            .col-sm-4-mentees{
+            max-width:100%;
+                            flex: 1 1 79%;
+
+            }
+            .col-sm-4-small{
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+
+            }
+            }	
+            @media screen and (min-width: 600px) and (max-width:800px){
+            .centerStundentMargin{
+            margin-top:3%;
+            }
+            }
+            .form-control>label,input::placeholder,.form-group>label,.form-control-label{
+            color:#551A8B;
+            }
+            @media screen and (max-width: 600px){
+            .full-width{
+            width:100%;
+            }
+            .col-sm-4-mentees{
+            max-width:100%;
+            }
+            .margin-container{
+            margin-top:13% !important;
+            }
+            .col-sm-8-center{
+            margin-top:5%;
+            }
+            .tab-full{
+            display:none;
+            }
+            .mobile{
+            display:block;
+            }
+            .helpPage{
+            margin-top: 25%;
+            }
+            .col-sm-3-left{
+            padding-left: unset;
+            max-width: 2%;
+            width:2%;
+            }
+            .col-sm-6-center{
+            width: -webkit-fill-available;
+            width:-moz-available;
+            margin-top:7%;
+            max-width: max-content;
+            flex: none;
+            }
+            }
+            
+            
+            @media screen and (max-width:450px){
+            
+            .helpPage{
+            margin-top: 30%;
+            }
+            }
+            @media screen and (max-width:360px){
+            
+            .helpPage{
+            margin-top: 40%;
+            }
+            }
+            @media screen and (max-width:825px){
+            
+            .col-sm-8-center{
+            margin-top:5%;
+            }
+            }
+            @media screen and (max-width:700px){
+            .col-sm-4-small{
+            flex: 0 0 40%;
+            max-width: 40%;
+            }
+            .col-sm-8-center{
+            margin-top:7%;
+            }
+            }
+            @media screen and (max-width:550px){
+            .col-sm-4-small{
+            flex: 0 0 90%;
+            max-width: 100%;
+            }
+            }
+            @media screen and (max-width:470px){
+            
+            .col-sm-8-center{
+            margin-top:10%;
+            }
+            }
+            @media screen and (max-width:370px){
+            
+            .col-sm-8-center{
+            margin-top:13%;
+            }
+            }
+            @media screen and (max-width:325px){
+            
+            .col-sm-8-center{
+            margin-top:17%;
+            }
+            }
+            @media screen and (max-width:400px){
+            .formpadding{
+            padding:unset !important;
+            }
+            }
+            .alignment{
+            white-space:nowrap;
+            }
+            
+            @media screen and (max-width:380px){
+            .alignment{
+            white-space: inherit;
+            }
+            .margin-btn-top{
+            margin-top:2%;
+            }
+            }
+            
+            .logo{
+            width:100%;
+            max-width:80%;
+            max-width:342px;
+            height:70px;
+            }
+            @media screen and (max-width:420px){
+            .centermargin{
+            margin-top:13%;
+            }
+            .logo{
+            width:100%;
+            max-width:100%;
+            height:70px;
+            }
+            }
+            .container-padding{
+            padding:unset;
+            }
+            .buttons {
+            border-radius:3px;
+            
+            color:#fff;
+            border: 1px solid #551A8B;
+            /*text-transform:uppercase;*/
+            background: #551A8B;
+            }
+            .buttons:hover,.cancelButton:hover{
+            box-shadow: rgb(127 127 182 / 25%) 0px 0px 16px;
+            }
+            .buttons:hover {
+            opacity: 0.7;
+            color:#ffffff;
+            background-color:black !important;
+            }
+            @media screen and (max-width:320px){
+            .centermargin{
+            margin-top:17%;
+            }
+            }         
+            .col-sm-2,.col-sm-3,html,body{
+            background-color: #fff;
+            }
+            @media screen and (max-width:325px){
+            .logo{
+            max-width:342px;	
+            width:105%;
+            }
+            }
+            .badge-success{
+            background:orange;
+            }
+            
+            .container-full{
+        	    margin-top: 7rem;
+        }
+            @media screen and (max-width:850px){
+            .col-sm-6-med{
+            flex: 0 0 50%;
+            max-width: 50%;
+            margin: unset !important;
+            padding: unset;
+            
+            }
+            .flex-wrapping{
+            flex-wrap:wrap;
+            margin-right:unset;
+            justify-content: space-between;
+            
+            
+            padding:unset;
+            }
+            .padd-md{
+            padding:unset !important;
+            }
+            .col-sm-12.d-flex.flex-wrapping>* {
+            width: 78% !important;
+            max-width: 44%;
+            margin: 0.25rem !important;
+            }
+            }
+        .container-full>div>*{
+                border: 1px solid rgba(0,0,0,.125);
+                border-radius: 0.25rem;
+        	}
+        @media screen and (max-width:992px){
+        .container-full>*{
+        		margin:unset;
+        	}
+        	.container-full>div>*{
+                border: 1px solid rgba(0,0,0,.125);
+                border-radius: 0.25rem;
+        	}
+        	.container-full{
+        		max-width:100% ;
+                margin-left: 5%;
+
+        	}
+        	.col-sm-6-medium{
+                flex: 0 0 50%;
+                max-width: 50%;
+        	}	
+        	.m-3-top{
+        		margin-top:3rem;
+        	}
+        }
+        @media screen and (max-width:650px){
+                .col-sm-6-medium,.col-sm-6-med,.col-sm-12.d-flex.flex-wrapping>*{
+                flex: 0 0 100%;
+                max-width: 100%;
+                }	
+        	.container-full{
+        		margin-right:unset;
+        	}
+        }
+        html,body{
+        /*background-color: #e5e7eb;*/
+        }
+        .focused.form-group>label,.focused.form-group>input,.focused.form-group>input::placeholder{
+        	color:rgb(85, 26, 139);
+        }
+
+            
+        </style>
+    </head>
+    <body ng-app="mentorDetailApp" ng-controller="mentorDetailController">
+        <div class="loadingSection" id="spinner" ng-if="showSpinner">
+            <div class="loadingBackground"></div>
+            <div>
+                <apex:image url="{!$Resource.loading}" styleClass="loading" />
+                
+            </div>
+        </div>
+        <div>
+            <nav class="navbar fixed-top navbar-light bg-light navbar-expand-lg">
+                <div class="container-fluid container-padding">
+                    <a class="navbar-brand" href="#">
+                        <div class=""><apex:image url="{!$Resource.FFEbanner}" styleClass="logo" width="50%" height="50%"/></div>
+                        
+                    </a>
+                    <div class="burger">
+                        <span><label for="toggle" style="cursor:pointer;">&#9776;</label> <input type="checkbox" id="toggle" ng-model="burgerToggle"/></span>
+                    </div>
+                    <div class="collapse navbar-collapse disp" ng-class="{checkCss:burgerToggle}" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item "><!--active-->
+                                <a class="nav-link" href="#" ng-click="homepage()" ng-class="{activeColor:activeTab==0}" style="color: #551A8B;" >Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" ng-click="progDetails()" ng-class="{activeColor:activeTab==1}" style="color: #551A8B;">Modules</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" ng-click="studentListing()" ng-class="{activeColor:activeTab==2}" style="color: #551A8B;">Sessions</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown pmd-dropdown pmd-user-info ml-auto disp smallheader mr-5" ng-class="{checkCss:burgerToggle}">
+                        <a href="javascript:void(0);" style="text-decoration:none;color: #551A8B;" class="btn-user media align-items-center small-alignment" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                            
+                            <!--<div ng-show="mentorDetail.Profile_Pic_Attachment_Id__c == undefined || mentorDetail.Profile_Pic_Attachment_Id__c == null || mentorDetail.Profile_Pic_Attachment_Id__c == ''">
+                                <img class="mr-2 profile-pic" src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" width="40" height="40" alt="avatar" / >
+                            </div>-->
+                            <div ng-hide="mentorDetail.Profile_Pic_Attachment_Id__c == undefined || mentorDetail.Profile_Pic_Attachment_Id__c == null || mentorDetail.Profile_Pic_Attachment_Id__c == ''">
+                                <img class="mr-2 profile-pic" src="{!baseURL}servlet/servlet.FileDownload?file={{mentorDetail.Profile_Pic_Attachment_Id__c}}" width="40" height="40" alt="avatar"/> 
+                                
+                            </div>
+                            <div ng-show="mentorDetail.Profile_Pic_Attachment_Id__c == undefined || mentorDetail.Profile_Pic_Attachment_Id__c == null || mentorDetail.Profile_Pic_Attachment_Id__c == ''">
+                                <!--<apex:image url="{!URLFOR($Resource.Mentor_user)}"   width="50" height="50"/>-->
+                                <img class="mr-2 profile-pic" src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" width="40" height="40" alt="avatar" / >
+                            </div>
+                            <div class="media-body" style="color: #551A8B;">
+                                {{menteeDetail.Name}}
+                            </div>
+                            <!--<i class="material-icons md-light ml-2 pmd-sm"  style="margin-left:unset !important;color: #551A8B;font-style:normal;">{{mentorDetail.Name}}</i>-->
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <a class="dropdown-item" href="javascript:void(0);" ng-click="editDetails();" ng-class="{activeColor:activeTab==3}" style="color: #551A8B;">Edit Profile</a>
+                            <a class="dropdown-item" href="javascript:void(0);" ng-click="helpCenter()" ng-class="{activeColor:activeTab==4}" style="color: #551A8B;">Mentor Help Center</a>
+                            <a class="dropdown-item" href="javascript:void(0);" ng-click="signOut();" ng-class="{activeColor:activeTab==5}" style="color: #551A8B;">Logout</a>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="main">
+                <div class="container-fluid margin-container" style="margin-top:6%;padding:unset;">                    
+                    <!-- program details start-->
+                    <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;" ng-if="showProgramDetail">
+                        <div class=" m-auto justify-content-center">
+                            <h4  style="text-align:center;background-color: orange;font-size:55px;"><b class="mt-auto">Modules</b>
+                            </h4>  
+                            <p class="text-center">Mentor > Modules</p>
+                            
+                        </div>
+                        
+                    </div>
+                    <div class="row" ng-if="showProgramDetail">
+                        <div class="row mt-3" ng-if="showProgramDetail">
+                            <!--<div class="col-sm-2 col-sm-left"/> -->
+                            <div class="col-sm-12  padding">
+                                <div class="row">
+                                    <div class="d-flex col-sm-12 flex-wrap justify-content-center">
+                                        
+                                        <div class="card col-sm-3 m-3 col-width col-sm-4-small p-0" ng-repeat="x in programDetails">
+                                            <div class="card-header p-0" style="padding:unset;" ><img src="{{x.programmeRec.Image_URL__c}}" style="width:100%;height: 300px;" /></div>
+                                            <div class="card-body">
+                                                <b class="card-title">{{x.programmeRec.curriculum__c}}</b>
+                                                <span><h4><b style="color: #551A8B;">{{x.programmeRec.Name}}</b></h4></span>
+                                                <!--<h5 class="card-title">Curriculam</h5>-->
+                                                <p class="card-text"><div ng-repeat="att in x.attId">
+                                                
+                                                <span>
+                                                    {{att.Name}}   
+                                                </span>
+                                                <button class="download btn btn-lg" ng-click="downloadDoc(att.Id)" style="margin-top:1%;"><i class="fa fa-download" ></i></button>
+                                                </div>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-3 col-sm-3-left"/> 
+                    <div class="col-sm-6 col-sm-6-center centermargin">
+                        <div class="tab-full">
+                            <!--<table class="table styled-table" >
+<thead>
+<tr>
+<th scope="col">SNO</th>
+<th scope="col">Module</th>
+<th scope="col">curriculum</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="x in programDetails" style="background:#fff;">
+<td >{{$index + 1}}</td>
+<td  style="text-align:left;">{{x.programmeRec.Name}}</td>
+<td style="text-align:left;">
+{{x.programmeRec.curriculum__c}}
+<div ng-repeat="att in x.attId">
+<button class="download btn btn-lg" ng-click="downloadDoc(att.Id)" style="margin-top:1%;"><i class="fa fa-download" ></i></button>
+<span>
+{{att.Name}}   
+</span>
+</div>
+
+</td>
+<div class="w3-container">
+
+</div>
+</tr>
+</tbody>
+</table>-->
+                        </div>
+                        <!--<div class="card mobile" ng-repeat="x in programDetails">
+                            <div class="card-header" style="background-color: #2e3192;color: #ffffff;">{{x.programmeRec.Name}}</div>
+                            <div class="card-body">{{x.programmeRec.curriculum__c}}
+                                <h5 class="card-title">Curriculam</h5>
+                                <p class="card-text"><div ng-repeat="att in x.attId">
+                                <button class="download btn btn-lg" ng-click="downloadDoc(att.Id)" style="margin-top:1%;"><i class="fa fa-download" ></i></button>
+                                <span>
+                                    {{att.Name}}   
+                                </span>
+                                </div>
+                            </p>
+                        </div>
+                    </div>-->
+                </div>
+                <div class="col-sm-3 col-sm-3-right"/>
+            </div>
+            <!-- program details end-->
+            <!--Profile-->
+                <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;" ng-if="editable">
+                    <div class=" m-auto justify-content-center">
+                        <h3  style="text-align:center;background-color: orange;font-size:55px;"><b class="mt-auto">Edit Profile</b>
+                        </h3>  
+                        <p class="text-center">Mentor > Edit Profile</p>
+                        
+                    </div>
+                    
+                </div>
+            <div class="row pt-5" ng-if="editable" style="justify-content:center;">
+                <div class="col-sm-3 col-sm-3-left"/>
+                <div class="col-sm-6 col-sm-6-center">
+                    <!-- modal popup to change profile pic-->
+                    <div id="profilePicModal" class="w3-modal popuppadding">
+                        <div class="w3-modal-content" >
+                            <header class="w3-container" style="">
+                                <span onclick="document.getElementById('profilePicModal').style.display='none'" 
+                                      class="w3-button w3-display-topright">&times;</span>
+                                
+                            </header>
+                            <div class="w3-container">
+                                <h4 style="font-weight: 600;">Upload Profile Picture</h4>
+                                <span >
+                                    <div class="d-flex row pl-5 pr-5" style="font-size: 12pt;padding-block: 60px;">
+                                        <input type="file" id="attachmentFile" class="uploadFilePopup col-sm-12" accept="image/*" style="padding:4px; text-decoration: none; border-color:red;max-width:49%;"/> 
+                                        <button class="uploadDocButton col-sm-12 buttonWidth buttons" style="width:50%;" ng-click="uploadProfilePic(mentorDetail.Id);">Upload</button>
+                                    </div>
+                                    
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card shadow centerStundentMargin">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                            </div>
+                        </div>
+                        <div class="card-body ">
+                            <form style="padding:40px;" class="formpadding">
+                                <div class="pl-lg-4">
+                                    <div class="row" style="justify-content: center;">
+                                        <!--<div class="col-lg-4">
+</div>-->
+                                        <div class="col-lg-4" >
+                                            <span>
+                                                <div ng-show="mentorDetail.Profile_Pic_Attachment_Id__c == undefined || mentorDetail.Profile_Pic_Attachment_Id__c == null || mentorDetail.Profile_Pic_Attachment_Id__c == ''">
+                                                    <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"  class="upload-profile-pic" / >
+                                                </div>
+                                                <div ng-hide="mentorDetail.Profile_Pic_Attachment_Id__c == undefined || mentorDetail.Profile_Pic_Attachment_Id__c == null || mentorDetail.Profile_Pic_Attachment_Id__c == ''">
+                                                    <img src="{!baseURL}servlet/servlet.FileDownload?file={{mentorDetail.Profile_Pic_Attachment_Id__c}}" class="upload-profile-pic"/> 
+                                                </div>
+                                                <button class="upload-profile-pencil" onclick="document.getElementById('profilePicModal').style.display='block'">
+                                                    <i class='fa fa-pencil' style='font-size:28px'></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <!--<div class="col-lg-4">-->
+                                        <!--button class="download"  style="margin-top:85%;background-color:#ff793c;"><i class='fa fa-pencil' style='font-size:36px'></i>Change</button-->  
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                                <h3 class="heading-small  mb-4" style="color:#551A8B;"><b>User Information</b></h3>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-username">Username</label>
+                                                <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="{{mentorDetail.Name}}" ng-model="mentorDetail.Name" maxlength="120"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-email">Email address</label>
+                                                <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="abc@mail.com" value="{{mentorDetail.Email}}" ng-model="mentorDetail.Email" maxlength="75"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-first-name">Years of Work Experience</label>
+                                                <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="work Experience" value="{{mentorDetail.Years_of_Work_Experience__c}}" ng-model="mentorDetail.Years_of_Work_Experience__c" maxlength="3"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-last-name">Gender</label>
+                                                <!--input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Gender" value="{{mentorDetail.Gender__c}}" ng-model="mentorDetail.Gender__c" /-->
+                                                <select class="form-control" style="width:100%;"  name="Gender" ng-model="mentorDetail.Gender__c">
+                                                    <option ng-repeat="option in genderPicklistValues" value="{{option}}">{{option}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-first-name">Languages Known</label>
+                                                <!--input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="Languages Spoken" value="{{mentorDetail.Spoken_Languages__c}}" ng-model="mentorDetail.Spoken_Languages__c"/>
+<ul ng-repeat="prog in finalListtoDisp" ><li><input type="checkbox" ng-model="prog.selected" ng-click="selectedModule(prog.Name,prog.selected)"/>&nbsp;{{prog.Name}}&nbsp;</li></ul-->
+                                                <div class="row">
+                                                    <div class="col-md-6" ng-repeat="item in finalListtoDisp | limitTo: finalListtoDisp.length /2: 0">
+                                                        <label><input type="checkbox" ng-model="item.selected" ng-click="selectedLanguage(item.Name,item.selected)"/>&nbsp;&nbsp;<span style="color:#551A8B" >{{item.Name}}</span> <br ng-if="$index > 0 && $index % 2 != 0"/></label>
+                                                    </div>
+                                                    <div class="col-md-6" ng-repeat="item in finalListtoDisp | limitTo: finalListtoDisp.length /2: finalListtoDisp.length /2">
+                                                        <label> <input type="checkbox" ng-model="item.selected" ng-click="selectedLanguage(item.Name,item.selected)"/>&nbsp;&nbsp;<span style="color:#551A8B" >{{item.Name}}</span> <br ng-if="$index > 0 && $index % 2 != 0"/></label>
+                                                    </div>  
+                                                </div>    
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-last-name">LinkedIn Profile</label>
+                                                <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Profile Id" value="{{mentorDetail.Linkedin_Profile_Link__c}}" ng-model="mentorDetail.Linkedin_Profile_Link__c" maxlength="200"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <!--div class="form-group focused">
+<label class="form-control-label" for="input-first-name">Employer Company</label>
+<input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="Company Name" value="{{mentorDetail.Company_Name__c}}" ng-model="mentorDetail.Company_Name__c"/>
+</div-->
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" >Employer Company</label> 
+                                                <!--select class="form-control" style="width:100%;"  >
+<option ng-repeat="x in corpPicklistValues" value="mentorDetail.Corporate__c">
+<span  value="mentorDetail.Corporate__c">{{x}}</span> 
+</option>
+</select-->
+                                                <select class="form-control" style="width:100%;"  name="Corporate" ng-model="mentorDetail.Corporate__c">
+                                                    <option ng-repeat="option in corpPicklistValues" value="{{option}}">{{option}}</option>
+                                                </select>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-last-name">Job Title</label>
+                                                <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Job Title" value="{{mentorDetail.Designation__c}}" ng-model="mentorDetail.Designation__c" maxlength="200"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-first-name">Area of Specialization</label>
+                                                <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="branch of knowledge" value="{{mentorDetail.Area_of_Specialization__c}}	" ng-model="mentorDetail.Area_of_Specialization__c" maxlength="200"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-last-name">College Name:</label>
+                                                <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="College name" value="" ng-model="mentorDetail.Mentor_College_Name__c" maxlength="200" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="my-4"/>
+                                <!-- Address -->
+                                <h3 class="heading-small  mb-4" style="color:#551A8B"><b>Contact information</b></h3>
+                                <div class="pl-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-country">Postal code</label>
+                                                <input type="text" id="input-postal-code" class="form-control form-control-alternative" placeholder="Postal code"  ng-model="mentorDetail.MailingPostalCode" maxlength="17"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-city">Contact Number</label>
+                                                <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="Mobile Number"  ng-model="mentorDetail.Phone" maxlength="11"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-city">City</label>
+                                                <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="City" ng-model="mentorDetail.MailingCity" maxlength="35"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group focused">
+                                                <label class="form-control-label" for="input-country">Country</label>
+                                                <input type="text" id="input-country" class="form-control form-control-alternative" placeholder="Country"  ng-model="mentorDetail.MailingCountry" maxlength="75"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="my-4"/>
+                                <label class="form-control-label"><b>Are you Opting for Mentoring Program?</b></label>
+                                <input type="checkbox" ng-model="mentorDetail.Opting_for_mentorship__c"/>
+                                <hr class="my-4" />
+                                <div align="center" class="d-flex justify-content-around"> 
+                                    <button class="download btn btn-lg buttons col-sm-5" style="background-color:#551A8B;color:#fff;" ng-click="saveMentorDetails()">Save</button>
+                                    <button class="col-sm-5" style="color:#551A8B;border:1px solid #551A8B;background:#fff;">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-sm-3 col-sm-3-right"/>
+            </div>
+            
+            <!-- student details start-->
+            <div class="row pt-3 d-flex justify-content-center" ng-if="showStudentListing">
+                <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;">
+                    <div class=" m-auto justify-content-center">
+                        <h4  style="text-align:center;background-color: orange;font-size:55px;">
+                            <b class="mt-auto">Sessions</b>
+                        </h4>  
+                        <p class="text-center">Student > Sessions</p>
+                        
+                    </div>
+                    
+                </div>
+                
+                <div class="row d-flex"><!--col-sm-12 col-sm-6-center centerStundentMargin-->
+                    <div ng-if="showNoSessions" style="text-align:center;">
+                        You will be soon Assigned a Mentee
+                    </div>
+                    <div class="row  w-100 container-fluid justify-content-center m-4">
+                        <!--<div class="col-sm-1 "></div>-->
+                        <div class="col-sm-10 full-width d-flex flex-wrap justify-content-center">
+                            <div class="col-sm-12 card m-1 m-2 p-0 "  ng-repeat="mentee in menteeList track by $index" ng-if="menteeList.length==1 ">
+                                 <b class="text-center p-3">Mentee Details</b>
+                                <div class="card-header pt-3 d-flex justify-content-center " style="padding:unset;background:unset;border:unset;" >
+                                    <div class="">
+                                        <div ng-show="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+                                            <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"  class="rounded-circle" style="border-radius:50%;margin-top:4%;border:solid 2px;max-width: 100px;max-height: 100px;" / >
+                                        </div>
+                                        <div ng-hide="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+                                            <img src="{!baseURL}servlet/servlet.FileDownload?file={{mentee.mentee_del__r.Profile_Pic_Attachment_Id__c}}" style="border-radius:50%;margin-top:4%;border:solid 2px;max-width: 100px;max-height: 100px;" width="120" height="150"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 pb-4" >
+                                    <div class="col-sm-12">
+                                        <h4><b>{{mentee.mentee_del__r.Name}}</b></h4>
+                                        <p><b>Location:</b> {{mentee.mentee_del__r.Location__c}} </p>
+                                        <p><b>Gender:</b> {{mentee.mentee_del__r.Gender__c}}</p>
+                                        <p class="programs"><b>Programs:</b> <!-- {{mentee.Modules__c}}-->
+                                            <p ng-repeat="module in mentee.modulesList" class="badge badge-pill badge-success p-1 m-1 table-layout btn  text-left">{{module}}</p></p>
+                                    <span style="width:100%;" class="alignment flex-wrap d-flex justify-content-between"> 
+                                        <button class="download btn btn-lg buttons" ng-click="viewDetails(mentee.mentee_del__c)" style="background:#fff;border:1px solid #551A8B;color:#551A8B;" >View Profile</button>
+                                        <button class="download btn btn-lg buttons margin-btn-top"  ng-click="redirectURL('MentorMenteeSessionPage?menteeId='+mentee.Id)" >View Sessions</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-4 col-sm-4-mentees card m-1 m-2 p-0 "  ng-repeat="mentee in menteeList track by $index" ng-if="menteeList.length==2 ">
+                             <b class="text-center p-3">Mentee Details</b>    
+                            <div class="card-header pt-3 d-flex justify-content-center " style="padding:unset;background:unset;border:unset;" >
+                                    <div class="">
+                                        <div ng-show="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+                                            <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"  class="rounded-circle" style="border-radius:50%;margin-top:4%;border:solid 2px;max-width: 100px;max-height: 100px;" / >
+                                        </div>
+                                        <div ng-hide="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+                                            <img src="{!baseURL}servlet/servlet.FileDownload?file={{mentee.mentee_del__r.Profile_Pic_Attachment_Id__c}}" style="border-radius:50%;margin-top:4%;border:solid 2px;max-width: 100px;max-height: 100px;" width="120" height="150"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 pb-4">
+                                    <div class="col-sm-12">
+                                        <h4><b>{{mentee.mentee_del__r.Name}}</b></h4>
+                                        <p><b>Location:</b> {{mentee.mentee_del__r.Location__c}} </p>
+                                        <p><b>Gender:</b> {{mentee.mentee_del__r.Gender__c}}</p>
+                                        <p class="programs"><b>Programs:</b> <!-- {{mentee.Modules__c}}-->
+                                            <p ng-repeat="module in mentee.modulesList" class="badge badge-pill badge-success p-1 m-1 table-layout btn text-left">
+                                                {{module}}</p></p>
+                                    <span style="width:100%;" class="alignment flex-wrap d-flex justify-content-between"> 
+                                        <button class="download btn btn-lg buttons" style="background:#fff;border:1px solid #551A8B;color:#551A8B;" ng-click="viewDetails(mentee.mentee_del__c)" >View Profile</button>
+                                        <button class="download btn btn-lg buttons margin-btn-top"  ng-click="redirectURL('MentorMenteeSessionPage?menteeId='+mentee.Id)" >View Sessions</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="col-sm-3 card m-1 col-sm-4-mentees m-2 p-0" ng-repeat="mentee in menteeList" ng-if="menteeList.length>2">
+                                <b class="text-center p-3">Mentee Details</b>
+                                <div class="card-header pt-3 d-flex justify-content-center " style="padding:unset;background:unset;border:unset;" >
+                                    <div class="">
+                                        <div ng-show="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+                                            <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"  class="rounded-circle" style="border-radius:50%;margin-top:4%;border:solid 2px;max-width: 100px;max-height: 100px;" / >
+                                        </div>
+                                        <div ng-hide="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+                                            <img src="{!baseURL}servlet/servlet.FileDownload?file={{mentee.mentee_del__r.Profile_Pic_Attachment_Id__c}}" style="border-radius:50%;margin-top:4%;border:solid 2px;max-width: 100px;max-height: 100px;" width="120" height="150"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0 pb-4">
+                                    <div class="col-sm-12">
+                                        <h4><b>{{mentee.mentee_del__r.Name}}</b></h4>
+                                        <p><b>Location:</b> {{mentee.mentee_del__r.Location__c}} </p>
+                                        <p><b>Gender:</b> {{mentee.mentee_del__r.Gender__c}}</p>
+                                        <p class="programs"><b>Programs:</b><p ng-repeat="module in mentee.modulesList" class="badge badge-pill badge-success p-1 m-1 table-layout btn  text-left">{{module}}</p></p>
+                                    <span style="width:100%;" class="alignment flex-wrap d-flex justify-content-between"> 
+                                        <button class="download btn btn-lg buttons" style="background:#fff;border:1px solid #551A8B;color:#551A8B;" ng-click="viewDetails(mentee.mentee_del__c)" >View Profile</button>
+                                        <button class="download btn btn-lg buttons margin-btn-top"  ng-click="redirectURL('MentorMenteeSessionPage?menteeId='+mentee.Id)" >View Sessions</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    <!--<div class="col-sm-1 full-hide" />-->
+                </div>
+                <!--<div class="row d-flex container-fluid flex-wrap">
+<div class="d-flex col-sm-12 flex-wrap justify-content-md-around">
+<div class="card col-sm-3 m-2 col-width" ng-repeat="mentee in menteeList">
+<div class="card-header pt-2" style="padding:unset;background:unset;border:unset;" >
+
+<div class="col-sm-3">
+<div ng-show="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+<img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"  class="rounded-circle" style="width: 100%;border-radius: 75%;border:solid 2px;" / >
+</div>
+<div ng-hide="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+<img src="{!baseURL}servlet/servlet.FileDownload?file={{mentee.mentee_del__r.Profile_Pic_Attachment_Id__c}}" style="width:100%;border-radius:100%;margin-top:4%;border:solid 2px;" width="120" height="150"/>
+</div>
+</div>
+</div>
+<div class="card-body p-0 pb-4">
+<div class="col-sm-12">
+<h4><b>{{mentee.mentee_del__r.Name}}</b></h4>
+<p><b>Location:</b> {{mentee.mentee_del__r.Location__c}} </p>
+<p><b>Gender:</b> {{mentee.mentee_del__r.Gender__c}}</p>
+<p class="programs"><b>Programs:</b> <p ng-repeat="module in mentee.modulesList" class="badge badge-pill badge-success p-1 m-1 table-layout btn">{{module}}</p></p>
+<span style="align:right" class="alignment"> 
+<button class="download btn btn-lg buttons" ng-click="viewDetails(mentee.mentee_del__c)" >View Profile</button>
+<button class="download btn btn-lg buttons margin-btn-top" style="background:#fff;border:1px solid #551A8B;color:#551A8B;" ng-click="redirectURL('MentorMenteeSessionPage?menteeId='+mentee.Id)" >View Sessions</button>
+</span>
+</div>
+</div>
+</div>
+</div>
+</div>-->
+                <!--<div class="row d-flex col-sm-12 justify-content-center">
+<div class="d-flex col-sm-6 justify-content-center">
+
+<div class="card col-sm-12 m-5" style="margin-bottom:20px;" ng-repeat="mentee in menteeList">
+<div class="container"  style="padding:14px;margin-left:unset;">
+<div class="col-md-4">
+<div ng-show="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+<img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"  class="rounded-circle" style="width: 50%;border-radius: 75%;border:solid 2px;" / >
+</div>
+<div ng-hide="mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == undefined || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == null || mentee.mentee_del__r.Profile_Pic_Attachment_Id__c == ''">
+<img src="{!baseURL}servlet/servlet.FileDownload?file={{mentee.mentee_del__r.Profile_Pic_Attachment_Id__c}}" style="width:100%;border-radius: 50%;margin-top:4%;border:solid 2px;" width="120" height="150"/>
+</div>
+</div>
+<div class="col-md-8">
+<h4><b>{{mentee.mentee_del__r.Name}}</b></h4>
+<p><b>Location:</b> {{mentee.mentee_del__r.Location__c}} </p>
+<p><b>Gender:</b> {{mentee.mentee_del__r.Gender__c}}</p>
+<p class="programs"><b>Programs:</b></p> <p ng-repeat="module in mentee.modulesList" class="badge badge-pill badge-success p-1 m-1 table-layout">{{module}}</p>
+<span style="align:right" class="alignment"> 
+<button class="download btn btn-lg buttons" ng-click="viewDetails(mentee.mentee_del__c)" >View Profile</button>
+<button class="download btn btn-lg buttons margin-btn-top" ng-click="redirectURL('MentorMenteeSessionPage?menteeId='+mentee.Id)" >View Sessions</button>
+</span>
+</div>
+</div>
+</div>
+
+</div>
+
+</div>-->
+            </div>
+            
+        </div>
+        <!-- student details end-->
+        <!-- Help center detail page start-->
+        <div style="width:100%;" ng-if="showHelpPage" class="helpPage">
+            <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;">
+                <div class=" m-auto justify-content-center">
+                    <h4  style="text-align:center;background-color: orange;font-size:55px;">
+                        <b class="mt-auto">Help Centre</b>
+                    </h4>  
+                    <p class="text-center">Student > Help Center</p>
+                     
+                </div>
+                
+            </div>
+            <div class=" container d-flex justify-content-center col-sm-12"  style="padding:unset;margin-top:2%;border:unset;box-shadow:unset;">
+                <!--<h4 class="card-title" style="text-align:center;background-color:orange;color: #fff;padding: 15px;margin-top:unset;"><b>Help Centre</b></h4>
+<hr style="display:none;"/>-->
+                <div class="col-md-6 d-flex justify-content-center p-2" style="border-radius:25px;box-shadow:0 10px 20px 0 rgb(0 0 0 / 20%);border:1px solid rgba(0,0,0,.125);">
+                    <p style="color:#551A8B;" class="m-2">Click here to download mentorship guide</p>
+                    <button style="border:unset;margin-left:unset !important;" class="buttons m-2" ng-click="getHelpDoc()">
+                        <i class="fa fa-download" aria-hidden="true" style="font-size:20px;"></i></button>
+                    
+                    <!--p><a href="{!$Label.Mentor_youtube_link}"><b>&nbsp;Take a tour</b>&nbsp;<i class="fa fa-youtube" style="font-size:28px;color:red"></i></a></p-->
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- help center detail end-->
+        
+        <!-- Home page -->
+        <div class="row" ng-if="showHomepage">
+            <!--<div class="col-sm-2"/>
+<div class="col-sm-8 col-sm-8-center " style="box-shadow: 0 10px 20px 0 rgb(0 0 0 / 20%);border-radius: .25rem;">
+<section>
+<div >
+<h3 style="text-align: center;">
+Foundation For Excellence-Mentoring Program
+</h3>
+<br/>
+<div class="row">
+<div class="col-md-6">
+<h4>
+About FFE:
+</h4>
+<p>
+The Foundation For Excellence (FFE) is a registered, US based non-profit -organization founded by the renowned serial entrepreneur, Dr. Prabhu Goel and Mrs. Poonam Goel. The Foundation for Excellence India Trust (FFEIT) is a registered, public Charitable Trust in India and works in association with FFE.
+</p>
+<p>
+The mission of FFE is to transform the lives of academically brilliant but financially needy students in India by awarding merit cum means scholarships. In the twenty three years since its inception in 1994, FFE has already helped over 20,300 scholars across India awarding over 50,449 scholarships in excess of ~Rs.160 Crores. 
+</p>
+<p>
+FFE currently supports close to 4000 Engineering students enrolled in different Engineering degree courses across India through merit cum means scholarships. FFE is committed to the overall well-being, skill development and employability of its scholars.
+</p>
+<p>
+To meet these objectives, Skill Development/Training programs (for 1st and 2nd year scholars)  and a Mentoring Program (for 3rd year scholars) are  being offered to FFE scholars.  FFE is striving to make our scholars more confident individuals who can  transition from “Campus to Corporate” smoothly .
+</p>
+<apex:image url="{!$Resource.MentorMenteeChart}" style="width:100%;"/>
+<p>
+* AY 2009-10 onwards FFE started including engineering and medicine and the focused more on these professions in the following years.* Data is from the start of the FFE India trust.
+</p>
+</div>
+<div class="col-md-6">
+<h4>
+MENTORING PROGRAM OVERVIEW:
+</h4>
+<p>
+<em>
+Mentoring is to support and encourage people to manage their own learning in order that they may maximise their potential, develop their skills, improve their performance and become the person they want to be.
+</em>
+" Eric Parsloe, The Oxford School of Coaching and Mentoring.
+</p>
+<p>
+FFE has identified key skill gaps and mentoring needs of its Engineering scholars, designed a curriculum to address those needs and through mentors, plans to implement the curriculum. We are confident that Mentors who are experienced, senior professionals from industry, through this program can enable scholars succeed in acquiring confidence, skills and other attributes, towards job-readiness.  
+</p>
+<p>
+FFE scholars are currently pursuing degrees in more than 300 Engineering colleges across India.  In order to maximize its reach, the mentoring program will be offered in two forms:
+</p>
+<ol>
+<li>
+In-Person Mentoring Program for mentors and mentees from a common geographical location. Meetings can be held at the mentor’s office or at a convenient location.
+</li>
+<li>
+Remote Mentoring Program which will allow mentors and mentees located in different cities/towns to connect. Meetings will be conducted over skype/ phone call.
+</li>
+</ol>
+<p>
+The program can be a hybrid model with some face to face sessions and many more remote modules. The curriculum provides the framework and guidelines for the sessions to be conducted but also allows some flexibility.   
+</p>
+<p>
+Thank you for your interest in this Program. 
+</p>
+</div>
+</div>
+</div>
+</section>   
+</div>
+<div class="col-sm-2"/>-->
+            <div class="container-fluid background mt-3 mb-5">
+                <!--<img src="https://news.lafayette.edu/wp-content/blogs.dir/2/files/2021/10/Inauguration-32-Nicole-Hurd.jpg" style="width:100%;"/>-->
+                <div class="col-sm-12 set-back-color">
+                    <div class="col-sm-8 h-100 vertical-center" style="color:#fff" >
+                        <div class="col-sm-12" style="    font-size: x-large;">
+                            <h2>Welcome To<br/><b> FFE Mentoring Progam</b></h2>
+                            <p class="m-0">We hope you will make the most of this opportunity.</p>
+                            <p>Wishing you all the best on your mentoring journey.</p>
+                            <hr class="w-25"/>
+                            <p>Feel free to email us if you have any questions at mentoring@ffe.org</p>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <!--<div class="col-sm-12 mt-5 mb-5 pb-5">
+                    <div class="col-sm-6 mb-5" style="font-size: larger;">
+                        
+                        <h1><b>What we do</b></h1>
+                        <p>Helping bright students achieve their dreams,transforming future generations one scholar at a time. 14,800 students with a scholarship amount more than $11.4 million. </p>
+                        <p>Helping her become financially stronger today, So she can be strength of the society tomorrow. 5000+ Girl Scholars </p>
+                        
+                    </div>
+                </div>-->
+                <div class="col-sm-12 mt-5  d-flex d-block-900">
+                         <div class="col-sm-6 mb-5 col-sm-12-900" >
+                            
+                            <h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>About FFE:</b></h3>
+                            <p class="text-justify mt-4 mb-4" style="font-size: larger;">The Foundation For Excellence (FFE) is a registered, US based non-profit -organization founded by the renowned serial entrepreneur, Dr. Prabhu Goel and Mrs. Poonam Goel. 
+                                The Foundation for Excellence India Trust (FFEIT) is a registered, public Charitable Trust in India and works in association with FFE.</p>
+                            <p  class="text-justify mt-4 mb-4" style="font-size: larger;">The mission of FFE is to transform the lives of academically brilliant but financially needy students in India by awarding merit cum means scholarships. In the twenty-eight years since its inception in 1994,
+                                FFE has already helped over 28,782 scholars across India awarding over 81,590 scholarships in excess of ~Rs. 276.12 Crores.</p>
+                            <p class="text-justify mt-4 mb-4" style="font-size: larger;">
+                                FFE currently supports close to 4000 Engineering students enrolled in different Engineering degree courses across India through merit cum means 
+                                scholarships. FFE is committed to the overall well-being, skill development and employability of its scholars.
+                             </p>
+                             <p class="text-justify mt-4 mb-4 " style="font-size: larger;">
+                                 To meet these objectives, Skill Development/Training programs (for 1st and 2nd-year scholars) and a Mentoring Program (for 3rd-year scholars) are being offered to FFE scholars. 
+                                 FFE is striving to make our scholars more confident individuals who can transition from “Campus to Corporate” smoothly.
+                             </p>
+                             <h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>Mentoring Milestone</b></h3>
+                             <img src="https://devpro-ffe.cs111.force.com/mentorship/resource/1659358596000/mentor_milestone?" class="w-100" /><!-- m-auto-->
+                        </div> 
+                        <div class="col-sm-6 col-sm-12-900">
+                            <!--<h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>Mentoring Milestone</b></h3>
+                            <img src="https://devpro-ffe.cs111.force.com/mentorship/resource/1659358596000/mentor_milestone?" class="w-100" />--><!-- m-auto-->
+                            <h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>Mentoring Program Overview:</b></h3>
+                             <p class="text-justify" style="font-size: larger;"><em>Mentoring is to support and encourage people to manage their own learning in order that they may maximize their potential, develop their skills, improve their performance and become the person they want to be.</em>
+                            " Eric Parsloe, The Oxford School of Coaching and Mentoring.</p>
+                            <p  class="text-justify" style="font-size: larger;">FFE has identified key skill gaps and mentoring needs of its Engineering scholars, designed a curriculum to address those needs and through mentors, plans to implement the curriculum. We are confident that Mentors who are experienced, senior professionals from industry, through this program can enable scholars succeed in acquiring confidence, skills and other attributes, towards job-readiness. </p>
+                            <div class="col-sm-12 d-flex justify-content-center"><img src="https://devpro-ffe.cs111.force.com/resource/1659422179000/portal_Image" class="w-50"/>   </div>
+                            <h4 class="mb-3 text-center" style="color: #551A8B;text-decoration: underline;"><b> Mentorship Program-Modules</b></h4>
+                            <p class="text-justify" style="font-size: larger;">
+                                FFE scholars are currently pursuing degrees in more than 300 Engineering colleges across India.
+                                In order to maximize its reach, the mentoring program will be offered in two forms:
+                            </p >
+                            <p class="text-justify" style="font-size: larger;">
+                                <ol style="font-size: larger;">
+                                    <li>
+                                        Remote Mentoring Program which will allow mentors and mentees located in different cities/towns to connect. Meetings will be conducted over zoom/skype/ phone call.
+                                    </li> 
+                                    <li>
+                                        In-Person Mentoring Program for mentors and mentees from a common geographical location. Meetings can be held at the mentor’s office or at a convenient location
+                                    </li>
+                            </ol>
+                        </p>
+                        <p class="text-justify" style="font-size: larger;">
+                            The program can be a hybrid model with some face-to-face sessions and many more remote modules. 
+                            The curriculum provides the framework and guidelines for the sessions to be conducted but at the same time is open to flexibility and customization.
+                        </p>
+                        <p class="text-justify" style="font-size: larger;">
+                            Thank you for your interest in this Program
+                        </p>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="col-sm-12 mt-5-rem  d-flex d-block-900">
+                        <!--<div class="col-sm-6 mb-5 col-sm-12-900" >-->
+                            
+                            <!-- <h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>MENTORING PROGRAM OVERVIEW:</b></h3>-->
+                            <!--<p class="text-justify" style="font-size: larger;"><em>Mentoring is to support and encourage people to manage their own learning in order that they may maximize their potential, develop their skills, improve their performance and become the person they want to be.</em>
+" Eric Parsloe, The Oxford School of Coaching and Mentoring.</p>
+<p  class="text-justify" style="font-size: larger;">FFE has identified key skill gaps and mentoring needs of its Engineering scholars, designed a curriculum to address those needs and through mentors, plans to implement the curriculum. We are confident that Mentors who are experienced, senior professionals from industry, through this program can enable scholars succeed in acquiring confidence, skills and other attributes, towards job-readiness. </p>-->
+                            <!--<p class="text-justify" style="font-size: larger;">
+                                FFE scholars are currently pursuing degrees in more than 300 Engineering colleges across India.
+                                In order to maximize its reach, the mentoring program will be offered in two forms:
+                            </p >
+                            <p class="text-justify" style="font-size: larger;">
+                                <ol style="font-size: larger;">
+                                    <li>
+                                        Remote Mentoring Program which will allow mentors and mentees located in different cities/towns to connect. Meetings will be conducted over zoom/skype/ phone call.
+                                    </li> 
+                                    <li>
+                                        In-Person Mentoring Program for mentors and mentees from a common geographical location. Meetings can be held at the mentor’s office or at a convenient location
+                                    </li>
+                            </ol>
+                        </p>
+                        <p class="text-justify" style="font-size: larger;">
+                            The program can be a hybrid model with some face-to-face sessions and many more remote modules. 
+                            The curriculum provides the framework and guidelines for the sessions to be conducted but at the same time is open to flexibility and customization.
+                        </p>
+                        <p class="text-justify" style="font-size: larger;">
+                            Thank you for your interest in this Program
+                        </p>-->
+                    <!--</div> -->
+                    <div class="col-sm-12 p-0 col-sm-12-900 d-flex d-block-900 row m-0">
+                        <!--<div class="col-sm-12 d-flex p-0 col-sm-12-900 justify-content-center">
+                            <img src="./resource/1659421894000/Program_Highlight" />
+                         
+                            
+                        </div>-->
+                          <!-- <div class="col-sm-6 justify-content-center text-center col-sm-12-900" style="">
+                                <div style="width: fit-content;color:#551A8B;border:1px solid;border-radius:20%;" class="m-auto p-5">
+                                    <span class="justify-content-center h4 pt-4">PROGRAM HIGHLIGHTS</span>
+                                    <ul class="justify-content-center pt-4 text-justify" >
+                                        <li class="p-1">Remote Mentorship Program</li>
+                                        <li class="p-1">In-house Technology platform</li>
+                                        <li class="p-1">Facilitated by Video Interface</li>
+                                        <li class="p-1">Structured Content</li>
+                                        <li class="p-1">Tracking and Mentoring</li>
+                                        <li class="p-1">Qualitative Feedback</li>
+                                    </ul>
+                                </div>
+                            </div>-->
+                        <div class="col-sm-12 mb-5 col-sm-12-900 d-flex justify-content-center">
+                            <!--<img src="https://devpro-ffe.cs111.force.com/resource/1659422179000/portal_Image" class="w-50"/>   -->                   <!--style="width:inherit;"-->      
+                        </div>
+                        <div class="col-sm-12 mb-5 col-sm-12-900 ">
+                            
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="col-sm-12 mb-5 pb-5 ">
+                    <div class="col-sm-12 mb-5 " >
+                        <h3><b style="color: #551A8B;text-decoration: underline;">MENTORSHIP PROGRAM-MODULES</b></h3>
+                    </div>
+                    <div class="col-sm-12 mt-5 p-0  d-flex d-block-900">
+                        <div class="col-sm-6 p-0 d-flex col-sm-12-900 justify-content-center">
+                            
+                            <div class="col-sm-6 justify-content-center text-center col-sm-12-900" style="">
+                                <div style="width: fit-content;color:#551A8B;border:1px solid;border-radius:20%;" class="m-auto p-5">
+                                    <span class="justify-content-center h4 pt-4">PROGRAM HIGHLIGHTS</span>
+                                    <ul class="justify-content-center pt-4 text-justify" >
+                                        <li class="p-1">Remote Mentorship Program</li>
+                                        <li class="p-1">In-house Technology platform</li>
+                                        <li class="p-1">Facilitated by Video Interface</li>
+                                        <li class="p-1">Structured Content</li>
+                                        <li class="p-1">Tracking and Mentoring</li>
+                                        <li class="p-1">Qualitative Feedback</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-6 mb-5 col-sm-12-900">
+                            <img src="https://devpro-ffe.cs111.force.com/resource/1659086992000/portal_Image" class="w-100" />                            
+                        </div>
+                    </div>
+            </div>-->
+            </div>
+           <!-- <div class="container-fluid background mt-3 mb-5">
+                    
+                    <div class="col-sm-12 set-back-color">
+                        <div class="col-sm-8 h-100 vertical-center" style="color:#fff" >
+                            <div class="col-sm-12">
+                                <h2>Foundation For Excellence<br/><b> Mentoring Program</b></h2>
+                                <p>Be A catalyst And Create Change In The Live Of</p>
+                                <p>Academically Brilliant Students With High Potential</p>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                	
+                <div class="m-lg-5 pl-lg-5 pr-lg-5 pt-5 m-5">
+                    <div class="row d-flex pb-5">
+                        <div class="col-12">
+                            <h1>
+                                <b>About FFE</b>
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-sm-6">
+                            <p>The Foundation For Excellence (FFE) is a registered, US based non-profit -organization founded by the renowned serial entrepreneur, Dr. Prabhu Goel and Mrs. Poonam Goel.
+                               The Foundation for Excellence India Trust (FFEIT) is a registered, public Charitable Trust in India and works in association with FFE.</p>
+                            <p>
+                                The mission of FFE is to transform the lives of academically brilliant but financially needy students in India by awarding merit cum means scholarships.
+                                In the twenty-eight years since its inception in 1994, FFE has already helped over 28,782 scholars across India awarding over 81,590 scholarships in excess of ~Rs. 276.12 Crores.
+                            </p>
+                            <p>
+                                FFE currently supports close to 4000 Engineering students enrolled in different Engineering degree courses across India through merit cum means scholarships.
+                                FFE is committed to the overall well-being, skill development and employability of its scholars.
+                            </p>
+                            <p>
+                                To meet these objectives, Skill Development/Training programs (for 1st and 2nd-year scholars) and a Mentoring Program (for 3rd-year scholars) are being offered to FFE scholars. 
+                                FFE is striving to make our scholars more confident individuals who can transition from “Campus to Corporate” smoothly.
+                            </p>
+                            
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:image url="https://devpro-ffe.cs111.force.com/mentorship/resource/1619078672000/MentorMenteeChart" style="width: inherit;"/>
+                        </div>
+                    </div>
+                    <div class="d-flex row">
+                        <div class="col-sm-6">
+                            <apex:image url="https://devpro-ffe.cs111.force.com/mentorship/resource/1619078672000/Group_399" style="width: inherit;"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row d-flex pb-5">
+                                <div class="col-12">
+                                    <h1>
+                                        <b>Mentoring Program</b>
+                                    </h1>
+                                </div>
+                               
+                            </div>
+                            <p>
+                                Mentoring is to support and encourage people to manage their own learning in order that they may maximize their potential, 
+                                develop their skills, improve their performance and become the person they want to be " Eric Parsloe, The Oxford School of Coaching and Mentoring.
+                            </p>
+                            <p>
+                                FFE has identified key skill gaps and mentoring needs of its Engineering scholars, designed a curriculum to address those needs and through mentors, plans to implement the curriculum. 
+                                We are confident that Mentors who are experienced, senior professionals from industry,
+                                through this program can enable scholars succeed in acquiring confidence, skills and other attributes, towards job-readiness.
+                            </p>
+                            <p>
+                                FFE scholars are currently pursuing degrees in more than 300 Engineering colleges across India.
+                                In order to maximize its reach, the mentoring program will be offered in two forms:
+                            </p>
+                            <p>
+                                In-Person Mentoring Program for mentors and mentees from a common geographical location. 
+                                Meetings can be held at the mentor’s office or at a convenient location.
+                                <br/>
+                                Remote Mentoring Program which will allow mentors and mentees located in different cities/towns to connect. 
+                                Meetings will be conducted over zoom/skype/ phone call.
+                                <br/>
+                                The program can be a hybrid model with some face-to-face sessions and many more remote modules. 4
+                                The curriculum provides the framework and guidelines for the sessions to be conducted but at the same time is open to flexibility and customization.
+                            </p>
+                            <p>Thank you for your interest in this Program.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!--<div class="container container-full">
+                <div class="row d-flex card p-3  justify-content-center" style="flex-direction: row;">
+                    
+                    
+                    <div class="col-sm-6  p-2 col-sm-6-medium d-flex flex-wrap">
+                        <div class="col-sm-12 d-flex justify-content-center">Profile</div>
+                        <div class="col-sm-12 d-flex justify-content-center" >
+                            <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" style="border-radius: 50%;max-width: inherit;width: inherit;max-width:150px;max-height:150px"/>
+                        </div>
+                        <div class="d-flex justify-content-center col-sm-12 flex-wrap">
+                            <div class="col-sm-12 justify-content-center d-flex">
+                                {{mentorDetail.Name}}
+                            </div>
+                            <div class="col-sm-12 justify-content-around d-flex">
+                                <button class="btn btn-light" style="border: solid 1px; background: #551A8B;color:#fff;" ng-click="editDetails();">
+                                    Edit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6  p-2 col-sm-6-medium ">
+                        <div class="col-sm-12 justify-content-center d-flex">Scheduled Meeting</div>
+                        <div class="col-sm-12 d-flex flex-wrap justify-content-center">
+                            <div class="w-100 d-flex justify-content-center mt-5" style="height: 135px;">
+                               
+                                <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                                    <img class="mr-2" style="border-radius: 50%;border: outset;" src="{!$Resource.Mentorship_Calender}" width="100" height="100" alt="avatar"/>
+                                    
+                                    
+                                </a>
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-12 justify-content-center d-flex">
+                            Upcoming meetings
+                        </div>
+                        <div class="col-sm-12 justify-content-around d-flex">
+                                <b>{{scheduledSesssions}} </b>
+                           
+                        </div>
+                    </div>
+                   
+                    
+                </div>
+                <div class="row   p-3 mt-3 col-sm-12  padd-md " style="flex-direction: row;padding-left: unset !important;">
+                    <div class="col-sm-12 d-flex flex-wrapping" style="border:unset;padding-left: unset !important;margin-right: unset !important;" >
+                        <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;padding-left: unset !important;margin-left:unset !important;">
+                            <div class="col-sm-3">
+                                <span class="fas " style="font-size:40px;">🏆</span>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="col-sm-12">
+                                    {{totalSesssions}}
+                                </div>
+                                <div class="col-sm-12">
+                                    Total Sessions    
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;margin-right: unset !important;">
+                            <div class="col-sm-3">
+                                <i class="fa fa-handshake-o" style="font-size:40px;" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="col-sm-12">
+                                    {{assignedMenteeCount}}
+                                </div>
+                                <div class="col-sm-12">
+                                    Connections    
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;margin-right: unset !important;">
+                            <div class="col-sm-3">
+                                
+                                <i class="fa fa-graduation-cap" style="font-size:40px;" aria-hidden="true"></i>
+                                
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="col-sm-12">
+                                    4
+                                </div>
+                                <div class="col-sm-12">
+                                    Courses    
+                                </div>
+                            </div>                    
+                        </div>
+                        <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;">
+                            <div class="col-sm-3">
+                                
+                                
+                                <i class="fa fa-bullseye"  style="font-size:40px;" aria-hidden="true"></i>
+                                
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="col-sm-12">
+                                    {{completedSesssions}}
+                                </div>
+                                <div class="col-sm-12">
+                                    Completed Sessions    
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+               
+            </div>-->
+        </div>
+    </div>
+    
+    
+</div>
+</div>
+<script>
+var maxStringSize = 6000000; //Maximum String size is 6,000,000 characters
+var maxFileSize = 4350000; //After Base64 Encoding, this is the max file size
+var chunkSize = 950000; //Maximum Javascript Remoting message size is 1,000,000 characters
+var attachment;
+var attachmentName;
+var fileSize;
+var positionIndex;
+var doneUploading;
+var mentorId;
+var baseURL = '{!baseURL}';
+var corpPicklistValues = JSON.parse('{!corpPicklistValues}');
+var languagePicklistValues = JSON.parse('{!languagePicklistValues}');
+var genderPicklistValues = JSON.parse('{!genderPicklistValues}');
+//var appId = "{!$CurrentPage.parameters.id}";
+//Method to prepare a file to be attached to the Account bound to the page by the standardController
+function uploadFile(param) {
+    mentorId = param;
+    if (mentorId != "") {
+        var file = document.getElementById('attachmentFile').files[0];
+        console.log(file);
+        if (file != undefined) {
+            if (file.size <= maxFileSize) {
+                attachmentName = file.name;
+                var fileReader = new FileReader();
+                fileReader.onloadend = function (e) {
+                    attachment = window.btoa(this.result); //Base 64 encode the file before sending it
+                    positionIndex = 0;
+                    fileSize = attachment.length;
+                    console.log("Total Attachment Length: " + fileSize);
+                    doneUploading = false;
+                    if (fileSize < maxStringSize) {
+                        uploadAttachment(null);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Internal error',
+                            text: 'Base 64 Encoded file is too large.  Maximum size is ' + maxStringSize + ' your file is ' + fileSize + '.',
+                        })
+                    }
+                }
+                fileReader.onerror = function (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Internal error',
+                        text: 'There was an error reading the file.  Please try again.',
+                    })
+                }
+                fileReader.onabort = function (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Internal error',
+                        text: 'There was an error reading the file.  Please try again.',
+                    })
+                }
+                fileReader.readAsBinaryString(file); //Read the body of the file
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Internal error',
+                    text: 'File must be under 4.3 MB in size.  Your file is too large.  Please try again.',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Internal error',
+                text: 'You must choose a file before trying to upload it',
+            }) 
+        }
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Internal error',
+            text: 'Cannot upload document',
+        })
+    }
+    
+}
+
+//Method to send a file to be attached to the Account bound to the page by the standardController
+//Sends parameters: Account Id, Attachment (body), Attachment Name, and the Id of the Attachment if it exists to the controller   
+function uploadAttachment(fileId) {
+    var attachmentBody = "";
+    if (fileSize <= positionIndex + chunkSize) {
+        attachmentBody = attachment.substring(positionIndex);
+        doneUploading = true;
+    } else {
+        attachmentBody = attachment.substring(positionIndex, positionIndex + chunkSize);
+    }
+    console.log("Uploading " + attachmentBody.length + " chars of " + fileSize);
+    MentorDetailPageController.doUploadProfilePic(
+        mentorId, attachmentBody, attachmentName,
+        function (result, event) {
+            console.log(result);
+            if (event.type === 'exception') {
+                console.log("exception");
+                console.log(event);
+            } else if (event.status) {
+                if (result.substring(0, 3) == '00P') {
+                    if (doneUploading == true) {
+                        
+                        Swal.fire(
+                            '',
+                            'Profile picture Updated successfully!',
+                            'success'
+                        )
+                        
+                        window.location.reload();
+                    } else {
+                        positionIndex += chunkSize;
+                        uploadAttachment(result);
+                    }
+                }
+            } else {
+                console.log(event.message);
+            }
+        }, {
+            buffer: true,
+            escape: true,
+            timeout: 120000
+        }
+    );
+}
+var app = angular.module('mentorDetailApp', []);
+app.controller('mentorDetailController', function ($scope) {
+    //debugger;
+    $scope.showSpinner = false;
+    $scope.showDetails = false;
+    var mentorId = '{!$CurrentPage.parameters.Id}';
+    $scope.mentorDetail = {};
+    $scope.onEdit = true;
+    $scope.editable = false;
+    $scope.showProgramDetail = false;
+    $scope.showStudentListing = false;
+    $scope.showHomepage = true;
+    $scope.showHelpPage = false;
+    $scope.assignedMenteeCount = 0;
+    $scope.corpPicklistValues = corpPicklistValues;
+    $scope.languagePicklistValues = languagePicklistValues;
+    $scope.genderPicklistValues = genderPicklistValues;
+    
+    $scope.finalListtoDisp = [];
+    $scope.getMentorDetails = function () {
+        $scope.showSpinner = true;
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.MentorDetailPageController.getMentorDetails}',
+            mentorId,
+            function (result, event) {
+                $scope.showSpinner = false;
+                $scope.$apply();
+                if (event.status) {
+                    $scope.mentorDetail = result;
+                    if($scope.mentorDetail.Spoken_Languages__c != undefined){
+                        $scope.languageList = $scope.mentorDetail.Spoken_Languages__c.split(';');
+                        
+                        for(var i=0;i<$scope.languagePicklistValues.length;i++){
+                            if($scope.languageList.includes($scope.languagePicklistValues[i])){
+                                $scope.finalListtoDisp.push({Name : $scope.languagePicklistValues[i], selected : true});
+                            }else{
+                                $scope.finalListtoDisp.push({Name : $scope.languagePicklistValues[i], selected : false});
+                            }
+                            
+                        }
+                    }else{
+                        for(var i=0;i<$scope.languagePicklistValues.length;i++){
+                            $scope.finalListtoDisp.push({Name : $scope.languagePicklistValues[i], selected : false});
+                        }
+                    }
+                    
+                    
+                    
+                    $scope.$apply();
+                }
+            }, {
+                escape: true
+            }
+        );
+    }
+    $scope.getMentorDetails();
+    
+    
+    $scope.editDetails = function () {
+        $scope.activeTab=3;
+        $scope.burgerToggle=false;
+        $scope.editable = true;
+        $scope.showDetails = false;
+        $scope.showProgramDetail = false;
+        $scope.showStudentListing = false;
+        $scope.showHomepage = false;
+        $scope.showHelpPage = false;
+    }
+    
+    $scope.helpCenter = function () {
+        $scope.activeTab=4;
+        $scope.burgerToggle=false;
+        $scope.editable = false;
+        $scope.showDetails = false;
+        $scope.showProgramDetail = false;
+        $scope.showStudentListing = false;
+        $scope.showHomepage = false;
+        $scope.showHelpPage = true;
+    }
+    
+    $scope.getHelpDoc = function () {
+        $scope.showSpinner = true;
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.MentorDetailPageController.getHelpDoc}',
+            function (result, event) {
+                $scope.showSpinner = false;
+                $scope.$apply();
+                if (event.status) {
+                    /*  Swal.fire(
+                                '',
+                                'Profile Updated successfully!',
+                                'success'
+                            )  */
+                            if(result != null){
+                                $scope.download(result);
+                            }
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+            }
+            
+            $scope.saveMentorDetails = function () {
+                $scope.languageListToInsert = [];
+                $scope.showSpinner = true;
+                for(var i=0;i<$scope.finalListtoDisp.length;i++){
+                    debugger;
+                    if($scope.finalListtoDisp[i].selected == true){
+                        if(!$scope.languageListToInsert.includes($scope.finalListtoDisp[i].Name)){
+                            $scope.languageListToInsert.push($scope.finalListtoDisp[i].Name);
+                        }
+                    }
+                }
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.updateMentorDetails}',
+                    $scope.mentorDetail,$scope.languageListToInsert,
+                    function (result, event) {
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                        if (event.status) {
+                            $scope.editable = false;
+                            $scope.languageListToInsert = [];
+                            $scope.showProgramDetail = true;
+                            Swal.fire(
+                                '',
+                                'Profile Updated successfully!',
+                                'success'
+                            )
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+                
+            }
+            
+            
+            $scope.viewDetails = function (menteeId) {
+                let mainURL = window.location.origin + '/mentorship';
+                window.location.replace(mainURL + "/" + 'MenteeProfile?id=' + mentorId + '&MenteeId=' + menteeId);
+                
+            }
+            
+            $scope.progDetails = function () {
+                $scope.activeTab=1;
+                $scope.burgerToggle=false;
+                $scope.showDetails = false;
+                $scope.showProgramDetail = true;
+                $scope.showStudentListing = false;
+                $scope.editable = false;
+                $scope.showHomepage = false;
+                $scope.showHelpPage = false;
+                
+            }
+            $scope.studentListing = function () {
+                $scope.activeTab=2;
+                $scope.burgerToggle=false;
+                $scope.showProgramDetail = false;
+                $scope.showStudentListing = true;
+                $scope.showDetails = false;
+                $scope.editable = false;
+                $scope.showHomepage = false;
+                $scope.showHelpPage = false;
+            }
+            
+            $scope.getprogramDetail = function () {
+                $scope.showSpinner = true;
+                $scope.programDetails = [];
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.getProgramDetails}',
+                    function (result, event) {
+                        if (event.status) {
+                            $scope.programDetails = result;
+                            $scope.$apply();
+                        } else if (event.type === 'exception') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                    }, {
+                        escape: true
+                    }
+                );
+            }
+            $scope.getprogramDetail();
+            
+            $scope.download = function (attIds) {
+                
+                var attlocation = baseURL + 'servlet/servlet.FileDownload?file=' + attIds;
+                window.open(attlocation, '_blank');
+            }
+            $scope.menteeList;
+            $scope.totalSesssions = 0;
+            $scope.completedSesssions = 0;
+            $scope.scheduledSesssions = 0;
+            $scope.upcomingSessions = [];
+            $scope.recentSession;
+            $scope.getMenteeList = function () {
+                
+                $scope.showSpinner = true;
+                let pageURL = window.location.href;
+                var type = pageURL.split('Type=')[1];
+                if (type == "Student") {
+                    $scope.showProgramDetail = false;
+                    $scope.showStudentListing = true;
+                    $scope.showDetails = false;
+                    $scope.editable = false;
+                    $scope.showHomepage = false;
+                    $scope.showNoSessions = false;
+                    $scope.showHelpPage = false;
+                }
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.getMenteeDetails}',
+                    mentorId,
+                    function (result, event) {
+                        if (event.status) {
+                            if(result == null || result.length == 0){
+                                $scope.showNoSessions = true;
+                            }else{
+                                $scope.showNoSessions = false;
+                            }
+                            let menteeDump = [];
+                            
+                            angular.forEach(result, function(mentee, key){
+                                if(mentee.mentee_del__r.Modules__c) {
+                                    mentee.modulesList = mentee.mentee_del__r.Modules__c.split(";");
+                                }
+                                menteeDump.push(mentee); 
+                            });
+                            $scope.menteeList = menteeDump;
+                            
+                            if($scope.menteeList.length != 0 || $scope.menteeList != undefined){
+                                $scope.assignedMenteeCount = $scope.menteeList.length;
+                            }
+                            debugger;
+                            for(var i=0;i<$scope.menteeList.length;i++){
+                                if($scope.menteeList[i].Sessions__r != undefined){
+                                    $scope.totalSesssions += $scope.menteeList[i].Sessions__r.length;
+                                    for(var j=0;j<$scope.menteeList[i].Sessions__r.length;j++){
+                                        if($scope.menteeList[i].Sessions__r[j].Status__c == "Completed"){
+                                            $scope.completedSesssions++;
+                                        }else if($scope.menteeList[i].Sessions__r[j].Status__c == "Created"){
+                                            $scope.scheduledSesssions++;
+                                            $scope.upcomingSessions.push($scope.menteeList[i].Sessions__r[j]);
+                                        }
+                                    }
+                                }
+                            }
+                            //$scope.menteeList = result;
+                            if($scope.upcomingSessions.length > 0){
+                                for(var i=0;i<$scope.upcomingSessions.length;i++){
+                                    var sessionDate = new Date($scope.upcomingSessions[i].Date__c);
+                                    if($scope.recentSession != undefined){
+                                        var recentSessionDate = new Date($scope.recentSession.Date__c);
+                                        if(sessionDate.getDate() < recentSessionDate.getDate() && sessionDate.getMonth() < recentSessionDate.getMonth()){
+                                            $scope.recentSession = $scope.upcomingSessions[i];
+                                        }
+                                    }else{
+                                        $scope.recentSession = $scope.upcomingSessions[i];
+                                    }
+                                }
+                                var endTime = new Date($scope.recentSession.End_time__c);
+                                var strtTime = new Date($scope.recentSession.Time__c);
+                                var recSessionDate = new Date($scope.recentSession.Date__c);
+                                $scope.recentSessionDetails = strtTime.getHours()+":"+strtTime.getMinutes()+" - "+endTime.getHours()+":"+endTime.getMinutes();
+                            }
+                        }
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                    }, {
+                        escape: true
+                    }
+                );
+            }
+            $scope.getMenteeList();
+            
+            $scope.redirectURL = function (pageName) {
+                var redirecTo = pageName;
+                let mainURL = window.location.origin + '/mentorship';
+                window.location.replace(mainURL + "/" + pageName + "&MentorId=" + mentorId);
+            }
+            
+            $scope.signOut = function () {
+                $scope.activeTab=5;
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.mentorSignOut}',
+                    $scope.mentorDetail.Id,
+                    function (result, event) {
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                        if (event.status) {
+                            let mainURL = window.location.origin + '/mentorship/mentorLogin';
+                            window.location.replace(mainURL);
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+                
+            }
+            
+            $scope.homepage = function () {
+                $scope.activeTab=0;
+                
+                $scope.burgerToggle=false;
+                $scope.showProgramDetail = false;
+                $scope.showStudentListing = false;
+                $scope.showDetails = false;
+                $scope.editable = false;
+                $scope.showHomepage = true;
+                $scope.showHelpPage = false;
+                
+            }
+            
+            $scope.uploadProfilePic = function (mentorId) {
+                uploadFile(mentorId);
+            }
+            
+            $scope.downloadDoc = function(attid){
+                downloadDoc(attid);
+            }
+            
+        });
+var counter=0;
+function downloadDoc(attid) {
+    let anchorTagA = document.createElement('a');
+    anchorTagA.href = '{!$Label.Mentorship_Site_URL}' + 'servlet/servlet.FileDownload?file=' + attid;
+    anchorTagA.download = 'downloadDoc';
+    anchorTagA.click();
+    
+}
+</script>        
+</body>
+</apex:page>

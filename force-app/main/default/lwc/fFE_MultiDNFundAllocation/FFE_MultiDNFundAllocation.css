@@ -1,0 +1,87 @@
+.slds-box{
+    background: #032559;
+}
+.h3{
+    color:#fff;
+    text-align: center;
+}
+.back-icon {
+    --sds-c-icon-color-foreground-default: white;
+}
+.close-icon {
+    --sds-c-icon-color-foreground-default: white;
+}
+.slds-button .slds-button_neutral {
+    font-family: 'Source Sans Pro', sans-serif;
+    float: right;
+    background: #ff793c; 
+    color:#fff; 
+    font-size: 11pt;    
+}
+label {
+    float: left;
+    margin-right: 10px;
+    color: #032559;
+    font-size: 10pt;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+.searchCol {
+    float: left;
+    width: 45%;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+.mdContPopup{ 
+    margin: 0;
+    width: 50%;
+    margin-top: 0px !important;
+    padding: 2px 2px;
+    display: inline-block;
+    position: relative;
+    padding: 2px;
+    margin: 18px 0;
+    vertical-align: middle;
+}
+.slds-slider-label__range {
+    display: none;
+}
+.slds-form-element_horizontal .slds-form-element__label .slds-form_horizontal .slds-form-element .slds-form-element__label .slds-form_stacked .slds-form-element_horizontal .slds-form-element__label {
+    display: none;
+}
+.searchDiv {
+    margin-top: 150px;
+    margin-bottom: 25px;
+    background: #fff;
+    padding-bottom: 10px;
+    width: 90% !important;
+    margin-left: 5% !important;
+}
+.searchDiv, .searchRow{
+    float:left;
+    width:100%;
+}
+
+.searchCol{
+    float: left;
+    width: 45%;
+    padding: 1% 2%;
+}
+.searchColPopup{
+    float:left;
+    width:45%;
+}
+.searchTagsPopup{
+    float:left;
+    margin-right:10px;
+    color: #032559;
+    font-size:10pt;
+    min-width: 40%;
+}
+.mysearchRow{
+    /* float:left; */
+    width:100%;
+    background: #fff;
+    padding-bottom: 10px;
+    /* width: 90% !important; */
+    /* margin-left: 5% !important; */
+}

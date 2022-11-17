@@ -1,0 +1,346 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 11-02-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+     <!--Spinner-->
+     <div if:true={showLoadSpinner} class="spinner">
+        <lightning-spinner
+            variant="brand"
+            size="large"
+            alternative-text="Loading...">
+        </lightning-spinner>
+    </div>
+    
+    <!--START : Page 1-->
+    <lightning-card if:false={showDisburseform}>
+        <div class="slds-box slds-box_x-small">
+            <div class="slds-text-heading_medium slds-align_absolute-center" style="color:rgb(15, 15, 15)">
+                <h3>Multi Donor Fund Allocation</h3>
+            </div>
+        </div>
+        <div class="slds-form_horizontal slds-grid slds-wrap slds-align_absolute-center">
+            <!--Students By Section-->
+            <div class="slds-col slds-size_1-of-2 searchCol slds-p-bottom_none">
+              <!--
+                 <label for="stdByField">Students By</label>
+              --> 
+                <lightning-combobox 
+                    label="Students By"
+                    name="progress"
+                    value={value}
+                    options={studentoptions}
+                    onchange={handleStudentChange} ></lightning-combobox>
+                  
+                </div>
+           
+
+             <!--Application Type Section-->
+             <div class="slds-col slds-size_1-of-2 searchCol slds-p-bottom_none" >
+                <label for="appTypeField" style="padding-left: 50px;padding-top:13px;float:left;">Application Type</label>
+                <c-ffe-multi-select-picklist-lwc
+                    id="appTypeField" 
+                    options={applTypeOptions}
+                    onvaluechange={handleApplType}>
+                </c-ffe-multi-select-picklist-lwc>
+            </div>
+        </div>
+            <!--Search / Clear Button-->
+            <div class="slds-m-top_small slds-m-bottom_medium slds-align_absolute-center">
+                <button onclick={getAllStudents_multiDonor} class="slds-button slds-button_neutral" style="font-family: 'Source Sans Pro', sans-serif; float: right; background: #ff793c; color:#fff; font-size: 11pt">
+                    <div class="slds-p-left_xx-small">Search</div>
+                </button>
+                <button onclick={clearFilter} class="slds-button slds-button_neutral" style="font-family: 'Source Sans Pro', sans-serif; float: right; background: #ff793c; color:#fff; font-size: 11pt">
+                    <div class="slds-p-left_xx-small">Clear</div>
+                </button>           
+            </div>
+
+            <div if:true={showStudentDetails} style="height: 300px;">
+                <lightning-card>
+                    <div class="slds-table_edit_container slds-p-horizontal_small"> 
+                        <table aria-multiselectable="true" aria-describedby="conatact-list" class="slds-table  slds-table_bordered slds-table_col-bordered slds-table_cell-buffer" >
+                            <!--Header of the table-->
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="slds-size_1-of-6 " scope="col">
+                                        <div class="slds-truncate " title="Student Name">Student Name</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6 " scope="col">
+                                        <div class="slds-truncate " title="Student Id">Student Id</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6 " scope="col">
+                                        <div class="slds-truncate " title="Approved Scholarship Amount">Approved Scholarship Amount</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6" scope="col">
+                                        <div class="slds-truncate " title="Internal Status">Internal Status</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6" scope="col">
+                                        <div class="slds-truncate " title="Student Mailing City">Student Mailing City</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6" scope="col">
+                                        <div class="slds-truncate " title="Student Mailing State">Student Mailing State</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <!--Body of the table-->
+                        <template for:each={showStudentResult} for:item="item" for:index="indexVar">
+                            <table key={item.Id} class="slds-table  slds-table_bordered slds-table_cell-buffer">
+                                <tbody>
+                                    <tr class="slds-hint-parent">
+                                        <td class="slds-size_1-of-6" data-id={indexVar} data-recid={item.value.Id} onclick={handleParentTable}>
+                                            <div><a>{item.value.Name}</a></div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div><a href={item.recordLink} target="_blank">{item.value.FFE_ID__c}</a></div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div>{item.value.ScholarshipAmount__c}</div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div>{item.value.Internal_Status__c}</div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div>{item.value.MailingCity}</div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div>{item.value.MailingState}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <section key={item.value.Id} data-recordid={item.value.Id} data-id="divblock" class="slds-hide">
+                                <table style="margin:0px;width: 90%;margin: 1% 5%;" aria-multiselectable="true" aria-describedby="conatact-list" class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+                                    <!--Header of the table-->
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="slds-size_1-of-6 " scope="col">
+                                                <div class="slds-truncate " title="Bank Account Holder's Name">Bank Account Holder's Name</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6 " scope="col">
+                                                <div class="slds-truncate " title="Bank Name">Bank Name</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6 " scope="col">
+                                                <div class="slds-truncate " title="Bank Account #">Bank Account #</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate " title="IFSC Code">IFSC Code</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate " title="Bank Branch City">Bank Branch City</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate " title="Bank Address">Bank Address</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate " title="Passbook Copy">Passbook Copy</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="slds-hint-parent">
+                                            <td class="slds-size_1-of-6">
+                                                <div>{item.value.Bank_Account_Holder_s_Name__c}</div>
+                                            </td>
+                                            <td class="slds-size_1-of-6">
+                                                <div><a href={item.recordLink} target="_blank">{item.value.Bank_Name__c}</a></div>
+                                            </td>
+                                            <td class="slds-size_1-of-6">
+                                                <div>{item.value.Full_Bank_Account_No_With_all_digits__c}</div>
+                                            </td>
+                                            <td class="slds-size_1-of-6">
+                                                <div>{item.value.X11_character_IFSC_Code_of_the_Branch__c}</div>
+                                            </td>
+                                            <td class="slds-size_1-of-6">
+                                                <div>{item.value.Bank_City__c}</div>
+                                            </td>
+                                            <td class="slds-size_1-of-6">
+                                                <div>{item.value.Branch_Address__c}</div>
+                                            </td>
+                                            <td class="slds-size_1-of-6">
+                                                <div></div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table style="margin:0px;width: 90%;margin: 1% 5%;" aria-multiselectable="true" aria-describedby="conatact-list" class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+                                    <!--Header of the table-->
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="slds-size_1-of-6 " scope="col">
+                                                <div class="slds-truncate " title="Application Name">Application Name</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6 " scope="col">
+                                                <div class="slds-truncate " title="Application Type">Application Type</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6 " scope="col">
+                                                <div class="slds-truncate " title="Application Stage">Application Stage</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate " title="Requested Amount">Requested Amount</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate " title="Amount Funded">Amount Funded</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate " title="Remaining Fund">Remaining Fund</div>
+                                            </th>
+                                            <th class="slds-size_1-of-6" scope="col">
+                                                <div class="slds-truncate "></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <template for:each={item.value.Applications__r} for:item="apps">
+                                        <tbody key={apps.Id}>
+                                            <tr class="slds-hint-parent">
+                                                <td class="slds-size_1-of-6">
+                                                    <div><a href={apps.recordLink} target="_blank">{apps.Name}</a></div>
+                                                </td>
+                                                <td class="slds-size_1-of-6">
+                                                    <div>{apps.RecordType.Name}</div>
+                                                </td>
+                                                <td class="slds-size_1-of-6">
+                                                    <div>{apps.Application_Stage__c}</div>
+                                                </td>
+                                                <td class="slds-size_1-of-6">
+                                                    <div>{apps.Amount_Requested__c}</div>
+                                                </td>
+                                                <td class="slds-size_1-of-6">
+                                                    <div>{apps.Amount_Funded__c}</div>
+                                                </td>
+                                                <td class="slds-size_1-of-6">
+                                                    <div>{apps.Remaining_Fund__c}</div>
+                                                </td>
+                                                <td>
+                                                    <button value={apps.Id} 
+                                                            onclick={processApplication} 
+                                                            class="slds-button slds-button_neutral" 
+                                                            style="font-family: 'Source Sans Pro', sans-serif; float: right; background: #ff793c; color:#fff; font-size: 11pt">
+                                                        <div class="slds-p-left_xx-small">Process</div>
+                                                    </button>                                
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </table>
+                                </section>
+                            </template>
+                    </div>
+                </lightning-card>
+            </div>
+    </lightning-card>
+    
+       <!--END : Page 1--> 
+    <!--START : Page 2-->
+    <template if:true={showDisburseform}>
+    <lightning-card >
+        <div class="slds-box slds-box_x-small">
+            <div class="slds-text-heading_medium slds-align_absolute-center" style="color:rgb(15, 15, 15)">
+                <h3>Multi Donor Fund Allocation</h3>
+            </div>
+        </div>
+        <div class="slds-form_horizontal slds-grid slds-wrap slds-align_absolute-center">
+            <table aria-multiselectable="false" aria-describedby="conatact-list" class="slds-table  slds-table_bordered slds-table_col-bordered slds-table_cell-buffer" >
+                <!--Header of the table-->
+               
+                <thead >
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-size_1-of-6 " scope="col">
+                            <div class="slds-truncate " title="Student Application Type">Student Application Type</div>
+                        </th>
+                        <th class="slds-size_1-of-6 " scope="col">
+                            <div class="slds-truncate " title="Student Requested Amount">Student Requested Amount</div>
+                        </th>
+                        <th class="slds-size_1-of-6 " scope="col">
+                            <div class="slds-truncate " title="Amount Funded For Current Application">Amount Funded For Current Application</div>
+                        </th>
+                        <th class="slds-size_1-of-6 " scope="col">
+                            <div class="slds-truncate " title="Selected Amount for Disburse">Selected Amount for Disburse</div>
+                        </th>
+                        <th class="slds-size_1-of-6 " scope="col">
+                            <div class="slds-truncate " title="Remaining Fund For Current Application">Remaining Fund For Current Application</div>
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="slds-hint-parent">
+                        <td class="slds-size_1-of-6">
+                            <div>{appType}</div>
+                        </td>
+                        <td class="slds-size_1-of-6">
+                            <div>{studentRequestedAmount}</div>
+                        </td>
+                        <td class="slds-size_1-of-6">
+                            <div>{amountforcurrentApp}</div>
+                        </td>
+                        <td class="slds-size_1-of-6">
+                            <div>{disburseAmount}</div>
+                        </td>
+                        <td class="slds-size_1-of-6">
+                            <div>{remainingFund}</div>
+                        </td>
+                       
+                    </tr>
+                </tbody>
+            </table>
+            <div class="slds-box slds-box_x-small" style="height: 10px;color:#fff;">
+                <div class="slds-text-heading_medium slds-align_absolute-center" style="color:#fff">
+                   
+                </div>
+            </div>
+        <table aria-multiselectable="false" aria-describedby="conatact-list" class="slds-table  slds-table_bordered slds-table_col-bordered slds-table_cell-buffer" >
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="slds-size_1-of-6 " scope="col">
+                        <div class="slds-truncate " title="Donor Name">Donor Name</div>
+                    </th>
+                    <th class="slds-size_1-of-6 " scope="col">
+                        <div class="slds-truncate " title="Donor Id">Donor Id</div>
+                    </th>
+                    <th class="slds-size_1-of-6 " scope="col">
+                        <div class="slds-truncate " title="Donor Current Balanace">Donor Current Balanace</div>
+                    </th>
+                    <th class="slds-size_1-of-6" scope="col">
+                        <div class="slds-truncate " title="Suggested Amount(By Donor Team)">Suggested Amount(By Donor Team)</div>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+            <template for:each={showDonorResult} for:item="item" for:index="indexVar">
+                <table key={item.Id} class="slds-table  slds-table_bordered slds-table_cell-buffer">
+                    <tbody>
+                        <tr class="slds-hint-parent">
+                            <td class="slds-size_1-of-6" data-id={indexVar} data-recid={item.Id}>
+                              <div><a>{item.Donor__r.Name}</a></div>
+                            </td>
+                            <td class="slds-size_1-of-6">
+                                <div>{item.Donor__r.FFE_ID__c}</div>
+                            </td>
+                            <td class="slds-size_1-of-6">
+                                <div>{item.Donor__r.Current_Balance__c}</div>
+                            </td>
+                            <td class="slds-size_1-of-6">
+                                <div>{item.Funding_amount__c}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
+       
+        <div class="slds-m-top_small slds-m-bottom_medium slds-align_absolute-center">
+            <button onclick={cancelButton} class="slds-button slds-button_neutral" style="font-family: 'Source Sans Pro', sans-serif; float: right; background: #ff793c; color:#fff; font-size: 11pt">
+                <div class="slds-p-left_xx-small">Cancel</div>
+            </button>
+            <button onclick={handleDisburseClick} class="slds-button slds-button_neutral" style="font-family: 'Source Sans Pro', sans-serif; float: right; background: #ff793c; color:#fff; font-size: 11pt">
+                <div class="slds-p-left_xx-small">Disburse</div>
+            </button>           
+        </div>
+    </div>
+</lightning-card>   
+   </template>
+   
+</template>

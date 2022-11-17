@@ -1,0 +1,70 @@
+<template>
+    <div style="position:relative;">
+        <div if:true={showSpinner} >
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+    <lightning-layout vertical-align="stretch" multiple-rows="true" class="x-large">
+        <lightning-layout-item size="6" flexibility="auto" padding="around-small" class="custom-box">
+            <div class="slds-align_absolute-center">
+                Source
+            </div>
+            <div class="slds-align_absolute-center">
+                <lightning-record-edit-form
+                    object-api-name={objectApiName}
+                    record-id={recordId}>
+                        <lightning-output-field
+                            field-name={donorField}>
+                        </lightning-output-field>
+                        <lightning-output-field
+                            field-name={gauField}>
+                        </lightning-output-field>
+                        <lightning-output-field
+                            field-name={currentBalance}>
+                        </lightning-output-field>
+                        <lightning-input-field
+                            field-name={shortComments}
+                            onchange={handleCommentChange}
+                            value={sourceShortComments}
+                            required>
+                        </lightning-input-field>
+                        <!-- <lightning-input value={sourceShortComments} label="Short Comments" onchange={handleCommentChange}>
+                        </lightning-input> -->
+                </lightning-record-edit-form>
+            </div>    
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="auto" padding="around-small" class="custom-box">
+            <div class="slds-align_absolute-center">
+                Destination
+            </div>
+            <div class="slds-align_absolute-center">
+                <lightning-record-edit-form
+                    object-api-name={objectApiName}>
+                        <lightning-input-field
+                            field-name={donorField}
+                            onchange={handleDonorChange}>
+                        </lightning-input-field>
+                        <lightning-input-field
+                            field-name={gauField}
+                            onchange={handleGauChange}
+                            required>
+                        </lightning-input-field>
+                        <label class="slds-form-element__label" for="fieldid"><abbr class="slds-required" title="required">* </abbr>Amount to Transfer</label>
+                        <lightning-input-field
+                            id="fieldid"
+                            variant = "label-hidden"
+                            field-name={currentBalance}
+                            onchange={handleTransferAmountChange}
+                            required>
+                        </lightning-input-field>
+                </lightning-record-edit-form>
+            </div>
+        </lightning-layout-item>
+    </lightning-layout>
+    <div class="slds-align_absolute-center slds-p-around_x-small">
+        <lightning-button label="Transfer" onclick={handleTransferClick}></lightning-button>
+    </div>
+    </div>
+    
+</template>

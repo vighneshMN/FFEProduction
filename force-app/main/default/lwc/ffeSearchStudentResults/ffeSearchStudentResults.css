@@ -1,0 +1,11 @@
+.historyTable{
+    /* float:left; */
+    width:100%;
+    table-layout:fixed;
+    border-collapse: collapse;
+    background: #fff;
+    margin-bottom:25px;
+    padding-bottom: 10px;
+    margin-left: 5% !important;
+    width: 90% !important;
+}

@@ -1,0 +1,26 @@
+<template>
+    <div class="historyTable">
+        <template if:true={showNoResult}>
+            <!-- <h4 align="center" style="margin-top: 20px;float: left;width: 100%;">
+                No Results found 
+            </h4> -->
+            <h4 align="center" style="margin-top: 30px;">
+                No Results found 
+            </h4>
+            <!-- No Results found -->
+        </template>
+        <template if:true={showDataTable}>
+            Results
+            <lightning-datatable 
+                key-field="Id" 
+                data={displayStudentLst} 
+                columns={columnList} 
+                hide-checkbox-column="true"
+                onrowaction={handleRowAction} >
+            </lightning-datatable>
+            
+        </template>
+        
+    </div>
+    
+</template>

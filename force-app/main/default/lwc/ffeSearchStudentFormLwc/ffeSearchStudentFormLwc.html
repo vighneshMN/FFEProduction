@@ -1,0 +1,139 @@
+<template>
+    <div class="searchDiv">
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Permanent State
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc options={listOfStates} label='My Label' onvaluechange={handlePermanentValueChange}></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Current State
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc options={listOfStates} label='My Label' onvaluechange={handleCurrentValueChange}></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+        </div>
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Institution City
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Name of the Institution
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+        </div>
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Course
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc options={listOfStudentCourseYearPicklist} label='My Label' onvaluechange={handleCourseValueChange} ></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Course Year
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+        </div>
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Gender
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc options={genderValueList} label='My Label' onvaluechange={handleGenderValueChange} ></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Branch/Stream
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc options={branchValueList} label='My Label' onvaluechange={handleBranchValueChange}></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+        </div>
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    College Rating
+                </h3>
+                <div class="mdContPopup" >
+                    <c-ffe-multi-select-picklist-lwc options={clzRatingValueList} label='My Label' onvaluechange={handleClzRatingValueChange} ></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Student Priority
+                </h3>
+                <div class="mdContPopup" >
+                    <lightning-combobox options={priorityOptions} value={studentPriorityFilter} onchange={handlePriorityChange} variant='label-hidden' ></lightning-combobox>
+                </div>
+            </div>
+        </div>
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Min Family Income 
+                </h3>
+                <div class="mdContPopup" >
+                    <lightning-slider variant="label-hidden" min=0 step=5000 max=125000 label="Volume" size="small" value={minFamilyIncome} onchange={handleMinChange}></lightning-slider>
+                </div>
+            </div>
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Max Family Income
+                </h3>
+                <div class="mdContPopup" >
+                    <lightning-slider variant="label-hidden" min=130000 step=5000 max=250000 label="Volume" size="small" value={maxFamilyIncome} onchange={handleMaxChange}></lightning-slider>
+                </div>
+            </div>
+        </div>
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    Scholarship Amount
+                </h3>
+                <div class="mdContPopup" >
+                    <lightning-combobox options={scholarshipAmountOptions} value={scholarshipAmountFilter} onchange={handleScholarshipAmountChange} variant='label-hidden' ></lightning-combobox>
+                </div>
+            </div>
+        </div>
+        <div class="buttonDiv" align="center">
+            <input type="button" value="Search" class="buttons" onclick={handleSearchClick} />
+            <input type="button" value="Clear" class="buttons"  onclick={clear}/>
+        </div>
+    </div>
+
+    <!-- <div class="slds-form_horizontal slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-2 searchCol">
+            <label for="permanentstate">Permanent State c</label>
+            <c-ffe-multi-select-picklist-lwc
+                id='permanentstate' 
+                options={listOfStates} 
+                label='My Label' 
+                onvaluechange={handlePermanentValueChange}>
+            </c-ffe-multi-select-picklist-lwc>
+        </div>
+
+    </div> -->
+</template>

@@ -1,0 +1,52 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 11-01-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <!-- <c-header></c-header>
+    <div class="headermenuSelection">
+        <h3 style="margin:10px;color:#fff;" align="center">
+            Multi Donor Allocation
+        </h3>
+    </div>
+    
+        <c-ffe-search-student-form-lwc onsearchstudent={searchStudent} onresetstudentresult={resetPage}></c-ffe-search-student-form-lwc>
+        <div class="mysearchRow"  style="text-align:center;margin-top: -20px;">
+            <hr class="or-hr"/>
+            <div id="or" style="color: #ff793c;font-weight: bold;">OR</div>
+        </div>
+        <c-ffe-search-by-ffeuid onsearchstudent={searchStudent} onresetstudentresult={resetPage}></c-ffe-search-by-ffeuid>
+        <template if:true={loader}>
+            <c-ffe-loading-lwc></c-ffe-loading-lwc>
+        </template>
+        <c-ffe-search-student-results onhideloading={hideLoader} onshowmodal={showStudentPopUpModalMethod}></c-ffe-search-student-results>
+        <template if:true={showStudentPopUpModal}>
+            <c-ffe-student-allocation-pop-up-lwc selectedstudent={selectedStudent} onresetpage={resetPage} onshowloading={showLoader} onhideloading={hideLoader}></c-ffe-student-allocation-pop-up-lwc>
+        </template> -->
+    
+    <lightning-card>
+        <div class="slds-box slds-box_x-small">
+            <div class="slds-text-heading_medium slds-align_absolute-center" style="color:#fff">
+                <h3>Multi Donor Allocation</h3>
+            </div>
+        </div>
+        <c-ffe-search-student-form-lwc onsearchstudent={searchStudent} onresetstudentresult={resetPage}></c-ffe-search-student-form-lwc>
+        <div class="mysearchRow"  style="text-align:center;margin-top: -20px;">
+            <hr class="or-hr"/>
+            <div id="or" style="color: #ff793c;font-weight: bold;">OR</div>
+        </div>
+        <c-ffe-search-by-ffeuid onsearchstudent={searchStudent} onresetstudentresult={resetPage}></c-ffe-search-by-ffeuid>
+        <template if:true={loader}>
+            <c-ffe-loading-lwc></c-ffe-loading-lwc>
+        </template>
+        <c-ffe-search-student-results onhideloading={hideLoader} onshowmodal={showStudentPopUpModalMethod}></c-ffe-search-student-results>
+        <template if:true={showStudentPopUpModal}>
+            <c-ffe-student-allocation-pop-up-lwc selectedstudent={selectedStudent} onresetpage={resetPage} onshowloading={showLoader} onhideloading={hideLoader}></c-ffe-student-allocation-pop-up-lwc>
+        </template>
+    </lightning-card>    
+        
+        
+</template>

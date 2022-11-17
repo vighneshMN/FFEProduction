@@ -1,0 +1,31 @@
+<template>
+    <div>
+        <lightning-card>
+            <!-- <div class="slds-p-around_x-small">
+                <h3 class="slds-section__title slds-theme_shade">Beneficiary Details</h3>
+            </div> -->
+            <div class="slds-align_absolute-center">
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item padding="around-small" size="12">
+                            <lightning-combobox options={fyOptions} value={fySelected} onchange={handleFinYearChange} label='Financial Year' ></lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size="4">
+
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size="4">
+                            <lightning-button label="Export" onclick={handleExportClick}></lightning-button>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" size="4">
+
+                    </lightning-layout-item>    
+                </lightning-layout>
+            </div>
+            <div if:true={showSpinner} >
+                <lightning-spinner
+                    alternative-text="Loading..." variant="brand">
+                </lightning-spinner>
+            </div>
+        </lightning-card>
+    </div>
+    
+</template>

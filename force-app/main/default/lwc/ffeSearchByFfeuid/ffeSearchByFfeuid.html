@@ -1,0 +1,15 @@
+<template>
+    <div class="searchDiv" style="margin-bottom:20px">
+        <h3 class="searchTags" align="right" style="margin-top: 23px;">
+            Search by FFEUID
+        </h3>
+        <!-- <lightning-input style="margin: 2px 27px;width: 19%;" value={ffeUid} onchange={handleUidChange}></lightning-input> -->
+        <lightning-input class="mystyle" value={ffeUid} onchange={handleUidChange}></lightning-input>
+    
+    <div class="buttonDiv" align="center">
+        <input type="button" value="Search" class="buttons"  onclick={handleSearchClick}/>
+        <input type="button" value="Clear" class="buttons"  onclick={clear}/>
+    </div>
+
+    </div>
+</template>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>MBBS Year 2 sem 5</label>
+    <protected>false</protected>
+    <values>
+        <field>Course__c</field>
+        <value xsi:type="xsd:string">MBBS</value>
+    </values>
+    <values>
+        <field>Semester__c</field>
+        <value xsi:type="xsd:string">MBBS_Year_1__c</value>
+    </values>
+    <values>
+        <field>Year__c</field>
+        <value xsi:type="xsd:string">Year II, Sem 5</value>
+    </values>
+</CustomMetadata>

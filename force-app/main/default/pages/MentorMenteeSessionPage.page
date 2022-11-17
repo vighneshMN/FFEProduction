@@ -1,0 +1,1659 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="MentorDetailPageController">
+    <head>
+        <c:MentorshipScripts /> 
+        <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-animate.min.js')}"/>  
+        <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-aria.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/ui-bootstrap-tpls.min.js')}"/>         
+        <apex:stylesheet value="{!URLFOR($Resource.mentorship_resource, '/styles/w3.min.css')}"/>
+        <style>
+            
+            body{
+            //overflow-x:hidden;
+            }
+            .column1 {
+            float: left;
+            width: 20%;
+            padding: 10px;
+            height: 830px;
+            overflow: overlay;
+            }
+            
+            .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            }
+            
+            .rate {
+            float: left;
+            height: 46px;
+            padding: 0 10px;
+            }
+            
+            .rate:not(:checked)>input {
+            position: absolute;
+            top: -9999px;
+            }
+            
+            .rate:not(:checked)>label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+            }
+            
+            .rate:not(:checked)>label:before {
+            content: '★ ';
+            }
+            
+            .rate>input:checked~label {
+            color: #ffc700;
+            }
+            
+            .rate:not(:checked)>label:hover,
+            .rate:not(:checked)>label:hover~label {
+            color: #deb217;
+            }
+            
+            .rate>input:checked+label:hover,
+            .rate>input:checked+label:hover~label,
+            .rate>input:checked~label:hover,
+            .rate>input:checked~label:hover~label,
+            .rate>label:hover~input:checked~label {
+            color: #c59b08;
+            }
+            
+            .my-custom-stars .button .material-icons {
+            font-size: 50px;
+            }
+            
+            .my-custom-stars .star-button.star-on .material-icons {
+            color: red;
+            }
+            
+            .my-custom-stars .star-button.star-off .material-icons {
+            color: yellow;
+            }
+            
+            .jk-rating-stars-container .button {
+            cursor: pointer
+            }
+            
+            .jk-rating-stars-container .button .material-icons {
+            font-size: 30px
+            }
+            
+            .jk-rating-stars-container .star-button {
+            text-shadow: .06em .04em #000
+            }
+            
+            .jk-rating-stars-container .star-button.star-on .material-icons {
+            color: #ee9a00
+            }
+            
+            .jk-rating-stars-container .star-button.star-off .material-icons {
+            color: #ddd
+            }
+            
+            .rating {
+            color: #a9a9a9;
+            margin: 0;
+            padding: 0;
+            }
+            
+            .Rating {
+            color: #a9a9a9;
+            margin: 0;
+            padding: 2px;
+            float: right;
+            }
+            
+            ul.rating {
+            display: inline-block;
+            }
+            
+            .rating li {
+            list-style-type: none;
+            display: inline-block;
+            padding: 1px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            }
+            
+            .rating .filled {
+            color: blue;
+            }
+            
+            .container {
+            padding: 16px;
+            width: 80%;
+            }
+            
+            
+            /* Full-width input fields */
+            
+            input[type=date],
+            input[type=time],
+            input[type=text],
+            input[type=textarea] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+            }
+            
+            input[type=text]:focus,
+            input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+            }
+            
+            
+            /* Overwrite default styles of hr */
+            
+            hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+            }
+            
+            
+            /* Set a style for the submit button */
+            
+            .registerbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+            }
+            
+            .registerbtn:hover {
+            opacity: 1;
+            }
+            
+            blockquote {
+            padding: 10px 20px;
+            margin: 0 0 20px;
+            font-size: 17.5px;
+            padding: 10px 20px;
+            margin: 0 0 20px;
+            }
+            
+            .w3-container,
+            .w3-panel {
+            padding: 1.01em 90px;
+            }
+            
+            .download {
+            background-color: #F39C12;
+            border: none;
+            color: white;
+            padding: 5px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            }
+            
+            .download:hover {
+            opacity: 0.7;
+            }
+            
+            .loadingBackground {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background: #F6F6F6;
+            z-index: 11111;
+            opacity: 0.7;
+            top: 0px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            }
+            
+            .loading {
+            top: 50%;
+            left: 50%;
+            margin: -50px 0px 0px -50px;
+            z-index: 111111;
+            position: fixed;
+            }
+            /* table css new */
+            .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+            
+            .styled-table thead tr {
+            background-color: #2e3192;
+            color: #ffffff;
+            text-align: left;
+            }
+            
+            .styled-table th,
+            .styled-table td {
+            padding: 12px 15px;
+            }
+            
+            .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+            }
+            
+            .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+            }
+            
+            .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #2e3192;
+            }
+            
+            .styled-table tbody tr.active-row {
+            font-weight: bold;
+            color: #2e3192;
+            }
+            /* fallback */
+            @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(https://fonts.gstatic.com/s/materialicons/v85/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+            }
+            
+            .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+            } 
+             .buttons {
+            border-radius:3px;
+            
+            color:#fff;
+            border: 1px solid #b1976b;
+            /*text-transform:uppercase;*/
+            background: #032559;
+            }
+            .buttons:hover,.cancelButton:hover{
+            box-shadow: rgb(127 127 182 / 25%) 0px 0px 16px;
+            }
+            .buttons:hover {
+            opacity: 0.7;
+            color:#ffffff;
+            background-color:black !important;
+            }
+            .fixed-top{
+            	position:fixed !important;
+            	background:#fff;
+                box-shadow: rgb(17 17 26 / 10%) 0px 0px 16px;
+            }
+            .top-buttons{
+            	display:flex;
+            	}
+            .margin-top{
+            	margin-top:7%;
+            	}
+             .tab-full{
+            	display:block;
+            }
+            .mobile{
+            	margin-top:5%;
+            	display:none;
+            }
+            .img-fluid{
+            	height:75px;	
+            	width:100%;
+            }
+            .bg-light{
+            	background:#fff !important;
+            }
+            @media screen and (min-width: 750px) and (max-width: 1000px){
+            .w3-modal{
+            	padding-top:50px;
+            }
+            }
+            @media screen and (min-width: 1000px) and (max-width: 1330px){
+                .margin-top{
+                margin-top:10%;
+                }
+            }
+            @media screen and (min-width: 715px) and (max-width: 1000px){
+            .margin-top{
+            margin-top:13%;
+            }
+            }
+            @media screen and (max-width:630px){
+            .navbar>.container, .navbar>.container-fluid{
+                flex-wrap: unset;
+            	}
+            }
+             @media screen and (max-width:600px){
+            .navbar>.container, .navbar>.container-fluid{
+                    flex-wrap: wrap;
+            		display:block;
+            	}
+            }
+            .new-sess{
+            	display:none;
+            }
+            .mt-5{
+            margin-top: 7rem!important;
+			}
+             @media screen and (min-width:600px) and (max-width:714px){
+            	.margin-top{
+            		margin-top:17%;
+            	}
+            	.new-session,.back{
+            		display:none;
+            	}
+            	.new-sess{
+            		display:block;
+            	}
+            }
+              @media screen and (max-width: 600px){
+                    .new-sess{
+                    display:block;
+                    }
+            	.contain{
+            		padding:unset !important;
+            	}
+            	.margin-top{
+            	margin-top:22%;
+            	}
+            	.top-buttons{
+            	display:block;
+            	}
+            	.new-session{
+            		float:left;
+            	display:none;
+            	}
+            	.back{
+            		float:right;
+            		display:none;
+            	}
+
+            	.disp{
+            		display:none;
+            	}
+            	.btnSize{
+            	}
+            }
+            @media screen and (max-width: 700px){
+            	.btnSize{
+            	}
+            }
+           .formpadding{
+            	padding:40px;
+            }
+            @media screen and (max-width: 525px){
+                .margin-top{
+            		margin-top:30%;
+                }
+            }
+            @media screen and (max-width:400px){
+            	.formpadding{
+            		padding:20px;
+            	}
+            	.margin-top{
+            		margin-top:40%;
+                }
+            }
+            .w3-modal {
+				z-index:1040;
+            }
+             @media screen and (max-width: 1300px){
+            	 .tab-full{
+            	display:none;
+            	}
+            	.smallpadding{
+            		padding:2%;
+            	}
+            
+            .w3-modal-content{
+            	margin-top:10%;
+            	}
+            .mobile{
+            	display:block;
+            }
+            }
+            
+            @media screen and (max-width:362px){
+            	.smallmargin{
+            		margin-right:3%;
+            	}
+                .smallpadding{
+                padding:unset;
+                }
+            	.downloadsmall{
+            		font-size:11px;
+            	}
+                .paddingbtn {
+                display: flex;
+                justify-content: center;
+                }
+            }
+            @media screen and (max-width:331px){
+            	.downloadsmall{
+            		font-size:10px;
+            		padding: 5px 13px;	
+            	}
+            }
+             .md-select-menu-container{
+            	z-index:1040;
+            }
+            html,body{
+            /*background-color: #e5e7eb;*/
+            overflow-x:hidden;
+			}
+            input::placeholder{
+            	color:#032559;
+            }
+            .swal2-popup .swal2-styled.swal2-confirm{
+            	background:#032559;
+            	width:50%;
+            	
+            }
+            .swal2-popup .swal2-styled.swal2-cancel{
+            	background:#fff;
+            	color:#032559;
+            	border:1px solid #032559;
+            	width:50%;
+            }
+            .swal2-actions{
+            	width:100%;
+            }
+            .swal2-popup .swal2-actions{
+            	    flex-wrap: nowrap;
+            }
+            
+            
+            .container-full{
+            /* margin-top: 7rem;*/
+        }
+            @media screen and (max-width:850px){
+            .col-sm-6-med{
+            flex: 0 0 50%;
+            max-width: 50%;
+            margin: unset !important;
+            padding: unset;
+            
+            }
+            .flex-wrapping{
+            flex-wrap:wrap;
+            margin-right:unset;
+            justify-content: space-between;
+            
+            
+            padding:unset;
+            }
+            .padd-md{
+            padding:unset !important;
+            }
+            .col-sm-12.d-flex.flex-wrapping>* {
+            width: 78% !important;
+            max-width: 44%;
+            margin: 0.25rem !important;
+            }
+            }
+        .container-full>div>*{
+                border: 1px solid rgba(0,0,0,.125);
+                border-radius: 0.25rem;
+        	}
+        @media screen and (max-width:992px){
+        .container-full>*{
+        		margin:unset;
+        	}
+        	.container-full>div>*{
+                border: 1px solid rgba(0,0,0,.125);
+                border-radius: 0.25rem;
+        	}
+        	.container-full{
+        		max-width:100% ;
+                margin-left: 5%;
+				margin-right: 2% !important;
+        	}
+        	.col-sm-6-medium{
+                flex: 0 0 50%;
+                max-width: 50%;
+        	}	
+        	.m-3-top{
+        		margin-top:3rem;
+        	}
+        }
+        @media screen and (max-width:650px){
+                .col-sm-6-medium,.col-sm-6-med,.col-sm-12.d-flex.flex-wrapping>*{
+                flex: 0 0 100%;
+                max-width: 100%;
+                }	
+        	.container-full{
+        		margin-right:unset;
+        	}
+        }
+            @media screen and (max-width:576px){
+            	.col-sm-mob{
+					padding-left:unset;
+            	}
+            }
+        </style>
+        <script>
+        !(function () {
+            "use strict";
+            angular.module("jkAngularRatingStars", ["jkAngularRatingStars.templates"]);
+        })(),
+            (function () {
+                angular.module("jkAngularRatingStars.templates", []).run([
+                    "$templateCache",
+                    function ($templateCache) {
+                        $templateCache.put(
+                            "rating-stars-directive.html",
+                            '<div\n  class="jk-rating-stars-container"\n  layout="row" >\n\n  <a\n    class="button"\n    ng-click="ctrl.setRating(0)"\n    ng-if="!ctrl.readOnly" >\n      </a>\n\n  <a\n    class="button star-button"\n    ng-class="item.class"\n    ng-click="ctrl.setRating($index + 1)"\n    ng-repeat="item in ctrl.starsArray" >\n    <i class="material-icons">star</i>\n  </a>\n\n</div>\n'
+                        );
+                    },
+                ]);
+                    })();
+                    (function () {
+                    "use strict";
+                    
+                    function RatingStarsController($scope, $attrs, $timeout) {
+                    var that = this;
+                    void 0 === that.readOnly && (that.readOnly = !1),
+                    (that.initStarsArray = function () {
+                    (that.starsArray = that.getStarsArray()), that.validateStars();
+                    }),
+                    (that.getStarsArray = function () {
+                    for (var starsArray = [], index = 0; index < that.maxRating; index++) {
+                    var starItem = {
+                        index: index,
+                        class: "star-off"
+                    };
+                    starsArray.push(starItem);
+                }
+                return starsArray;
+            }),
+            (that.setRating = function (rating) {
+                that.readOnly ||
+                    ((that.rating = rating),
+                     that.validateStars(that.rating),
+                     $timeout(function () {
+                         that.onRating({
+                             rating: that.rating
+                         }), $scope.$apply();
+                     }));
+            }),
+            (that.setMouseOverRating = function (rating) {
+                that.readOnly || that.validateStars(rating);
+            }),
+            (that.validateStars = function (rating) {
+                if (that.starsArray && 0 !== that.starsArray.length)
+                    for (var index = 0; index < that.starsArray.length; index++) {
+                        var starItem = that.starsArray[index];
+                        rating - 1 >= index ? (starItem["class"] = "star-on") : (starItem["class"] = "star-off");
+                    }
+            });
+        }
+        angular.module("jkAngularRatingStars").controller("RatingStarsController", ["$scope", "$attrs", "$timeout", RatingStarsController]);
+        })(),
+            (function () {
+                "use strict";
+                
+                function RatingStarsDirective() {
+                    function link(scope, element, attrs, ctrl) {
+                        (!attrs.maxRating || parseInt(attrs.maxRating) <= 0) && (attrs.maxRating = "5"),
+                            scope.$watch("ctrl.maxRating", function (oldVal, newVal) {
+                                ctrl.initStarsArray();
+                            }),
+                            scope.$watch("ctrl.rating", function (oldVal, newVal) {
+                                ctrl.validateStars(ctrl.rating);
+                            });
+                    }
+                    return {
+                        restrict: "E",
+                        replace: !0,
+                        templateUrl: "rating-stars-directive.html",
+                        scope: {},
+                        controller: "RatingStarsController",
+                        controllerAs: "ctrl",
+                        bindToController: {
+                            maxRating: "@?",
+                            rating: "=?",
+                            readOnly: "=?",
+                            onRating: "&"
+                        },
+                        link: link,
+                    };
+                }
+                angular.module("jkAngularRatingStars").directive("jkRatingStars", [RatingStarsDirective]);
+            })();
+        </script>
+    </head>
+    <body ng-app="mentorSession" ng-controller="mentorSessionController">
+        <div class="loadingSection" id="spinner" ng-if="showSpinner">
+            <div class="loadingBackground"></div>
+            <div>
+                <apex:image url="{!$Resource.loading}" styleClass="loading" />
+            </div>
+        </div>
+        <nav class="navbar fixed-top navbar-light  navbar-expand-lg" style="position: relative;">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#" style="padding:unset;">
+                    <img src="{!$Resource.FFEbanner}" class="img-fluid" />
+                </a>
+                <div class="top-buttons" style="text-align-last: center;margin-top:1%;">
+                <button type="button" ng-click="showNewSessionPopup()" class="download new-session buttons" style="margin-right:2%;background: #551A8B;border:1px solid #551A8B;">New Session</button>
+                <button type="button" ng-click="backToMentorPage()" class="download back" style="Background-color:#032559;text-transform:uppercase;background: #551A8B;border:1px solid #551A8B;">Back</button>   
+            </div>
+            </div>
+            
+        </nav>
+        <div class="container-fluid" style="padding:unset;">
+            <div class="container-fluid d-flex justify-content-center mt-5" style="background-color: orange;height:15rem;color: #fff;">
+                <div class=" m-auto justify-content-center">
+                    <h4  style="text-align:center;background-color: orange;font-size:55px;">
+                        <b class="mt-auto">Sessions</b>
+                    </h4>  
+                    <p class="text-center">Mentor > Sessions</p>
+                    <div class="row">
+                        <button class="btn btn-primary col-sm-12 new-sess" ng-click="showNewSessionPopup()" style="color:orange;background:#fff;border:1px solid orange;">New Session</button>
+                        <button class="btn btn-primary col-sm-12 new-sess" ng-click="backToMentorPage()" style="background:transparent;border:1px solid #fff;">Back </button>
+                    </div>
+                </div>
+                
+            </div>
+            <!-- create new session -->
+            <div id="createSession" class="w3-modal">
+                <div class="w3-modal-content">
+                    <header class="w3-container " style="padding:10px;">
+                        <span onclick="document.getElementById('createSession').style.display='none'" 
+                              class="w3-button w3-display-topright">&times;</span>
+                        <h3 style="font-weight: 600;color:orange;" class="pl-4 text-center">Create New Session</h3>
+                    </header>
+                    <div class="w3-container formpadding">
+                        <div >
+                            <div>
+                                <label for="date" style="color:#032559">Select Date:</label>
+                                <input type="date" name="date" ng-model="sessionDate"/>    
+                            </div>
+                            <div>
+                                <label for="appt" style="color:#032559">Select Start Time:</label>
+                                	<input type="time" id="appt" name="appt" ng-model="startTime" />    
+                                <div>
+                                    <label for="appt" style="color:#032559">Select End Time:</label>
+                                <input type="time" id="appt" name="appt" ng-model="endTime" />
+                                </div>
+                            </div>
+                            <div class="form-group focused">
+                                <label class="form-control-label" for="input-country" style="color:#032559">Session Agenda:</label>
+                                
+                                <md-input-container style="width:100%;">
+                      
+                                    <md-select class="form-control" style="width:100%;overflow:hidden;" ng-model="sessionAgenda" >
+                                        <md-option ng-repeat="x in moduleList" style="color:#032559">{{x}}</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                            
+                            <label for="agenda" style="color:#032559" >Meeting Link: </label>
+                            <input type="text" id="agenda" name="Meeting Link" ng-model="MeetingLink"/>
+                            <label for="description">Description: </label>
+                            <textarea id="description" name="description" rows="2" cols="50" ng-model="sessionDescription" style="width:100%" maxlength="200">
+                            </textarea>
+                        </div>
+                        <div class="d-flex justify-content-around mt-3">
+                        	<button type="button" ng-click="saveSession(sessionDate, startTime, endTime,sessionAgenda,sessionDescription,MeetingLink)" class="registerbtn buttons col-sm-6" style="">Create Session</button>    
+                            <button class="col-sm-6 buttons registerbtn" style="background:#fff;color:#032559;border:1px solid #032559;" onclick="document.getElementById('createSession').style.display='none'" >
+                                Cancel
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- modal popup to Reschedule-->
+            <div id="id01" class="w3-modal">
+                <div class="w3-modal-content">
+                    <header class="w3-container" style="color: #000;font-weight:700;padding-left:20px;padding-right:20px;">
+                        <span onclick="document.getElementById('id01').style.display='none'" 
+                              class="w3-button w3-display-topright" style="top: 25px;" >&times;</span>
+                        <h3 style="font-weight: 600;color:orange;" class="text-center">Reschedule Session</h3>
+                    </header>
+                    <div class="w3-container formpadding">
+                        <div >
+                            <label for="date">Select Date:</label>
+                            <input type="date" ng-model="rescheduleSessionDate"/>      
+                            <label for="appt">Select Start Time:</label>
+                            <input type="time" id="appt" name="appt" ng-model="rescheduleSessionTime" />    
+                            <div>
+                                <label for="appt">Select End Time:</label>
+                                <input type="time" id="appt" name="appt" ng-model="rescheduleSessionEndtime" />
+                            </div>
+                        </div>
+                        <button type="button" ng-click="updateRescheduleSession(rescheduleSessionTime,rescheduleSessionEndtime)" class="registerbtn buttons" style="">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <!-- modal popup for feedabck-->
+            <div id="feedbackPopup" class="w3-modal">
+                <div class="w3-modal-content">
+                    <header class="w3-container " style="background-color:#fff;color:white;font-weight:700;padding-right:20px;padding-left:20px;padding-top:unset;">
+                        <span  ng-click="closeFeedback()"
+                              class="w3-button w3-display-topright" style="top: 25px;color:#032559;" >&times;</span>
+                        
+                    </header>
+                    <div class="w3-container contain" style="padding:unset;">
+                        <h3 class="m-3" style="font-weight: 600;">Feedback</h3>
+                        <div class="row m-3" style="margin:unset;">
+                           
+                            <div class="" style="text-align-last: center;margin-top:1%;width:100%;" >
+                                <div class="smallpadding" ng-class="{paddingbtn:showMenteeFeedback==true}" >
+                                    <button type="button"  class="download buttons downloadsmall smallmargin" style="background: #551A8B;border:1px solid #551A8B;"  ng-click="showMentorFeedback()">Your Feedback</button>
+                                    <button type="button"  class="download buttons downloadsmall"  ng-show="showMenteeFeedback" ng-click="showFeedbackByMentee()">Mentee Feedback</button>  
+                                    <p/>
+                                    
+                                </div>
+                                <p ng-hide="showMenteeFeedback">
+                                    No feedback given by mentee
+                                </p>
+                                <div ng-show="MentorFeedback">
+                                    <!--<hr/>-->
+                                    <div class="card" ng-show="" style="width:100%;margin-left:0%;">
+                                        <div class="card-body">
+                                            <div ng-hide="enableInput"  >
+                                                <!--ng-if="disableInput"  -->
+                                                <blockquote class="blockquote mb-0">
+                                                    <div class="form-group">
+                                                        <div class="" >
+                                                            <jk-rating-stars  max-rating="5"  rating="mentorRating"  on-rating="onMentorRating(rating)" read-Only="disableInput">
+                                                            </jk-rating-stars>
+                                                        </div>
+                                                        <div style="margin-top:2%;font-size:16px;">
+                                                            {{mentorDescription}}
+                                                        </div>
+                                                    </div>
+                                                </blockquote>
+                                            </div>
+                                            <div ng-show="enableInput">
+                                                <div class="Rating" >
+                                                    <jk-rating-stars  max-rating="5"  rating="mentorRating" on-rating="onMentorRating(rating)" read-Only="">
+                                                    </jk-rating-stars>
+                                                </div>
+                                                <blockquote class="blockquote mb-0">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <textarea class="form-control" rows="3" id="comment" label="comment" placeholder="feedback Comment" 
+                                                                      ng-disabled="" ng-model="mentorDescription" maxlength="200"></textarea>   
+                                                        </div>
+                                                    </div>
+                                                    <div >
+                                                        <button type="button" class="download buttons" ng-click="submitFeedBack()" style="">Submit</button>
+                                                    </div>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-show="MenteeFeedback">
+                                    <!--<hr/>-->
+                                    <div class="card" ng-show="" style="width:100%;margin-left:0%;">
+                                        <div class="card-body">
+                                            <div class="" ng-disabled="true" disabled="true">
+                                                <jk-rating-stars 
+                                                                 max-rating="5" 
+                                                                 rating="menteeRating" 
+                                                                 on-rating="onMenteeRating(rating)" read-Only="true">
+                                                </jk-rating-stars>
+                                            </div>
+                                            <blockquote class="blockquote mb-0">
+                                                <div class="form-group" style="margin-top:2%;">
+                                                    {{menteeDescription}}
+                                                </div>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-show="">
+                                </div>
+                            </div>
+                            <!--<div class="col-md-2" >
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2" ></div>
+                <div class="col-md-8" >
+                    
+                </div>
+
+            </div>
+            <div class="row d-flex justify-content-center">
+                
+                <div class=" col-sm-8  my-5 container-full col-sm-mob"><!--container-->
+                        <div class="row d-flex card  justify-content-center" style="flex-direction: row;border:unset;">
+                            
+                            
+                            <div class="col-sm-6  p-2 col-sm-6-medium d-flex flex-wrap">
+                                <div class="col-sm-12 m-auto d-flex justify-content-center " style="margin-top:unset !important;"><h3><b>Schedule A Meeting</b></h3></div>
+                                <div class="col-sm-12 d-flex justify-content-center text-center">
+                                    <!--<img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" style="border-radius: 50%;max-width: inherit;width: inherit;    max-width: 180px;max-height: 150px;" />-->
+                                    <i class="fa fa-calendar" style="border-radius: 50%;max-width: inherit;width: inherit;font-size: xxx-large;  max-width: 180px;max-height: 150px;"  />
+                                </div>
+                                <div class="d-flex justify-content-center col-sm-12 flex-wrap">
+                                    <!--<div class="col-sm-12 justify-content-center d-flex">
+                                        {{mentorDetail.Name}}
+                                    </div>-->
+                                    <div class="col-sm-12 justify-content-around d-flex ">
+                                        <button class="btn-warning m-auto" style="max-height: 50px;border: solid 1px; background: orange;color:#fff;color:#fff;border-radius: 15px;background: orange !important;border-color:orange;" ng-click="showNewSessionPopup()">
+                                            <h3>Schedule A Meeting</h3>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6  p-2 col-sm-6-medium pb-5">
+                                <div class="col-sm-12 m-auto justify-content-center d-flex "><h3><b>Upcoming Meetings </b></h3></div>
+                                <div class="col-sm-12 d-flex flex-wrap justify-content-center">
+                                    <div class="w-100 d-flex justify-content-center my-5" style="height: 135px;">
+                                        <!--<i class="fa fa-calendar"  style="font-size:50px;"/>    -->
+                                        <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                                            <img class="mr-2" style="border-radius: 50%;border: outset;" src="{!$Resource.Mentorship_Calender}" width="100" height="100" alt="avatar"/>
+                                            <!--<button class="btn btn-primary col-sm-12 new-sess" ng-click="" style="color:orange;background:#fff;border:1px solid orange;">New Session</button>-->
+                                            
+                                        </a>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-sm-12 justify-content-around d-flex">
+                                    <!--<b>{{scheduledSesssions}} </b>-->
+                                    <h3><b>{{sessionList.length-completed }}</b></h3>
+                                </div>
+                                <div class="col-sm-12 justify-content-center d-flex">
+                                    <h3 style="font-weight: 500;">Upcoming meetings</h3>
+                                </div>
+                                
+                            </div>
+                          
+                            
+                            
+                        </div>
+                    <div class="row">
+                      	<div class="col-sm-6 d-flex">
+                            <div class="col-sm-3">
+                                <span class="fas " style="font-size:40px;">🏆</span>
+                            </div>
+                            <div class="col-sm-9 m-auto">
+                                <div class="col-sm-12">
+                                    <h3> <b>{{sessionList.length}}</b></h3>
+                                </div>
+                                <div class="col-sm-12">
+                                    <h3><b>Total Sessions  Created </b> </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex">
+                          
+                            <div class="col-sm-3 m-auto">
+                                <i class="fa fa-bullseye"  style="font-size:40px;" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-sm-9 m-auto">
+                                <div class="col-sm-12">
+                                    <h3> <b>{{completed}}</b></h3>
+                                </div>
+                                <div class="col-sm-12">
+                                    <h3><b>Total Sessions Completed</b>   </h3>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                        <!--<div class="row   p-3 mt-3   padd-md " style="flex-direction: row;padding-left: unset !important;padding-right: unset !important;margin:unset;">
+                            <div class="col-sm-12 p-0 d-flex flex-wrapping" style="border:unset;padding-left: unset !important;margin-right: unset !important;" >
+                                <div class="col-sm-6  p-2 col-sm-6-med d-flex justify-content-center card " style="flex-direction: row;padding-left: unset !important;margin-left:unset !important;">
+                                    <div class="col-sm-3">
+                                          <i class="fa fa-bullseye"  style="font-size:40px;" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="col-sm-12">
+                                            <b>{{sessionList.length}}</b>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            Total Sessions    
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="col-sm-6  p-2 col-sm-6-med d-flex justify-content-center card " style="flex-direction: row;">
+                                    <div class="col-sm-3">
+                                        
+                                        
+                                        <i class="fa fa-bullseye"  style="font-size:40px;" aria-hidden="true"></i>
+                                        
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="col-sm-12">
+                                            <b> {{completed}}</b>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            Completed Sessions    
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>-->
+                        <!--<div class="row  p-3 mt-3 " style="flex-direction: row;">
+<div class="col-sm-12 d-flex">
+<div class="col-sm-3 card">
+<div class="col-sm-12 d-flex ">Connections</div>
+</div>
+<div class="col-sm-3 card">
+<div class="col-sm-12 d-flex ">Upcoming Meetings(1)</div>
+</div>
+<div class="col-sm-6 card">
+<div class="col-sm-12 d-flex ">Goals(9)</div>
+</div>
+</div>
+</div>-->
+                    </div>
+                <div class="col-md-8  " ><!--margin-top-->
+                    
+                    <div class="d-flex justify-content-center flex-wrap" ng-show="showNoSessions" style="font-size:25px;margin-top:20px;text-align:center;">
+                        <!--<h1 style="font-size:100px;" class="col-sm-12">&#128551;</h1>-->
+                        <div class="col-sm-12">
+                            	<apex:image url="{!URLFOR($Resource.Emoji,'Emoji/NoSessions.png')}" width="150" height="150"/>
+                        </div>
+                        <h2 class="col-sm-12">No sessions to display create a new session.</h2>
+                        
+                    </div>
+                    <div class="card tab-full" ng-hide="showNoSessions" style="width:fit-content;">
+                        <div class="card-header" style="text-align:center;">
+                            <h3 style="text-align: center;font-weight: 600;">
+                                ALL SESSIONS
+                            </h3>
+                            <div class="progress" style="margin-top: 2%;">
+                                <div style="text-align:center;"></div>
+                                <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
+                                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="200" ng-style="{width : ( sessionPercentComputation + '%' ) }">
+                                    
+                                </div>
+                            </div>
+                            <span ng-if="sessionPercentComputation > 6">{{sessionPercentComputation}}% Complete</span>
+                            <div ng-show="showProgCompletedButton" style="padding: 17px 2px;">
+                                <button type="button" class="download" style="Background-color:#F39C12;" ng-click="completeModule()">Program Completed</button>
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+                            <table class="table styled-table" style="table-layout: fixed;">
+                                <thead >
+                                    <tr>
+                                        <!--<th scope="col" style="">Description</th>-->
+                                        <th scope="col">Session Topics</th>
+                                        
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Start Time</th>
+                                        <th scope="col">End Time</th>
+                                        <th scope="col">Meeting link</th>
+                                        <th scope="col">Status</th>
+                                        
+                                        <th scope="col">Attachment</th>
+                                        <th scope="col">More Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="session in sessionList">
+                                        <td>
+                                            {{session.Agenda__c}} 
+                                            
+                                        </td>
+                                         
+                                        <!--<td>{{session.Description__c}}</td>-->
+                                        <td>{{session.Date__c}}</td>
+                                        <td>{{session.Time__c | date:'shortTime'}}</td>
+                                        <td>{{session.End_time__c | date:' hh:mma'}}</td>
+                                        <td><a class="btn btn-warning w-75 w-75-100" href="{{session.Meeting_Link__c }}" style="color:#fff;border-radius: 15px;background: orange !important;border-color:orange;">Link</a></td>
+                                       <td>
+                                            <div ng-if="session.Status__c == 'Completed'">
+                                                <!--i class="glyphicon glyphicon-ok" style="color:green"></i-->Completed
+                                            </div>
+                                            <div ng-if="session.Status__c != 'Completed'"  >
+                                                <!--i class="glyphicon glyphicon-minus-sign" style="color:red"></i-->
+                                                <span class="" ng-click="completeSession(session)" style="cursor:pointer;color:orange;">Mark As Complete
+                                                <i class="fa fa-pencil"/></span>
+                                            </div>
+                                        </td>
+                                         <td class="text-center">
+                                            <a class="" style="color:orange;" href="{!baseURL}servlet/servlet.FileDownload?file={{session.Attachments[0].Id}}" ng-show ="({{session.Attachments}} !='' || {{session.Attachments}} !=undefined) && {{session.Attachments}} != undefined">
+                                                View <i class="fa fa-eye" aria-hidden="true" ></i></a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group dropright">
+                                                <button type="button" ng-click="viewSessionDetails($index)" class="download dropdown-toggle btnSize btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: orange;">
+                                                    More <i class="	fa fa-chevron-circle-down disp" style="float: right;font-size: 17px;background:orange;"></i>
+                                                </button>
+                                                <div class="dropdown-menu" style="width: max-content;">
+                                                    <li>
+                                                    <a class="dropdown-header" onclick="document.getElementById('feedbackPopup').style.display='block'">Feedback <i class="fa fa-pencil" aria-hidden="true" style="float: right;"></i></a></li>
+                                                    <!--<li ng-show="session.Status__c != 'Completed'"><a class="dropdown-item" href="#" ng-click="completeSession(session)" >Mark as complete<i class="glyphicon glyphicon-ok" style="color:green;float: right;"></i></a></li>-->
+                                                    <li ng-show="session.Status__c != 'Completed'"><a class="dropdown-item" href="#"  onclick="document.getElementById('id01').style.display='block'">Reschedule<i class="fa fa-pencil" aria-hidden="true" style="float: right;"></i></a></li>
+                                                    <!--<li ng-show="session.Attachments != undefined"><a class="dropdown-item" href="{!baseURL}servlet/servlet.FileDownload?file={{session.Attachments[0].Id}}" ng-show ="{{session.Attachments}} !='' || {{session.Attachments}} !=undefined">View Attachment<i class="fa fa-eye" aria-hidden="true" style="float: right;"></i></a></li>-->
+                                                </div>
+                                            </div>
+                                        </td>
+                                       
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card mobile" style="text-align:center;">
+                        <div class="card-header" ><h3 style="text-align: center;font-weight: 600;">
+                            ALL SESSIONS
+                            </h3>
+                             <div class="progress" style="margin-top: 2%;">
+                                <div style="text-align:center;"></div>
+                                <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
+                                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="200" ng-style="{width : ( sessionPercentComputation + '%' ) }">
+                                    
+                                </div>
+                            </div>
+                            <span ng-if="sessionPercentComputation > 6">{{sessionPercentComputation}}% Complete</span>
+                            <div ng-show="showProgCompletedButton" style="padding: 17px 2px;">
+                                <button type="button" class="download" style="Background-color:#F39C12;" ng-click="completeModule()">Program Completed</button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mobile" ng-repeat="session in sessionList">
+                        <div class="card-header" style="background-color: #2e3192;color: #ffffff;">
+                            <b>Title :</b> {{session.Agenda__c || 'Not available'}}
+                        </div>
+                                <div class="card-body">
+                                    <!--<h5 class="card-title"><b>Session Agenda :</b> {{session.Agenda__c}}</h5>-->
+                                    <h5 class="card-title"><b>Session Date :</b> {{session.Date__c}}</h5>
+                                    <p class="card-title"> <b>Session Time </b></p>
+                                    <p class="card-text">
+                                         <b>From : </b> {{session.Time__c | date:'shortTime'}} <b>to :</b> {{session.End_time__c | date:'shortTime'}}
+                                    </p>
+                                    <p>
+                                        <b>Description : </b>{{session.Description__c || 'Not available'}}
+                                    </p>
+                                    <p class="card-text">
+                                        <b>Meeting Link :</b> {{session.Meeting_Link__c || 'Not available'}}
+                                    </p>
+                                     <div class="btn-group dropright">
+                                                <button type="button" ng-click="viewSessionDetails($index)" class="download dropdown-toggle btnSize btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    More <i class="	fa fa-chevron-circle-down disp" style="float: right;font-size: 17px;"></i>
+                                                </button>
+                                                <div class="dropdown-menu" style="width: max-content;">
+                                                    <li><a class="dropdown-header" onclick="document.getElementById('feedbackPopup').style.display='block'">Feedback <i class="fa fa-pencil" aria-hidden="true" style="float: right;"></i></a></li>
+                                                    <li ng-show="session.Status__c != 'Completed'"><a class="dropdown-item" href="#" ng-click="completeSession(session)" >Mark as complete<i class="glyphicon glyphicon-ok" style="color:green;float: right;"></i></a></li>
+                                                    <li ng-show="session.Status__c != 'Completed'"><a class="dropdown-item" href="#"  onclick="document.getElementById('id01').style.display='block'">Reschedule<i class="fa fa-pencil" aria-hidden="true" style="float: right;"></i></a></li>
+                                                    <li ng-show="session.Attachments != undefined"><a class="dropdown-item" href="{!baseURL}servlet/servlet.FileDownload?file={{session.Attachments[0].Id}}" ng-show ="{{session.Attachments}} !='' || {{session.Attachments}} !=undefined">View Attachment<i class="fa fa-eye" aria-hidden="true" style="float: right;"></i></a></li>
+                                                </div>
+                                            </div>
+                                </div>
+                            </div>
+                </div>
+                
+            </div>
+        </div>
+        <script>
+        var app = angular.module('mentorSession', ['ngMaterial', 'jkAngularRatingStars']);
+        app.controller('mentorSessionController', ['$scope', function ($scope) {
+            $scope.showSpinner = false;
+            $scope.sessionList = [];
+            $scope.showDetails = false;
+            $scope.menteeDescription = '';
+            $scope.mentorDescription = '';
+            $scope.mentorRating;
+            $scope.rescheduleSessionDate = '';
+            $scope.sessionDate;
+            $scope.startTime;
+            $scope.endTime;
+            $scope.sessionDescription = '';
+            $scope.sessionAgenda = '';
+            $scope.totalProcessed = 90;
+            $scope.showReschedule = false;
+            $scope.sessionNotCompleted = false;
+            $scope.showNoSessions = false;
+            $scope.showProgCompletedButton = false;
+            $scope.completed=0;
+            var mentorMenteeeAssociationId = '{!$CurrentPage.parameters.menteeId}';
+            var mentorId = '{!$CurrentPage.parameters.mentorId}';
+            $scope.sessionPercentComputation = 0.00;
+            $scope.getSessions = function () {
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.getAllSessions}',
+                    mentorMenteeeAssociationId,
+                    function (result, event) {
+                        if (event.status) {
+                            if(result == null || result.length == 0){
+                            	$scope.showNoSessions = true;
+                            }else{
+                            	$scope.showNoSessions = false;
+                            }
+                            if( result.length != 0){
+                                
+                                $scope.sessionList = result;
+                                console.log($scope.sessionList)
+                                $scope.completed=$scope.sessionList.filter(sess=>{
+                                    	console.log(sess.Status__c)
+                                    	return sess.Status__c==='Completed';
+                                    }).length;
+                                console.log($scope.completed);
+                                var count = 1;
+                                for (var i = 0; i < $scope.sessionList.length; i++) {
+                                    var sessionDate = $scope.sessionList[i].Date__c;
+                                    var dateObject = new Date(sessionDate);
+                                    
+                                    if($scope.sessionList[i].Status__c == "Created"){
+                                        //debugger;
+                                         count += 1;
+                                        if(count > 2){
+                                        	$scope.sessionNotCompleted = true;
+                                        }
+                                    }
+                                    var humanDateFormat = dateObject.toLocaleString();
+                                    $scope.sessionList[i].Time__c = $scope.sessionList[i].Time__c + $scope.sessionList[i].Date__c - 19800000;
+                                    $scope.sessionList[i].End_time__c = $scope.sessionList[i].End_time__c + $scope.sessionList[i].Date__c- 19800000;
+                                    
+                                    $scope.sessionList[i].Date__c = humanDateFormat.split(",")[0];
+                                }
+                                
+                                $scope.totalHours = $scope.sessionList[0].Mentor_Mentee_Association__r.Total_Mentoring_Hours__c;
+                                $scope.hoursCompleted = $scope.sessionList[0].Mentor_Mentee_Association__r.Duration_of_Sessions_Attended__c;
+                                //debugger;
+                                if($scope.hoursCompleted >= $scope.totalHours){
+                                    $scope.sessionPercentComputation = 100;
+                                }else{
+                                    $scope.sessionPercentComputation = (($scope.hoursCompleted * 100.00) / $scope.totalHours);
+                                    if($scope.sessionPercentComputation == Infinity){
+                                        $scope.sessionPercentComputation = 0;  
+                                    }else{
+                                        $scope.sessionPercentComputation =  Math.round($scope.sessionPercentComputation);
+                                    }
+                                }
+                                
+                                
+                            } 
+                            if($scope.sessionPercentComputation > 85){
+                                $scope.showProgCompletedButton = true;
+                            
+                            }else{
+                            	$scope.showProgCompletedButton = false;
+                            }
+                        } else if (event.type === 'exception') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                    }, {
+                        escape: true
+                    }
+                );
+            }
+            var url_string = window.location.href; 
+            var url = new URL(url_string);
+            var MentorId = url.searchParams.get("MentorId");
+            console.log(MentorId);
+            Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.getMentorProfile}',
+                    MentorId,
+                    function (result, event) {
+                    	console.log(result)
+                    })
+            $scope.getSessions();
+            
+            $scope.menteeFeedback = [];
+            
+            $scope.showNewSessionPopup = function(){
+                 if($scope.sessionNotCompleted == true){
+                     //debugger;
+                
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'session error',
+                         text: 'Please Mark previous session as complete to create a new Session.',
+                     })
+                     return;
+                
+                }
+             document.getElementById('createSession').style.display='block';
+            }
+            
+            $scope.viewSessionDetails = function (index) {
+                $scope.MentorFeedback = true;
+                $scope.menteeFeedback = [];
+                $scope.showReschedule = false;
+                if ($scope.sessionList.length > 0)
+                    
+                    $scope.session = $scope.sessionList[index];
+                $scope.showDetails = true;
+                $scope.mentorDescription = '';
+                $scope.menteeDescription = '';
+                $scope.mentorRating = 0;
+                $scope.menteeRating = 0;
+                $scope.mentorFeedback = '';
+                $scope.rescheduleSession = $scope.sessionList[index];
+                $scope.rescheduleSessionDate = new Date($scope.rescheduleSession.Date__c);
+                if ($scope.sessionList[index].Feedbacks__r != null) {
+                    
+                    for (var i = 0; i < $scope.sessionList[index].Feedbacks__r.length; i++) {
+                        if ($scope.sessionList[index].Feedbacks__r[i].Feedback_given_by__c == "MENTOR") {
+                            $scope.disableInput = true;
+                            $scope.enableInput = false;
+                            $scope.mentorFeedback = $scope.sessionList[index].Feedbacks__r[i];
+                            $scope.mentorDescription = $scope.sessionList[index].Feedbacks__r[i].Description__c;
+                            $scope.mentorRating = $scope.sessionList[index].Feedbacks__r[i].Mentor_Rating__c;
+                        }
+                        if ($scope.sessionList[index].Feedbacks__r[i].Feedback_given_by__c == "MENTEE") {
+                            $scope.menteeFeedback = $scope.sessionList[index].Feedbacks__r[i];
+                            $scope.menteeDescription = $scope.sessionList[index].Feedbacks__r[i].Description__c;
+                            $scope.showMenteeFeedback = true;
+                            $scope.menteeRating = $scope.sessionList[index].Feedbacks__r[i].Mentee_Rating__c;
+                        }
+                        if ($scope.menteeFeedback.length == 0) {
+                            $scope.showMenteeFeedback = false;
+                        }
+                        if ($scope.mentorFeedback.length == 0) {
+                            $scope.enableInput = true;
+                            $scope.disableInput = false;
+                            $scope.disableSubmitButton = true;
+                            
+                        }
+                    }
+                    
+                    $scope.showButton = true;
+                    
+                } else {
+                    $scope.showMenteeFeedback = false;
+                    $scope.MentorFeedback = false;
+                    $scope.enableInput = true;
+                    //$scope.disableInput = false;
+                    //$scope.feedback = null;
+                    $scope.showButton = true;
+                }
+                //               $scope.$apply();
+            }
+            
+            $scope.submitFeedBack = function () {
+                $scope.session;
+                $scope.mentorRating;
+                console.log('$scope.Description' + $scope.Description);
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.submitFeedBack}',
+                    $scope.session.Id, $scope.mentorDescription, $scope.mentorRating,
+                    function (result, event) {
+                        if (event.status) {
+                            let timerInterval
+                            Swal.fire({
+                                title: 'Submitted Feedback Successfully!',
+                                html: '',
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                    timerInterval = setInterval(() => {
+                                    const content = Swal.getContent()
+                                    if (content) {
+                                    const b = content.querySelector('b')
+                                    if (b) {
+                                    b.textContent = Swal.getTimerLeft()
+                                }
+                                }
+                                }, 100)
+                                },
+                                    willClose: () => {
+                                        clearInterval(timerInterval)
+                                    }
+                                    }).then((result) => {
+                                        if (result.dismiss === Swal.DismissReason.timer) {}
+                                    })
+                                        
+                                        $scope.disableSubmitButton = true;
+                                        $scope.showButton = false;
+                                        location.reload();
+                                        
+                                    } else if (event.type === 'exception') {
+                                        Swal.fire({
+                                        icon: 'error',
+                                        title: 'Internal error',
+                                        text: 'Oops Something went wrong please refresh Page.',
+                                    })
+                                } else {
+                                Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                    }, {
+                        escape: true
+                    }
+                );
+                
+            }
+            $scope.menteeRating = function () {
+            }
+            $scope.firstRate = 0;
+            $scope.mentorRating;
+            $scope.menteeRating;
+            $scope.readOnly = true;
+            
+            $scope.onMentorRating = function (rating) {
+                $scope.mentorRating = rating;
+            };
+            
+            
+            $scope.getSelectedRating = function (rating) {
+                console.log(rating);
+            }
+            
+            $scope.createSession = false;
+            
+            $scope.saveSession = function (myDate, startTime, endTime, sessionAgenda, sessionDescription, MeetingLink) {
+                var startHour = startTime.getHours();
+                var startMin = startTime.getMinutes();
+                var endHour = endTime.getHours();
+                var endMin = endTime.getMinutes();
+                if(sessionAgenda == '' || sessionAgenda == undefined){
+                     Swal.fire({
+                                icon: 'error',
+                                title: 'Mandatory fields',
+                                text: 'Please fill Session Agenda.',
+                            })
+                	return;
+                }
+                if(MeetingLink == undefined)
+                    MeetingLink = '';
+                if(sessionDescription == undefined)
+                	sessionDescription = '';
+                
+                $scope.showSpinner = true;
+                
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.createNewSession}',
+                    myDate, startHour, startMin, endHour, endMin, sessionAgenda, sessionDescription, mentorMenteeeAssociationId,MeetingLink,
+                    function (result, event) {
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                        if (event.status) {
+                            document.getElementById('createSession').style.display = 'none';
+                            Swal.fire('Session created sucessfully!', '', 'success')
+                            location.reload();
+                        } else if (event.type === 'exception') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+            }
+            
+            $scope.moduleList = [];
+            $scope.getModulePickList = function () {
+               
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.getModulePicklist}',
+                    mentorMenteeeAssociationId,
+                    function (result, event) {
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                        if (event.status) {
+                            $scope.moduleList = result;
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+            }
+            $scope.getModulePickList();
+            
+            $scope.sessionCompleted = function (session) {
+                session.Status__c = 'Completed';
+                delete session['$$hashKey'];
+                delete session['Time__c'];
+                delete session['Feedbacks__r'];
+                delete session['Date__c'];
+                delete session['Attachments'];
+                delete session['End_time__c'];
+                $scope.showSpinner = true;
+                debugger;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.markSessionAsCompleted}',
+                    session,
+                    function (result, event) {
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                        if (event.status) {
+                            let timerInterval
+                            session.Status__c = 'Completed';
+                            $scope.$apply();
+                            Swal.fire('Saved!', '', 'success')
+                            document.getElementById('feedbackPopup').style.display='block';
+                            $scope.showMentorFeedback();
+                        } else if (event.type === 'exception') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+            }
+            
+            $scope.programCompleted = function(){
+            	                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.mentorMenteeAssociationCompleted}',
+                    mentorMenteeeAssociationId,
+                    function (result, event) {
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                        if (event.status) {
+                            Swal.fire('Mentorship program completed sucessfully!', '', 'success')
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+            
+            }
+            
+            
+            
+            $scope.rescheduledSession = function (session) {
+                
+                
+                $scope.rescheduleSession = session;
+                $scope.rescheduleSessionDate = new Date(session.Date__c);
+                $scope.showDetails = false;
+                $scope.showMenteeFeedback = false;
+                $scope.showReschedule = true;
+                
+                
+            }
+            $scope.updateRescheduleSession = function (rescheduleSessionTime, rescheduleSessionEndtime) {
+                
+                var reschedulestartHour = rescheduleSessionTime.getHours();
+                var reschedulestartMin = rescheduleSessionTime.getMinutes();
+                var rescheduleendHour = rescheduleSessionEndtime.getHours();
+                var rescheduleendMin = rescheduleSessionEndtime.getMinutes();
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MentorDetailPageController.updateSession}',
+                    $scope.rescheduleSessionDate, reschedulestartHour, reschedulestartMin, rescheduleendHour, rescheduleendMin, $scope.session.Id,
+                    function (result, event) {
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                        if (event.status) {
+                            Swal.fire('session created sucessfully!', '', 'success')
+                            document.getElementById('id01').style.display = 'none';
+                            location.reload();
+                            
+                        } else if (event.type === 'exception') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page.',
+                            })
+                        }
+                    }, {
+                        escape: true
+                    }
+                );
+                
+            }
+            
+            $scope.closeReschedule = function () {
+                $scope.showReschedule = false;
+                $scope.showDetails = true;
+                $scope.showMenteeFeedback = true;
+            }
+            
+            $scope.closeNewSession = function () {
+                $scope.createSession = false;
+                $scope.showReschedule = false;
+                
+                $scope.showDetails = false;
+                $scope.showMenteeFeedback = false;
+            }
+            
+            $scope.backToMentorPage = function () {
+                let mainURL = window.location.origin + '/mentorship';
+                window.location.replace(mainURL + "/MentorPortal" + "?id=" + mentorId + "&Type=Student");
+            }
+            
+            $scope.enableInput = true;
+            $scope.completeSession = function (session) {
+                //debugger;
+                Swal.fire({
+                    title: 'Do you want to mark the session as complete?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: `Save`,
+                    denyButtonText: `Don't save`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.value) {
+                    $scope.sessionCompleted(session);
+                    
+                } else if (!result.value) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+                })
+                }
+            $scope.completeModule = function () {
+                Swal.fire({
+                    title: 'Have you completed all the Modules?',
+                    showDenyButton: false,
+                    showCancelButton: true,
+                    confirmButtonText: `Yes`,
+                    denyButtonText: `No`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.value) {
+                    // $scope.sessionCompleted(session);
+                    $scope.programCompleted();
+                    
+                } else if (!result.value) {
+                    //Swal.fire('Changes are not saved', '', 'info')
+                }
+                })
+                }
+                   
+                    $scope.MentorFeedback = false;
+                    $scope.MenteeFeedback = false;
+                    $scope.showMentorFeedback = function () {
+                    $scope.MentorFeedback = true;
+                    $scope.MenteeFeedback = false;
+                }
+                    $scope.MentorFeedback = true;
+                    $scope.showFeedbackByMentee = function () {
+                    $scope.MentorFeedback = false;
+                    $scope.MenteeFeedback = true;
+                }
+                    
+                    $scope.closeFeedback = function () {
+                    $scope.MentorFeedback = false;
+                    $scope.MenteeFeedback = false;
+                    document.getElementById('feedbackPopup').style.display = 'none';
+                }
+                    
+                    
+                }]);
+                    </script>
+    </body>
+</apex:page>

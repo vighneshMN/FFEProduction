@@ -1,0 +1,554 @@
+<apex:page sidebar="false" showHeader="false" docType="html-5.0" controller="StudentbankDetails_Controller" standardStylesheets="false">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js">
+    </script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js">
+    </script>
+    <script>
+    
+    angular.module('number', [])
+    .directive('number', function () {
+        return {
+            require: 'ngModel',
+            restrict: 'A',
+            link: function (scope, element, attrs, ctrl) {
+                ctrl.$parsers.push(function (input) {
+                    if (input == undefined) return ''
+                    var inputNumber = input.toString().replace(/[^0-9]/g, '');
+                    if (inputNumber != input) {
+                        ctrl.$setViewValue(inputNumber);
+                        ctrl.$render();
+                    }
+                    return inputNumber;
+                });
+            }
+        };
+});
+        var maxStringSize = 6000000;    //Maximum String size is 6,000,000 characters
+        var maxFileSize = 4350000;      //After Base64 Encoding, this is the max file size
+        var chunkSize = 950000;         //Maximum Javascript Remoting message size is 1,000,000 characters
+        var attachment;
+        var attachmentName;
+        var fileSize;
+        var positionIndex;
+        var doneUploading;
+        var conId = "{!$CurrentPage.parameters.id}";
+        //Method to prepare a file to be attached to the Account bound to the page by the standardController
+        function uploadFile(param) {
+            // debugger;
+            appId = param;
+            if(appId != "") {
+                var file = document.getElementById('attachmentFile').files[0];
+                console.log(file);
+                if(file != undefined) {
+                    // debugger;
+                    if(file.size <= maxFileSize) {
+                        attachmentName = file.name;
+                        var fileReader = new FileReader();
+                        fileReader.onloadend = function(e) {
+                            attachment = window.btoa(this.result);  //Base 64 encode the file before sending it
+                            positionIndex=0;
+                            fileSize = attachment.length;
+                            console.log("Total Attachment Length: " + fileSize);
+                            doneUploading = false;
+                            if(fileSize < maxStringSize) {
+                                uploadAttachment(null);
+                            } else {
+                        swal(
+                        '',
+                        'Base 64 Encoded file is too large.  Maximum size is ' + maxStringSize + ' your file is ' + fileSize + '.',
+                        'warning'
+                    	)
+                            }
+                            
+                        }
+                        fileReader.onerror = function(e) {
+                        swal(
+                        '',
+                        'There was an error reading the file.  Please try again.',
+                        'warning'
+                    	)
+                        }
+                        fileReader.onabort = function(e) {
+                            swal(
+                        '',
+                        'There was an error reading the file.  Please try again.',
+                        'warning'
+                    )
+                        }
+                        
+                        fileReader.readAsBinaryString(file);  //Read the body of the file
+                        
+                    } else {
+                        swal(
+                        '',
+                        'File must be under 4.3 MB in size.  Your file is too large.  Please try again.',
+                        'warning'
+                    )
+                    }
+                } else {
+                     swal(
+                        '',
+                        'You must choose a file before trying to upload it',
+                        'warning'
+                    )
+                    
+                }
+            }else {
+                 swal(
+                        '',
+                        'Cannot upload document',
+                        'warning'
+                    )
+            }
+            
+        }
+        
+        //Method to send a file to be attached to the Account bound to the page by the standardController
+        //Sends parameters: Account Id, Attachment (body), Attachment Name, and the Id of the Attachment if it exists to the controller   
+        function uploadAttachment(fileId) {
+            // $scope.showSpinner = true;
+            var attachmentBody = "";
+            if(appId == undefined){
+            appId = '';    
+            }
+            if(fileSize <= positionIndex + chunkSize) {
+                attachmentBody = attachment.substring(positionIndex);
+                doneUploading = true;
+            } else {
+                attachmentBody = attachment.substring(positionIndex, positionIndex + chunkSize);
+            }
+            console.log("Uploading " + attachmentBody.length + " chars of " + fileSize);
+            StudentbankDetails_Controller.doUploadAttachment(
+                appId, attachmentBody, attachmentName, fileId,
+                function(result, event) {
+                    console.log(result);
+                    if(event.status){
+                        swal(
+                        '',
+                        'Uploaded document succesfully',
+                        'success'
+                    )
+                    let mainURL = window.location.origin+'/application';
+                    window.location.replace(mainURL);  
+                    }
+                    if(event.type === 'exception') {
+                        console.log("exception");
+                        console.log(event);
+                    } else if(event.status) {
+                        
+                        if(result.substring(0,3) == '00P') {
+                            if(doneUploading == true) {
+                             
+                                /* window.open("/", "_blank");
+                                window.location.reload(); */
+                            } else {
+                                positionIndex += chunkSize;
+                                uploadAttachment(result);
+                            }
+                        }
+                    } else {
+                        console.log(event.message);
+                    }
+                },
+                {buffer: true, escape: true, timeout: 120000}
+            );
+        }
+        
+    var studentDetails = JSON.parse('{!studentDetails}');
+    var accountType = JSON.parse('{!accountType}');
+    debugger;
+    var app = angular.module('studentBankApp', ['number']);
+    app.controller('studentBankCtlr', function($scope) {
+        $scope.firstName = "John";
+        $scope.lastName = "Doe";
+        $scope.student = studentDetails[0];
+        $scope.accountType = accountType;
+        $scope.activeAppId;
+        $scope.ifscCodeValid = false;
+
+        
+        if($scope.student.Applications__r != undefined){
+            for(var i=0;i<$scope.student.Applications__r.records.length;i++){
+               if($scope.student.Applications__r.records[i].Application_Stage__c == "Active"){
+                $scope.activeAppId = $scope.student.Applications__r.records[i].Id;
+               } 
+            }
+        }
+        
+
+        $scope.updateStudentDetails = function(){
+    $scope.loading= true;
+    debugger;
+                            var file = document.getElementById('attachmentFile').files[0];
+                console.log(file);
+                if(file == undefined) {
+                debugger;
+                    swal(
+                        '',
+                        'Please Upload the passbook copy to proceed',
+                        'warning'
+                    )
+                    return;
+                }
+            if($scope.ifscCodeValid != true){
+                 swal(
+                        '',
+                        'Please veryfy the ISFC code',
+                        'warning'
+                    )
+                    return;
+                }
+            if($scope.student.Bank_Account_Holder_s_Name__c == undefined || 
+              $scope.student.Full_Bank_Account_No_With_all_digits__c == undefined || 
+              $scope.student.X11_character_IFSC_Code_of_the_Branch__c == undefined || 
+              $scope.student.Branch_Address__c == undefined || 
+              $scope.student.Bank_Name__c == undefined || 
+              $scope.student.Type_Of_Bank_Account__c == undefined){
+                 swal(
+                        '',
+                        'Please fill all mandatory (*) fields',
+                        'warning'
+                    )
+                    return;
+            }
+    delete $scope.student.attributes ;
+            delete $scope.student.Applications__r ;
+            $scope.student.Is_IFSC_Code_Verified__c = $scope.ifscCodeValid;
+    StudentbankDetails_Controller.updateStudentDetails($scope.student, function(result,event){
+        if(event.status){
+            uploadFile($scope.activeAppId);
+            $scope.loading= false;
+            $scope.$apply();
+        }
+        else{
+            $scope.loading= false;
+            $scope.$apply();
+        }
+    },{escape:false})
+}
+$scope.verifyIfsc = function (ifscCode){
+    debugger;
+        $scope.loading=true;
+        var code = $scope.student.X11_character_IFSC_Code_of_the_Branch__c;
+        var studentId = $scope.student.Id;
+        if(code == undefined || code == ''){
+            alert('Please populate the IFSC code.');
+            return;
+        }
+        StudentbankDetails_Controller.ifscCodeResponse(code,studentId, function(result, event){
+            if(event.status) {
+                $scope.loading=false;
+                //console.log('result :  '+result)
+                if(result != undefined && result != '' && result != 'Service is disabled.'){
+                    $scope.ifscCodeNotValid=false;
+                    $scope.ifscCodeValid=true;
+                    $scope.ifscServiceDisabled = false;
+                    $scope.ifscCodeMessage = result;
+
+                    console.log('ifscCodeMessage :  '+ $scope.ifscCodeMessage);
+                }
+                else if(result != undefined && result == 'Service is disabled.' ){
+                    $scope.ifscCodeNotValid=false;
+                    $scope.ifscCodeValid=false;
+                    $scope.ifscServiceDisabled = true;
+                }
+                else
+                {
+                    $scope.ifscCodeNotValid=true;
+                    $scope.ifscCodeValid=false;
+                    $scope.ifscServiceDisabled = false;
+                }
+                $scope.$apply();
+            }});
+    }  
+        
+    });
+    </script>
+    
+    <style>
+        body{
+            min-width: min-content;
+        }
+        @media (min-width: 768px) {
+        .container {
+        width: 750px;
+        }
+        }
+        
+        @media (min-width: 992px) {
+        .container {
+        width: 970px;
+        }
+        }
+        
+        @media (min-width: 1200px) {
+        .container {
+        width: 1170px;
+        }
+        }
+        
+        .container {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+        }
+        @media screen and (min-width: 768px) {
+        .container .jumbotron, .container-fluid .jumbotron {
+        padding-right: 60px;
+        padding-left: 60px;
+        }
+        }
+        
+        .container .jumbotron, .container-fluid .jumbotron {
+        padding-right: 15px;
+        padding-left: 15px;
+        border-radius: 6px;
+        }
+        .jumbotron {
+        padding-top: 25px;
+        padding-bottom: 25px;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        top: 25px;
+        background-color: #032559;
+        color: #FFFFFF;
+        font-size: 45px;
+        }
+        @media screen and (min-width: 768px) {
+        .jumbotron {
+        padding-top: 25px;
+        padding-bottom: 25px;
+        }
+        }
+        body
+        {
+        background-color:#FFFFFF;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+        }
+        .download-btn {
+        position: relative;
+        top: 30px;
+        }
+        
+        button {
+        background-color: #F39C12 !important; 
+        border: none !important;
+        color: white !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        display: inline-block !important;
+        cursor: pointer !important;
+        }
+        .confirmBtn{
+        background-color: #F39C12 !important; 
+        border: none !important;
+        color: white !important;
+        padding: 7px 15px !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        display: inline-block !important;
+        font-size: 16px !important;
+        margin: 4px 2px !important;
+        cursor: pointer !important;
+        }
+        
+        .loadingBackground {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background: #F6F6F6;
+        z-index: 11111;
+        opacity: 0.7;
+        top: 0px;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        }
+        
+        .loading {
+        top: 50%;
+        left: 50%;
+        margin: -50px 0px 0px -50px;
+        z-index: 111111;
+        position: fixed;
+        }
+        #spinner {
+        display: none;
+        }
+        input[type=text],[type=number], select, textarea {
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+        }
+        .files input {
+        outline: 2px dashed #92b0b3;
+        outline-offset: -10px;
+        -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+        transition: outline-offset .15s ease-in-out, background-color .15s linear;
+        padding: 120px 0px 85px 35%;
+        text-align: center !important;
+        margin: 0;
+        width: 100% !important;
+        }
+        .files input:focus{     outline: 2px dashed #92b0b3;  outline-offset: -10px;
+        -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+        transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
+        }
+        .files{ position:relative}
+        .files:after {  pointer-events: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 50px;
+        right: 0;
+        height: 56px;
+        content: "";
+        background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
+        display: block;
+        margin: 0 auto;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        }
+        .color input{ background-color:#f1f1f1;}
+        .files:before {
+        position: absolute;
+        bottom: 10px;
+        left: 0;  pointer-events: none;
+        width: 100%;
+        right: 0;
+        height: 57px;
+        content: " or drag it here. ";
+        display: block;
+        margin: 0 auto;
+        color: #2ea591;
+        font-weight: 600;
+        text-transform: capitalize;
+        text-align: center;
+        }
+    </style>
+    
+</head>
+<body ng-app="studentBankApp" ng-controller="studentBankCtlr">
+    <div class="loadingSection" id="spinner">
+        <div class="loadingBackground"></div>
+        <div>
+            <apex:image url="{!$Resource.loading}" styleClass="loading" />
+        </div>
+    </div>
+    <apex:outputPanel layout="block">
+        <div class="container">
+            <div class="banner" align="center">
+                <a href="http://www.ffe.org/" target="_blank"  >
+                    <apex:image url="{!$Resource.FFEbanner}" styleClass="logo"/>
+                </a>
+            </div>
+            <div class="jumbotron">
+                <table class="student"  width="100%" style="font-size:15pt;font-weight: 200;margin-left:5%;">
+                    <tbody>
+                        <tr>
+                            <td width="20%" align="left">Name:</td>
+                            <td width="80%" align="left" >{{student.Name}}</td>
+                        </tr>
+                        <tr>
+                            <td width="20%" align="left">FFEUID:</td>
+                            <td width="80%" align="left" >{{student.FFE_ID__c}}</td>
+                        </tr>
+                        
+                    </tbody>            
+                </table>
+            </div>
+            <div class="download-btn">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Bank Acc Holder's Name</label><span style="color:#ff0000">*</span>
+                            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Acc holder's name" ng-model="student.Bank_Account_Holder_s_Name__c" maxlength="100"/>
+                        </div>
+                        <div class="form-group">
+                            <label >Full Bank Account No. (With all digits):</label><span style="color:#ff0000">*</span>
+                            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Account No" ng-model="student.Full_Bank_Account_No_With_all_digits__c" number="student.Full_Bank_Account_No_With_all_digits__c" maxlength="20"/>
+                        </div>
+                        <div class="form-group">
+                            <label>11 characters IFSC Code of the Branch:</label><span style="color:#ff0000" >*</span>
+                            <input type="text" class="form-control"  aria-describedby="emailHelp" placeholder="IFSC Code" ng-model="student.X11_character_IFSC_Code_of_the_Branch__c" maxlength='11' minlength='11' ng-pattern="/^[a-zA-Z0-9]*$/" />
+                            <small id="emailHelp" class="form-text text-muted" ng-if="">This helps to verify the IFSC entered by you. This is mandatory. Please check the IFSC code with your bank if there was a merger.</small>
+                            <br/><span><button type="button" class="btn btn-warning btn-pill" ng-mouseover="showVerifyIFSChelpText()"  ng-mouseleave="hideVerifyIFSChelpText()" value="Verify IFSC"  ng-click="verifyIfsc(basicInfo.ifscCode);">Verify IFSC</button>  <span ng-if="ifscCodeValid" style="color: rgb(255, 0, 0);    font-weight: bold;">&nbsp;&nbsp;IFSC code is valid.</span><span ng-if="ifscServiceDisabled" style="color: rgb(255, 0, 0);    font-weight: bold;">&nbsp;&nbsp;Service is disabled.</span><span ng-if="ifscCodeNotValid" style="color: rgb(255, 0, 0);    font-weight: bold;">&nbsp;&nbsp;IFSC code is not valid.</span></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label>Bank Branch Phone No:</label>
+                            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Bank Branch Phone No" ng-model="student.Bank_Branch_Phone_No__c" number="student.Bank_Branch_Phone_No__c" maxlength='12'/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Branch Address:</label><span style="color:#ff0000">*</span>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" ng-model="student.Branch_Address__c"></textarea>
+                        </div>
+
+                        
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Bank Name:</label><span style="color:#ff0000">*</span>
+                            <input type="text" class="form-control"  aria-describedby="emailHelp" placeholder="Bank Name" ng-model="student.Bank_Name__c" maxlength='200'/>
+                        </div>
+
+                        <div class="form-group">
+                            <label >Bank City:</label>
+                            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="City" ng-model="student.Bank_City__c" maxlength='200'/>
+                        </div>
+                        <div class="form-group">
+                            <label>Bank State:</label>
+                            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="State" ng-model="student.Bank_State__c" maxlength='200'/>
+                        </div>
+                        <div class="form-group">
+                            <label>Bank Pincode:</label>
+                            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Pincode" ng-model="student.Bank_Pincode__c" maxlength='10'/>
+                        </div>
+                        <div class="form-group">
+                            <label >Type Of Account:</label><span style="color:#ff0000">*</span>
+                            <select name="type" required="true"  class="form-control" ng-model="student.Type_Of_Bank_Account__c">
+                                <option ng-repeat="type in accountType" value="{{type}}"> {{type}}</option></select>
+                        </div>
+                        <div class="form-group" ng-if="student.Type_Of_Bank_Account__c=='Other'">
+                            <label>Type Of Account(Other):</label>
+                            <input type="text" class="form-control"  aria-describedby="emailHelp" placeholder="" ng-model="student.Other_Type_Bank_Account__c" maxlength='200'/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <form method="post" action="#" id="#">
+                            <div class="form-group files">
+                                <label>Upload Your Bank passbook copy or cancelled check </label>
+                                <input type="file" class="form-control" multiple="" id="attachmentFile"/>
+                            </div>
+                            
+                            
+                        </form>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <center>
+                    <div id="buttonSection">
+                        <button class="button" style="padding: 15px 32px !important; font-size: 16px !important;margin: 4px 2px !important;" ng-click="updateStudentDetails();">Upload</button>
+                    </div>
+                </center>
+            </div>
+            
+        </div>
+        
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" rendered="{!isError}">
+        <center><h3>You cannot proceed, please email us at: india_support@ffe.org</h3></center>
+    </apex:outputPanel>
+</body>
+</apex:page>

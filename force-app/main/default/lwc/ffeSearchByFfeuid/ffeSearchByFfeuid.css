@@ -1,0 +1,52 @@
+.searchDiv {
+    background: #fff;
+    padding-bottom: 10px;
+    width: 90% !important;
+    margin-left: 5% !important;
+}
+.searchTags{
+    float:left;
+    margin-right:34px;
+    color: #032559;
+    font-size:11pt;
+    margin-left: 26%;
+    margin-bottom: 12px;
+    display: inline-block;
+}
+.inputfileds{
+    width: 90%;
+    float: left;
+    min-height: 30px;
+    border: 1px solid rgba(99, 97, 121, 0.49);
+    border-radius: 5px;
+    padding: 0;
+    resize:none;
+    padding-left: 8px;
+}
+.mystyle{
+    margin: 2px 27px;
+    width: 19%;
+    display: inline-block;
+}
+/* .buttonDiv{
+    width:100%;
+    float:left;
+    padding-bottom: 40px;
+    background: #fff;
+} */
+.buttonDiv{
+    width:100%;
+    float:left;
+}
+.buttons{
+    border-radius:3px;
+    height: 30px;
+    color: #fff;
+    font-size: 11pt;
+    border: none;
+    cursor: pointer;
+    min-width: 10%;
+    background: #ff793c;
+    max-width:100%;
+    margin-left: 2px;
+}

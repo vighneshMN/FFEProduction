@@ -1,0 +1,7 @@
+<template>
+    <lightning-card  title="Send SMS">
+        <lightning-textarea name="input1" label="Enter Mobile Number(s) seperated by comma :"  onchange={handleChange} ></lightning-textarea>
+        <lightning-textarea name="input2" label="Enter Message for SMS :"  onchange={handlemessageChange} ></lightning-textarea>
+        <lightning-button label="Send" onclick={handleClick}></lightning-button>
+    </lightning-card>
+</template>

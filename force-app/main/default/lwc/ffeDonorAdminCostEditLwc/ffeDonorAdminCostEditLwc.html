@@ -1,0 +1,75 @@
+<template>
+    <div style="display: none;">
+        {recordId}
+    </div>
+    <div class="slds-box" style="position:relative;">
+        <div if:true={showSpinner} >
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <div if:false={showClose}>
+            <div class="slds-form">
+                <div class="slds-form-element slds-form-element_stacked">
+                    <label class="slds-form-element__label" for="stacked-input-id-01">Donor</label>
+                    <div class="slds-form-element__control">
+                      <!-- <input type="text" id="stacked-input-id-01" placeholder="Placeholder text…" class="slds-input" /> -->
+                      <!-- <lightning-formatted-text value={donorName}></lightning-formatted-text> -->
+                      <lightning-button variant='base' onclick={navigateToDonor} label={donorName}></lightning-button>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <label class="slds-form-element__label" for="stacked-input-id-02">GAU</label>
+                    <div class="slds-form-element__control">
+                      <!-- <input type="text" id="stacked-input-id-01" placeholder="Placeholder text…" class="slds-input" /> -->
+                      <!-- <lightning-formatted-text value={gauName}></lightning-formatted-text> -->
+                      <lightning-button variant='base' onclick={navigateToGau} label={gauName}></lightning-button>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <label class="slds-form-element__label" for="stacked-input-id-03">Current Balance </label>
+                    <div class="slds-form-element__control">
+                      <!-- <input type="text" id="stacked-input-id-01" placeholder="Placeholder text…" class="slds-input" /> -->
+                      <lightning-formatted-number value={currentBalance} format-style="currency" currency-code="INR" currency-display-as="symbol"></lightning-formatted-number>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <label class="slds-form-element__label" for="stacked-input-id-01">Add Funds</label>
+                    <div class="slds-form-element__control">
+                      <lightning-input type="number" value={addFund} onchange={handleFundChange} variant=' label-hidden'></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <label class="slds-form-element__label" for="stacked-input-id-01">Reduce Funds</label>
+                    <div class="slds-form-element__control">
+                      <lightning-input type="number" value={reduceFund} onchange={handleReduceFundChange} variant=' label-hidden'></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <label class="slds-form-element__label" for="stacked-input-id-01"><abbr class="slds-required" title="required">* </abbr>Short Comments</label>
+                    <div class="slds-form-element__control">
+                      <lightning-input value={shortComments} required onchange={handleCommentsChange} variant=' label-hidden'></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-align_absolute-center">
+                    <lightning-button label='Save' onclick={handleSaveClick}></lightning-button>
+                </div>
+            </div>
+        </div>
+        <div if:true={showClose}>
+            <div class="slds-p-around_medium" if:true={profileCheckMessage}>
+                <div class="slds-notify slds-notify_alert" role="alert">
+                    <h2>{profileCheckMessage}</h2>
+                </div>
+            </div>
+            <div class="slds-p-around_medium" if:true={gauNameCheckMessage}>
+                <div class="slds-notify slds-notify_alert" role="alert">
+                    <h2>{gauNameCheckMessage}</h2>
+                </div>
+            </div>
+            <div class="slds-align_absolute-center slds-p-top_x-small">
+                <lightning-button label="Close" onclick={handleCloseClick}></lightning-button>
+            </div>
+        </div>
+    </div>
+</template>

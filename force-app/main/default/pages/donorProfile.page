@@ -1,0 +1,152 @@
+<apex:page doctype="html-5.0" showheader="false" sidebar="false" applyhtmltag="false" standardstylesheets="false"  cache="false" controller="DN_DonorProfile_CTRL"  action="{!checkUserAuth}">
+    <html ng-app="DonorProfile">
+        <title>Donor Profile</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+        <head>
+            <c:pageResource />
+            <apex:stylesheet value="{!URLFOR($Resource.fontAwesome,'/font-awesome-4.7.0/css/font-awesome.min.css')}" />
+            
+             <script src="{!URLFOR($Resource.ffe_resource,'ffe_resource/Js/angularMaterial.js')}" >
+            </script>
+            
+            <script src="{!URLFOR($Resource.ffe_resource,'ffe_resource/Js/textAngularRangy.js')}" >
+            </script>
+            
+            <script src="{!URLFOR($Resource.ffe_resource,'ffe_resource/Js/textAngularSanitize.js')}" >
+            </script>
+            
+             <script src="{!URLFOR($Resource.ffe_resource,'ffe_resource/Js/textAngularJs.js')}" >
+            </script>
+            
+             <script src="{!URLFOR($Resource.ffe_resource,'ffe_resource/Js/donorprofile.js')}" >
+            </script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            
+            <link rel="stylesheet" href="{!URLFOR($Resource.ffe_resource,'ffe_resource/styles/angularMaterialCss.css')}" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+            <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@600&family=Varela+Round&display=swap" rel="stylesheet"/>
+            
+           
+            <link rel="stylesheet" href="{!URLFOR($Resource.ffe_resource,'ffe_resource/styles/donorProfile.css')}" />
+            <link rel="stylesheet" href="{!URLFOR($Resource.donorProfileCss)}" />
+            
+            <script src="{!URLFOR($Resource.ffe_resource,'ffe_resource/Js/angularMaterialJs.js')}" >
+            </script>
+            <script>
+            var scholarResidenstilPickValues	= {!DRscholarResidenstilPickValues};
+            var CitizenIndian					= "{!CitizenIndian}";
+            var CitizenNonIndian				= "{!CitizenNonIndian}";
+            var paymentWrpString				= {!paymentWrpString};
+            var userId							= "{!currentdonorId}";
+            var successMsg						= "{!updateSuccessMsg}"
+            var medical							= '{!$Label.Medical}';
+            var engg							= '{!$Label.Engineering}';
+            var passportReqMsg					= '{!$Label.Passport_upload_message}';
+            var siteLogin						= '{!$Setup.System_Details__c.Donor_Site_URL__c}';
+            var donorCurrencType				= '{!donorCurrencyType}'; 
+            var paymentDelete					= '{!deletePayment}';
+            var paymentAborted					= '{!abortPayment}';
+            var donorCategory					= '{!donorCategory}';
+            var FinancialYear                   =  {!FinancialYear};
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if(charCode == undefined){
+                    return false;
+                }
+                else if(evt.key=="Delete" || evt.key=="Backspace"){
+                    return true;
+                }
+                    else if (charCode > 31 && (charCode < 48 || charCode > 57 ))  {
+                        return false;
+                    }
+                return true;
+            }
+            function isChar(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if(evt.key=="Delete" || evt.key=="Backspace"){
+                    return true;
+                }
+                else if(!((charCode >= 65 && charCode <= 90 ) || (charCode >= 97 && charCode <= 122 )) && (charCode != 32 && charCode != 0 ))  {
+                    return false;
+                }
+                 
+                return true;
+            }
+            function isAlphaNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if(evt.key=="Delete" || evt.key=="Backspace"){
+                    return true;
+                }
+                else if((charCode > 47 && charCode<58 ) || (charCode > 64 && charCode<91 ) || (charCode > 96 && charCode<123 ))  {
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            </script>
+            <style>
+                .activetabstemp{
+                color:#f4a52e !important ;
+                }
+            </style>
+        </head>
+        <body ng-controller="donorProfile">
+            <div class="banner" align="center">
+                <a href="http://www.ffe.org/" target="_blank"  >
+                    <apex:image url="{!$Resource.FFEbanner}" styleClass="logo"/>
+                    <apex:image url="{!$Resource.ffe_logo_mobile}" styleClass="moblogo"/>
+                </a>
+                <ul class="burger" ng-if="!viewStudent">
+                    <li style="float:right;" class="burger-icon" ng-click="show();" ><label for="toggle" ng-click="show();">&#9776;</label> <input type="checkbox" id="toggle" /></li>
+                </ul>
+                <ul ng-if="!viewStudent"  ng-class="{checkCss:burgerToggle}"  class="styler disp" >
+                    <li ng-click="showTabcontent(0);" ng-class="{active: 0 == selected}"><a href="#/donorViewProfile" ng-click="moveToTop();">My Profile</a></li>
+                    <li class="contentHover"   ng-class="{active: 1 == selected}" ><a href="#/donationHistory" ng-class="{active: 1 == selected}" >My Donations <i class="fa fa-angle-down" style="margin-left:0.3rem;"></i></a>
+                        <ul class="drowDownContent" style="list-style:none;">
+                            <li ng-click="moveToTop();showTabcontent(1);switch(0,0);tabSelected(1);" ng-class="{activetabstemp: 1 == tab}"><a  ng-click="moveToTop();showTabcontent(1);switch(0,0);tabSelected(1);" style="color:#2e3192;" ng-class="{activetabstemp:1 == tab}" href="#/donationHistory" >Donation History</a></li>
+                            <li ng-click="moveToTop();showTabcontent(4);switch(1,1);tabSelected(2);" ng-class="{activetabstemp: 2 == tab}"><a href="#/donationHistory" ng-click="moveToTop();showTabcontent(4);switch(1,1);tabSelected(2)" style="color:#2e3192;" ng-class="{activetabstemp: 2 == tab}">Pledged Donations</a></li>
+                        </ul>
+                    </li>
+                    <li ng-click="showTabcontent(2)" ng-class="{active: 2 == selected}"><a href="#/donorStudents" ng-click="moveToTop();">My Students</a></li>
+                    <li  ng-click="showTabcontent(3);currencyType();" ng-class="{active: 3 == selected}"><a href="#/makeDonation" ng-click="moveToTop();">Make Donation</a></li>
+                    <li>
+                        <a type="button" class="" value="Sign out" name="Log out" style="margin-top:10px;" onclick="logOut();">Logout</a>
+                        <apex:form style="display: none;">             
+                            <apex:actionFunction action="{!logOutUser}" name="logOut"></apex:actionFunction>
+                        </apex:form>
+                    </li>
+                </ul>
+                 <div style="" class="backLogoDiv" ng-if="viewStudent">
+                    <a ng-click="previous();">
+                        <i class="fa fa-arrow-left fa-2x" style="margin:1.5rem 1rem 1rem 0;font-weight: inherit;"></i>
+                    </a>
+                </div> 
+            </div>
+            <div class="common" id="myContainerDiv">
+                <div class="ng-view">
+                </div>
+            </div>
+            <div class="loadingSection" ng-show="loading" >
+                <div class="loadingBackground"></div>
+                <div>
+                    <apex:image url="{!$Resource.loading}" styleClass="loading" />
+                </div>
+            </div>
+            <div class="renewalPopup" ng-show="descPop" style="overflow-x:hidden;">
+                <div style="width:100%;height:20px;margin-left:100%;">
+                        <div class="material-icons closePopUp" ng-click="closeDesc();">
+                            <a style="font-size:30px;cursor:pointer;">&times;</a>                            
+                        </div>    
+                    </div>
+               <div  ta-bind="text" ng-model="description.Description__c" style="box-shadow:none;"></div>
+            </div>
+            <div class="background" ng-show="descPop" >
+            </div>
+        </body>
+    </html>
+</apex:page>

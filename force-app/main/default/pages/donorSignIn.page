@@ -1,0 +1,263 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="SignIn_CTRL">
+    <html> 
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+        <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@600&family=Varela+Round&display=swap" rel="stylesheet"/>
+        <title>Sign In</title>
+        <head>
+            <c:pageResource ></c:pageResource>
+            <style>
+                  body{
+                margin-left:0% !important;
+                width:100% !important;
+                }
+                
+                .loginDiv{
+                	background:#fff;
+                	border-radius:7px;
+                    top:117px;
+                	left:0%;
+                    width: -webkit-fill-available;
+                	width:-moz-available;
+                    margin: 0% 30%;
+                }
+                input[type="text" i]  {
+                    width: -webkit-fill-available;
+                	width:-moz-available;
+                	margin-left:30%;
+                	margin-right:30%;
+                    float: left;
+                    min-height: 30px;
+                    border: 1px solid rgba(99, 97, 121, 0.49);
+                    padding: 0;
+                    resize: none;
+                    padding-left: 8px
+                }
+                 .buttons{
+                width: -webkit-fill-available;
+                width:-moz-available;
+                margin-left: 30%;
+                margin-right: 30%;
+                }
+                .loginPageType {
+                float: left;
+                min-height: 0;
+                top: 110px;
+                width: 92%;
+                left: 0;
+                border: 0;
+                position: relative;
+                font-size: 14px;
+                color: #f29b29;
+                }
+                   
+                .logo{
+                 height: 75px;
+                	padding-left:3%;
+                }
+              
+                .imagesLogin{
+                max-height: 43.688px;
+                max-width: 220.8px;
+                	float: unset;
+                }
+                @media screen and (max-width:900px){
+                .imagesLogin{
+                   		width:-webkit-fill-available;
+                		width:-moz-available;
+                		margin: 0% 0%;
+                    }
+                    .loginDiv{
+                        margin:0 10%;
+                        top: 85px;
+                    }
+                }
+                 @media only screen and (max-width:600px){
+                 input[type="text" i]{
+                    	margin-left:25%;
+                		margin-right:25%;
+                    }
+                	.banner{
+                		width:100%;
+                		left:0%;
+                	}
+                .imagesLogin{
+                		margin:unset;
+                	}
+                	.logo{
+                		width:100%;
+                		padding-left:0%;
+                	}
+                	.loginDiv{
+                        top:100px;
+						left:unset;
+                        width: -webkit-fill-available;
+                		width:-moz-available;
+                        margin-left: 5%;
+                        margin-right: 5%;
+                	}
+                	input {
+                		width:95%;
+                	}	
+                }
+                 @media only screen and (max-width : 600px){
+                    .or-container{
+                		margin-bottom:0px;
+                	}
+                	.headerH4{
+                		margin-top:0%;
+                	}
+                	.loginDiv{
+                    margin-left: 5%;
+                    margin-right: 5%;
+                	}
+                	input {
+                		width:75%;
+                	}	
+                    .logo {
+                		height:75px;
+                        width: 85%;
+                		padding-left:3%;
+                        min-width: 268px;
+                    }
+                    .divider{
+                    margin:unset;
+                    }
+                }
+            </style>
+            <script>
+            
+            window.onload = function(){
+                var a = document.getElementById('googleUrlId');
+                a.href = "https://accounts.google.com/AccountChooser?continue=https://accounts.google.com/o/oauth2/auth?redirect_uri="+"{!$Setup.Google_API_Details__c.Redirect_URI__c}"+"%26prompt%3Dconsent%26response_type%3Dcode%26client_id="+"{!$Setup.Google_API_Details__c.Client_Id__c}"+"%26scope%3Dhttps://www.googleapis.com/auth/userinfo.email%2Bhttps://www.googleapis.com/auth/userinfo.email%2Bhttps://www.googleapis.com/auth/userinfo.email%2Bhttps://www.googleapis.com/auth/plus.login%2Bhttps://www.googleapis.com/auth/plus.me%2Bhttps://www.googleapis.com/auth/userinfo.email%2Bhttps://www.googleapis.com/auth/userinfo.profile%2Bhttps://www.googleapis.com/auth/plus.login%2Bhttps://www.googleapis.com/auth/userinfo.email%2Bhttps://www.googleapis.com/auth/userinfo.profile%2Bhttps://www.googleapis.com/auth/plus.login%2Bhttps://www.googleapis.com/auth/plus.login%2Bhttps://www.googleapis.com/auth/plus.login%2Bhttps://www.googleapis.com/auth/plus.me%2Bhttps://www.googleapis.com/auth/userinfo.email%2Bhttps://www.googleapis.com/auth/userinfo.profile%2Bhttps://www.googleapis.com/auth/plus.login%2Bhttps://www.googleapis.com/auth/plus.me%2Bhttps://www.googleapis.com/auth/userinfo.email%2Bhttps://www.googleapis.com/auth/userinfo.profile%2Bhttps://www.googleapis.com/auth/userinfo.email%26access_type%3Doffline%26from_login%3D1%26as%3D-270badd61a3e150b&btmpl=authsub&scc=1&oauth=1";
+            	console.log("{!$Setup.Google_API_Details__c.Redirect_URI__c}");
+            	var fb	= document.getElementById('facebookUrlId');
+                fb.href = "https://www.facebook.com/v2.8/dialog/oauth?client_id="+"{!$Setup.Facebook_API_Details__c.App_Id__c}"+"&response_type=code&redirect_uri="+"{!$Setup.Facebook_API_Details__c.Redirect_URL__c}"+"&scope=public_profile,email&&auth_type=rerequest";
+                console.log("{!$Setup.Facebook_API_Details__c.Redirect_URL__c}");
+            }
+            
+            function submitFFEIdRequest(){
+                var ffeid   = document.getElementById('ffeId').value;
+                if(ffeid != undefined && ffeid != null && ffeid !=''){
+                    SignIn_CTRL.generateLoginURL(ffeid,'Donor',function(result,event){
+                        if(event.status){
+                            processResponse(result);                  
+                        }
+                    },{escape:false});
+                }else{
+                    noValueError();
+                }
+            }
+            
+            function submitEmailRequest(){
+                var ffeemail   = document.getElementById('ffeEmail').value;
+                if(ffeemail != undefined && ffeemail != null && ffeemail !=''){
+                    SignIn_CTRL.generateLoginURLForEmail(ffeemail,'Donor',function(result,event){
+                        if(event.status){
+                            processResponse(result);                  
+                        }
+                    },{escape:false});
+                }else{
+                    noValueError();
+                }
+            }           
+                
+            function processResponse(result){                
+                if(result == "{!$Label.temporary_url_sent_confirmation}"){
+                    swal({
+                        title: "",
+                        text: result,
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        closeOnConfirm: false,
+                    },
+                         function(isConfirm) {
+                             if (isConfirm) {
+                                 location.reload(true);
+                             } 
+                         });
+                    
+                }else{
+                    swal({
+                        title: "",
+                        text: result,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        closeOnConfirm: false,
+                    },
+                         function(isConfirm) {
+                             if (isConfirm) {
+                                 location.reload(true);
+                             } 
+                         });
+                }                
+            }
+                       
+            function noValueError(){
+                swal({
+                    title: "",
+                    text:'Please enter a value before submitting.',
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: false,
+                });
+            }
+            </script>            
+           
+        </head>
+        
+        <body>
+            <div class="banner" align="center">
+                <a href="http://www.ffe.org/" target="_blank"  >     
+                    <apex:image url="{!$Resource.FFEbanner}" styleClass="logo"/>
+                </a>
+            </div>
+            <div class="loginDiv" >
+                <div align="center" class="" style="font-size:15px;"><h3><strong>DONOR LOGIN</strong></h3></div>
+                <hr class="divider"/>
+                <div style="width:100%" align="center" >
+                    <a  id="googleUrlId" href="#" style="text-decoration:none;">
+                        <img src="{!URLFOR($Resource.gmail)}" class="imagesLogin"/>
+                    </a>
+                    <a  id="facebookUrlId" href = "#" style="text-decoration:none;">
+                        <img src="{!URLFOR($Resource.Facebook)}" class="imagesLogin"/>
+                    </a>
+                </div>
+                <div class="or-container">
+                    <hr class="or-hr"/>
+                    <div id="or">OR</div>
+                    <div align="center;" class="headerH4">
+                        <h4 style="padding:0% 2%;">
+                            Enter FFE Id to get temporary access link to your registered email
+                        </h4>
+                    </div>
+                    <input type="text" id="ffeId"/><br/>
+                    <input type="button" class="buttons" value="Submit" name="Submit" style="margin-top:10px;" onclick="submitFFEIdRequest();"/>
+                </div>
+                <div class="or-container">
+                    <hr class="or-hr"/>
+                    <div id="or">OR</div>
+                    <div align="center;" class="headerH4">
+                        <h4 style="padding:0% 2%;">
+                            Enter your registered email address to get temporary access link 
+                        </h4>
+                    </div>
+                    <input type="text" id="ffeEmail"/><br/>
+                    <input type="button" class="buttons" value="Submit" name="Submit" style="margin-top:10px;" onclick="submitEmailRequest();"/>
+                    <h5 align="center" style="float: left;top: 100px;width: 100%;">
+                        New User?&nbsp;&nbsp;<a href="{!$Setup.System_Details__c.Donor_Site_URL__c}/donorRegistration" >Click here</a>
+                    </h5>
+                </div>
+            </div>
+        </body>
+    </html>
+</apex:page>

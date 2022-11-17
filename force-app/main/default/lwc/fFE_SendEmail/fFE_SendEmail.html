@@ -1,0 +1,7 @@
+<template>
+    <lightning-card  title="Send Email">
+        <lightning-textarea name="input1" label="Enter Email id(s) seperated by comma :" onchange={handleChange} ></lightning-textarea>
+        <lightning-textarea name="input2" label="Enter Message for Email :" onchange={handlemessageChange} ></lightning-textarea>
+        <lightning-button label="Send" onclick={handleClick}></lightning-button>
+    </lightning-card>
+</template>

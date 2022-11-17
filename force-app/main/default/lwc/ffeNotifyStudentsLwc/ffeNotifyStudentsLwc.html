@@ -1,0 +1,66 @@
+<template>
+    <div class="slds-box" style="position:relative;">
+        <div if:true={showSpinner} >
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <div if:true={showError} class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="Description of icon when needed">
+            </span>
+            <h2>{errorMessage}</h2>
+        </div>
+        <h3 class="slds-section__title slds-theme_shade">Notify Student Form</h3>
+        <div class="slds-form">
+            <div class="slds-form-element slds-form-element_stacked">
+                <!-- <label class="slds-form-element__label" for="stacked-input-id-01">Select Gau</label> -->
+                <div class="slds-form-element__control">
+                    <lightning-combobox options={gauNamesOptions} value={gauNameSelected} onchange={handleGauChange} label='Select GAU :' ></lightning-combobox>
+                </div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <!-- <label class="slds-form-element__label" for="stacked-input-id-01">Select Gau</label> -->
+                <div class="slds-form-element__control">
+                    <lightning-combobox options={financialYearOptions} value={financialYearSelected} onchange={handleYearChange} label='Financial Year :' ></lightning-combobox>
+                </div>
+            </div>
+            
+            <fieldset class="slds-form-element slds-form-element_stacked">
+                <!-- <legend class="slds-form-element__legend slds-form-element__label">Checkbox Group Label</legend> -->
+                <div class="slds-form-element__control">
+                  <div class="slds-checkbox">
+                    <input type="checkbox" name="default" id="checkbox-unique-id-33" value="checkbox-unique-id-33" onclick={handleSendEmailChange} />
+                    <label class="slds-checkbox__label" for="checkbox-unique-id-33">
+                      <span class="slds-checkbox_faux"></span>
+                      <span class="slds-form-element__label">Send Email</span>
+                    </label>
+                  </div>
+                  <div class="slds-checkbox">
+                    <input type="checkbox" name="default" id="checkbox-unique-id-34" value="checkbox-unique-id-34" onclick={handleSendSmsChange}/>
+                    <label class="slds-checkbox__label" for="checkbox-unique-id-34">
+                      <span class="slds-checkbox_faux"></span>
+                      <span class="slds-form-element__label">Send SMS</span>
+                    </label>
+                  </div>
+                </div>
+            </fieldset>
+            <div class="slds-form-element slds-form-element_stacked">
+              <div class="slds-form-element__control">
+                <lightning-textarea label="Enter Message for Email:" onchange={handleEmailMessageChange} ></lightning-textarea>
+              </div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <div class="slds-form-element__control">
+                    <lightning-textarea label="Enter Message for SMS:" onchange={handleSmsMessageChange} ></lightning-textarea>
+                </div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked slds-align_absolute-center">
+                <lightning-button label="Send" onclick={handleSendClick}></lightning-button>
+            </div>
+            
+          </div>
+    </div>
+    
+    
+</template>

@@ -1,0 +1,3758 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="MenteePortal_Controller" action="{!checkUserAuth}">
+<head docType="html-5.0">
+    <c:MentorshipScripts />
+    <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-animate.min.js')}"/>  
+    <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-aria.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-sanitize.min.js')}"/>  
+    <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/ui-bootstrap-tpls.min.js')}"/>  
+    <apex:stylesheet value="{!URLFOR($Resource.mentorship_resource, '/styles/w3.min.css')}"/>
+    <style>
+        .card-show{
+        	display:block !important;
+        }
+        body,html {
+        margin: 0;
+        background-color: #fff !important;
+        overflow-x: hidden;
+
+        }
+        .loadingBackground {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background: #F6F6F6;
+        z-index: 11111;
+        opacity: 0.7;
+        top: 0px;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        }
+        .dropdown-menu{
+        	left: -140px;
+        	top: 134%;
+        }
+        ul.dropdown-menu.dropdown-menu-right.headerDropDown.show>a:first-child:after{
+            position: absolute;
+            left: 75%;
+            top: -20px;
+            width: 0;
+            height: 0;
+            content: '';
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            /* border: 1px solid rgba(0,0,0,.15); */
+            border-bottom: 20px solid #551A8B;
+        }
+        .loading {
+        top: 50%;
+        left: 50%;
+        margin: -50px 0px 0px -50px;
+        z-index: 111111;
+        position: fixed;
+        }
+        .profile-pic {
+        
+        display: inline-block;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        }
+        .styled-table>thead>tr>th,.styled-table>tbody>tr>td{
+        border:unset;
+        }
+        .styled-table{
+        border-collapse: collapse;
+        border-radius: 1em 1rem;
+        overflow: hidden;
+        }
+        .upload-profile-pic {
+        
+        width:100%;
+        height:170px;
+        border-radius: 50%;
+        /*border: solid 2px;*/
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        
+        width: 95%;
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        
+        }
+        
+        .upload-profile-pencil {
+        z-index: 2;
+        top: -50px;
+        margin-left: 75%;
+        position: relative;
+        border-radius:50%;
+        background:orange;
+        opacity: 0.6;
+        border:1px solid #fff;
+        }
+        .card-profile-image img {
+        box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15) !important;
+        }
+        
+        .card-profile-image {
+        position: relative;
+        }
+        
+        .card-profile-image img {
+        position: absolute;
+        left: 50%;
+        max-width: 70px;
+        transition: all .15s ease;
+        transform: translate(-50%, -30%);
+        border-radius: .375rem;
+        }
+        
+        .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        }
+        
+        .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-profile-image img:hover {
+        transform: translate(-50%, -33%);
+        }
+        
+        .rounded-circle {
+        border-radius: 50% !important;
+        }
+        
+        .profileDetailCard {
+        box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        Fwidth: 73%;
+        }
+        
+        .card {
+        box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        width: 100%;
+        margin-bottom: 20px;
+        }
+        
+        .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .container {
+        padding: 2px 16px;
+        /* margin-left: 20%;  */
+        width: 90%;
+        }
+        
+        .cardContainer {
+        padding: 2px 16px;
+        margin-left: 20%;
+        }
+        
+        .column {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        height: 300px;
+        /* Should be removed. Only for demonstration */
+        }
+        
+        
+        /* Clear floats after the columns */
+        
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
+        
+        table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        /* width: 70%; */
+        margin-top: 1%;
+        border: 1px solid #ddd;
+        }
+        
+        td,
+        th {
+        text-align: center;
+        padding: 8px;
+        }
+        .navButtons:hover {
+        opacity: 0.8;
+        }
+        
+        .bg-light {
+        background-color: #fff !important;
+        box-shadow: rgb(17 17 26 / 10%) 0px 0px 16px;
+        }
+        
+        .rate {
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+        }
+        
+        .rate:not(:checked)>input {
+        position: absolute;
+        top: -9999px;
+        }
+        
+        .rate:not(:checked)>label {
+        float: right;
+        width: 1em;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+        font-size: 30px;
+        color: #ccc;
+        }
+        
+        .rate:not(:checked)>label:before {
+        content: '★ ';
+        }
+        
+        .rate>input:checked~label {
+        color: #ffc700;
+        }
+        
+        .rate:not(:checked)>label:hover,
+        .rate:not(:checked)>label:hover~label {
+        color: #deb217;
+        }
+        
+        .rate>input:checked+label:hover,
+        .rate>input:checked+label:hover~label,
+        .rate>input:checked~label:hover,
+        .rate>input:checked~label:hover~label,
+        .rate>label:hover~input:checked~label {
+        color: #c59b08;
+        }
+        
+        .my-custom-stars .button .material-icons {
+        font-size: 50px;
+        }
+        
+        .my-custom-stars .star-button.star-on .material-icons {
+        color: red;
+        }
+        
+        .my-custom-stars .star-button.star-off .material-icons {
+        color: yellow;
+        }
+        
+        .jk-rating-stars-container .button {
+        cursor: pointer
+        }
+        
+        .jk-rating-stars-container .button .material-icons {
+        font-size: 30px
+        }
+        
+        .jk-rating-stars-container .star-button {
+        text-shadow: .06em .04em #000
+        }
+        
+        .jk-rating-stars-container .star-button.star-on .material-icons {
+        color: #ee9a00
+        }
+        
+        .jk-rating-stars-container .star-button.star-off .material-icons {
+        color: #ddd
+        }
+        
+        .Rating {
+        color: #a9a9a9;
+        margin: 0;
+        padding: 2px;
+        float: right;
+        }
+        
+        .uploadDocButton {
+        Background-color: #F39C12;
+        color: white;
+        padding: 16px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        opacity: 0.9;
+        }
+        
+        /* table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        margin-top: 3%;
+        } */
+        
+        td,
+        th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+        }
+        
+        .tableHeader {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        font-size: larger;
+        font-weight: bolder;
+        }
+        
+        .tableHeader td,
+        .tableHeader th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+        
+        .tableHeader tr:nth-child(even) {
+        background-color: #f2f2f2;
+        }
+        
+        .tableHeader tr:hover {
+        background-color: #ddd;
+        }
+        
+        .tableHeader th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        background-color: #032559;
+        color: white;
+        /* font-size: x-large; */
+        text-align: center;
+        }
+        
+        div {
+        posititon: relative;
+        }
+        
+        .js-nametag {
+        position: absolute;
+        }
+        
+        .js-nametag:nth-child(1) {
+        animation-name: fade;
+        animation-fill-mode: both;
+        animation-iteration-count: infinite;
+        animation-duration: 5s;
+        animation-direction: alternate-reverse;
+        }
+        
+        .js-nametag:nth-child(2) {
+        animation-name: fade;
+        animation-fill-mode: both;
+        animation-iteration-count: infinite;
+        animation-duration: 5s;
+        animation-direction: alternate;
+        }
+        
+
+        @keyframes fade {
+        0%,
+        50% {
+        opacity: 0;
+        }
+        100% {
+        opacity: 1;
+        }
+        }
+        
+        .download {
+        background-color: #F39C12;
+        color: white;
+        padding: 5px 20px;
+        cursor: pointer;
+        }
+        
+        .download:hover {
+        opacity: 0.7;
+        }
+        
+        /* table css new */
+        .styled-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        /*box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
+        }
+        
+        .styled-table thead tr {
+        background-color: #2e3192;
+        color: #ffffff;
+        text-align: left;
+        }
+        
+        .styled-table th,
+        .styled-table td {
+        padding: 12px 15px;
+        }
+        
+        .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+        }
+        
+        .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+        }
+        
+        .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid #2e3192;
+        }
+        
+        .styled-table tbody tr.active-row {
+        font-weight: bold;
+        color: #2e3192;
+        } 
+        
+        /* fallback */
+        @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url(https://fonts.gstatic.com/s/materialicons/v85/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+        }
+        .collapse.disp.navbar-collapse
+        {
+        	justify-content:end;
+        }
+        .navbar-nav>*{
+        	margin: 0 15px;
+        }
+        .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+        }
+        #toggle,.burger{
+            display:none;
+        }
+            .mobile{
+            margin-top:5%;
+            display:none;
+        }
+         .full-table{
+        	display:block;
+        }
+        @media screen and (max-width:750px){
+            .full-table{
+            display:none
+            }
+        	.mobile{
+        		display:block;
+        	}
+        }
+        .tab-full{
+        
+            display:block;
+        }
+            .navbar-brand{
+        width:33.33%;
+        }
+        .logo{
+            width:100%;
+            height:70px;
+            max-width:342px;
+        }
+        .container-padding{
+            padding:unset;
+        }
+        .buttonWidth{
+            padding: 7px 3px;
+        }
+        .welcomeDiv{
+            margin-top:3%;
+        }
+            a:hover,.activeColor,.burger:hover,i.material-icons.md-light.ml-2.pmd-sm.ng-binding:hover{
+        color: #f4a52e !important;
+        }
+        .dropdown-item:focus, .dropdown-item:hover,.dropdown-item.active, .dropdown-item:active{
+            background:unset;
+        }
+        .snomargin{
+            margin-top:6%;
+        }
+        .w3-modal {
+            z-index:1040;
+        }
+        .buttons {
+        border-radius:3px;
+        
+        color:#fff;
+        border: 1px solid #b1976b;
+        /*text-transform:uppercase;*/
+        background: #2e3192;
+        }
+        .cancelButton{
+        	background:#fff;
+        	color:#551A8B;
+        	border:1px solid #551A8B;
+        }
+        .buttons:hover,.cancelButton:hover{
+        box-shadow: rgb(127 127 182 / 25%) 0px 0px 16px;
+        }
+        .buttons:hover {
+        opacity: 0.7;
+        color:#ffffff;
+        background-color:black !important;
+        }
+        
+        .mobheader{
+            display:none;
+        }
+        .fullheader{
+            display:block;
+        }
+        .btn-warning{
+        	background:orange;
+        }
+        .btn-warning:hover{
+        	background:transparent !important;
+        }
+        @media screen and (max-width:950px){
+        	.col-sm-4-small{
+        		flex:1 1 50%;
+        		max-width:47%;
+        	}
+        }
+        
+        @media screen and (max-width: 1010px){
+            .mobheader{
+            display:block;
+            text-align:center;
+            }
+            .fullheader{
+            display:none !important;
+            }
+            .media-body{    
+            flex: 0 0 44%;
+            display:none;
+            }
+        .col-sm-8-center-small{
+			padding:unset;        
+        }
+            .headerDropDown{
+        /*margin-left:-15px;
+        width:106%;*/
+                text-align:center;
+            }
+        .headerDropDown .dropdown-item{
+            border-bottom: 1.5px solid #efefef;
+            }
+            
+        .navbar-light .navbar-nav .nav-link{
+            border-bottom: 1.5px solid #efefef;
+        }
+        .dropdown-menu{
+            border:unset;
+        }
+        .smallsize{
+            text-align:center;
+            padding-top:1%;
+            margin-left:44%;
+        }
+        .smallheader{
+            width:100%;
+        }
+        .navbar-light .navbar-nav .nav-link{
+            text-align:center;
+        }
+        .logo{
+            max-width:342px;
+        }	
+        .navbar-brand{
+            width:80%;
+        }
+            .buttonWidth{
+                width:100% !important;
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        
+        .uploadFilePopup{
+                max-width:100% !important;
+            }
+            .down{
+                display:none;
+            }
+            .burger{
+                display:block;
+            }
+            .col-sm-left{
+                max-width:5% !important;
+            }
+            .col-sm-right{
+                max-width:5% !important;
+            }
+            .col-sm-6-center{
+            flex: 1 1 50%;
+            max-width:100%;
+            }
+            .col-sm-8-center{
+                flex: 1 1 100% !important;
+                max-width:100% !important;
+            }
+            .disp,.profile-pic {
+            display:none !important;
+            }
+            .checkCss{
+                display:inline-block !important;
+            }
+            .ml-auto, .mx-auto{
+                margin-left:unset !important;
+            }
+            
+            }
+        @media screen and (max-width:750px){
+        .col-sm-6-center-user{
+                width: 80%;
+                max-width: 100%;
+                flex: 0 0 75%;
+                flex: 0 0 80%;
+
+            }
+        .col-sm-3-left-user{
+            max-width: 10%;
+            width: 10%;
+            
+        }
+        }
+        .col-width{
+            max-width:33%;
+            flex: 0 0 31%;
+        }
+        ul.headerDropDown.show:before{
+            border-top: 10px solid #fff;
+            border-right: 10px solid #fff;
+            background-color: #fff;
+        }
+        @media screen and (max-width:992px){
+        	ul.dropdown-menu.dropdown-menu-right.headerDropDown.show>a:first-child:after{
+        		display:none;
+        	}
+        }	
+        @media screen and (min-width:991px) and (max-width: 1000px){
+        .media-body{    
+            flex: 0 0 44%;
+            display:none;
+            }
+        .headerDropDown{
+        /*margin-left:-15px;
+        width:106%;*/
+        text-align:center;
+        }
+        .headerDropDown .dropdown-item{
+        border-bottom: 1.5px solid #efefef;
+        }
+            .buttonWidth{
+                width:100% !important;
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            .down{
+                display:none;
+            }
+            .burger{
+                display:block;
+            }
+            .col-sm-left{
+                max-width:5% !important;
+            }
+            .col-sm-right{
+                max-width:5% !important;
+            }
+            .col-sm-6-center{
+            flex: 1 1 50%;
+            max-width:100%;
+            }
+            .col-sm-8-center{
+                flex: 1 1 100% !important;
+                max-width:100% !important;
+            }
+            .disp,.profile-pic {
+            display:none !important;
+            }
+            .checkCss{
+                display:inline-block !important;
+            }
+            .ml-auto, .mx-auto{
+                margin-left:unset !important;
+            }
+            
+            }
+        .col-md-6-align{
+            text-align:center;
+            flex: 0 0 20%;
+
+        }
+        .checked{
+            color:orange;
+        }
+        @media screen and (max-width: 900px){
+        .snomargin{
+            margin-top:13%;
+        }
+        .col-sm-12-900{
+        	width:100%;
+        	max-width:100%;
+            flex: 0 0 100%;
+
+        }
+        .d-block-900{
+        
+        	display:block !important;
+        }
+        }
+        @media screen and (min-width:991px) and (max-width: 1000px){
+            .media-body{    
+            flex: 0 0 44%;
+            display:none;
+            }
+        }
+            @media screen and (max-width: 800px){
+        .col-md-6-align{
+                
+                width:50% !important;
+            }
+            .col-md-6-align-right{
+                
+                width:50% !important;
+            }
+        }
+        .popuppadding{
+            padding-top:15%;
+        }
+        .banner{
+            height:100%;
+        }
+        @media screen and (max-width:767px){
+            .smallsize{
+                margin-left:43%;
+            }
+            .banner{
+                height:unset ;
+            }
+            .welcomeDiv{
+                margin-top:10%;
+            }
+            .small-height{
+                height:275px !important;
+            }
+            .small-home-page{
+                height:400px;
+        /*background:orange;*/
+            }
+        }
+        @media screen and (max-width:700px){
+        	.col-sm-12-small{
+        		overflow-x:scroll;
+        	}
+        	.w-75-100{
+        		width:100% !important;
+        	}
+        .col-sm-12-small>table.table.styled-table{
+        	    table-layout: unset !important;
+        }
+            .smallsize{
+                margin-left:41%
+            }
+            .welcomeDiv{
+            margin-top:10%;
+            }
+        	.card-padding{
+        		padding:unset;
+        	}
+        }
+        @media screen and (max-width:550px){
+            .smallsize{
+                margin-left:38%;
+            }
+        }
+            @media screen and (max-width:480px){
+            .smallsize{
+                margin-left:35%;
+            }
+        }
+            @media screen and (max-width:420px){
+            .smallsize{
+                margin-left:32%;
+            }
+        }
+        @media screen and (max-width:380px){
+            .smallsize{
+                margin-left:28%;
+            }
+        }
+        @media screen and (max-width:300px){
+            .smallsize{
+                margin-left:20%;
+            }
+        }
+            @media screen and (max-width:660px){
+            .welcomeDiv{
+            margin-top:0%;
+            }
+        }
+            @media screen and (max-width:630px){
+            .welcomeDiv{
+            margin-top:-4%;
+            }
+        }
+            @media screen and (max-width:600px){
+        .col-sm-4-small{
+        	max-width:90%;
+        }
+            .col-sm-3-left-user{
+            max-width: 0%;
+            width: 0%;
+            }
+            .col-sm-6-center-user{
+                width: fit-content;
+                max-width:fit-content;
+                flex: 100%;
+
+        }	
+            .welcomeDiv{
+            margin-top:-9%;
+            }
+        }
+            @media screen and (max-width:575px){
+            .welcomeDiv{
+            margin-top:-15%;
+            }
+        }
+        @media screen and (max-width:525px){
+            .welcomeDiv{
+            margin-top:-23%;
+            }
+        }
+            @media screen and (max-width:480px){
+            .welcomeDiv{
+            margin-top:-28%;
+            }
+        }
+            @media screen and (max-width:450px){
+            .welcomeDiv{
+            margin-top:-30%;
+            }
+        }
+        
+            @media screen and (max-width:425px){
+            .welcomeDiv{
+            margin-top:-42%;
+            }
+        }
+            @media screen and (max-width:400px){
+            .welcomeDiv{
+            margin-top:-44%;
+            }
+        }
+            @media screen and (max-width:375px){
+            .welcomeDiv{
+            margin-top:-53%;
+            }
+        }
+            @media screen and (max-width:350px){
+            .welcomeDiv{
+            margin-top:-65%;
+            }
+        }
+            @media screen and (max-width:325px){
+            .welcomeDiv{
+            margin-top:-67%;
+            }
+        }
+            @media screen and (max-width:300px){
+            .welcomeDiv{
+            margin-top:-77%;
+            }
+        }
+
+            @media screen and (max-width:280px){
+            .welcomeDiv{
+            margin-top:-92%;
+            }
+        
+        }
+        @media screen and (max-width:750px){
+            .popuppadding{
+            padding-top:30%;
+            }
+        }
+            @media screen and (max-width:510px){
+        .headerDropDown{
+        /*width:108%;*/
+        }
+        }
+        @media screen and (max-width:400px){
+        .headerDropDown{
+        /*width:110%;*/
+        }
+        }
+        @media screen and (max-width:310px){
+        .headerDropDown{
+        /*width:112%;*/
+        }
+        }
+        .preliner{
+        white-space: pre-line;
+        padding-left:unset;
+        }
+        @media screen and (max-width:767px){
+        .preliner{
+        white-space: unset;
+        }
+        }
+        @media screen and (max-width:500px){
+        
+            .fontsSize{
+                font-size:medium !important;
+            }
+        
+            .small-height{
+                height:200px !important
+            }
+            .popuppadding{
+            padding-top:100px
+            }
+        }
+        @media screen and (max-width:325px){
+            .small-height{
+                height:200px !important;
+            }
+        }
+        @media screen and (max-width:300px){
+            .small-height{
+                height:200px !important;
+            }
+        }
+            @media screen and (max-width:1000px){
+            .mobheader{
+            display:block ;
+            }
+            .fullheader{
+            display:none !important;
+            }
+            .smallpadding{
+            padding-top:2%;
+            }
+        }
+        .fullquestions{
+            display:block;
+        }
+        .mobilequestions{
+            display:none;
+        }
+       
+        
+            @media screen and (max-width: 600px){
+            .mobilequestions{
+                display:block;
+            }
+            .mobquestionmargin{
+                margin-left:2%;
+                margin-right:2%;
+            }
+            .fullquestions{
+                display:none;
+            }
+            .smallpadding{
+                padding-top:3%;
+            }
+            .col-md-6-align{
+                text-align:left;	
+                width:50% !important;
+            }
+            .col-md-6-align-right{
+                text-align:right;	
+                width:50% !important;
+            }
+            .mobile{
+            display:block;
+            }
+            .tab-full{
+            display:none;
+        }
+            .col-sm-left{
+                display:none;
+            }
+            .col-sm-right{
+                display:none;
+            }
+            .col-sm-6-center{
+            flex:none;
+        /*padding-left:1%;*/
+            max-width:100%;
+            }
+        
+            .table-header{
+            display:none !important;
+            }
+            .table-body{
+        display:table-caption !important;
+            }
+            .table-row{
+            display:inline-grid !important;
+            }
+        }
+        @media screen and (max-width: 600px){
+            .top-margin{
+                margin-top:17% !important;
+            }	
+            .mob-center{
+            margin-left:0% !important;
+        }
+        }
+        @media screen and (max-width:550px){
+            .top-margin{
+                margin-top:15% !important;
+            }
+            .margin-sessions{
+                margin-top:-7%;
+            }
+            .mobquestionmargin{
+                margin-top:-10%;
+            }
+        }
+        @media screen and (max-width:525px){
+        .mobquestionmargin{
+                margin-top:-5%;
+            }
+        }
+        @media screen and (max-width:550px){
+            .top-margin{
+                margin-top:20% !important;
+            }
+        }
+        @media screen and (max-width:420px){
+            .top-margin{
+                margin-top:30% !important;
+            }
+            
+            .paddingbtn{
+        /*-webkit-writing-mode: vertical-rl;*/
+            padding-left:20%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            }
+            .marginBtn{
+            margin-top:2%;
+            }
+        }
+            @media screen and (max-width:392px){
+        .marginBtn{
+                margin-top:2%;
+            }
+        }
+        @media screen and (max-width:320px){
+            .margin-metorshipdetails{
+                margin-top:25% !important;
+            }
+        .top-margin{
+                margin-top:40% !important;
+            }
+        }
+        .userformpadd{
+            padding:40px;
+        }
+            .fontsSize{
+            font-size:25px;
+            margin-top:20px;
+            text-align:center;
+        }
+        @media screen and (max-width:400px){
+            .fontsSize{
+                font-size:unset;
+            }
+            .userformpadd{
+                padding:20px;
+            }
+        }
+
+            @media screen and (max-width:400px){
+            .userformpadd{
+                padding:0px;
+            }
+        }
+        @media screen and (max-width:325px){
+            .logo{
+                width:110%;
+            }
+        }
+        @media screen and (max-width:850px){
+        	.col-sm-6-med{
+                flex: 0 0 50%;
+                max-width: 50%;
+                margin: unset !important;
+                padding: unset;
+            
+        	}
+        	.flex-wrapping{
+        		flex-wrap:wrap;
+        		margin-right:unset;
+                justify-content: space-between;
+
+
+        	padding:unset;
+        	}
+        	.padd-md{
+        		padding:unset !important;
+        	}
+                .col-sm-12.d-flex.flex-wrapping>* {
+                width: 78% !important;
+                max-width: 44%;
+                margin: 0.25rem !important;
+                }
+        }
+        .container-full{
+        	    margin-top: 7rem;
+        }
+        .container-full>div>*{
+                border: 1px solid rgba(0,0,0,.125);
+                border-radius: 0.25rem;
+        	}
+        @media screen and (max-width:992px){
+        .container-full>*{
+        		margin:unset;
+        	}
+        	.container-full>div>*{
+                border: 1px solid rgba(0,0,0,.125);
+                border-radius: 0.25rem;
+        	}
+        	.container-full{
+        		max-width:100% ;
+                margin-left: 5%;
+
+        	}
+        	.col-sm-6-medium{
+                flex: 0 0 50%;
+                max-width: 50%;
+        	}	
+        	.m-3-top{
+        		margin-top:3rem;
+        	}
+        }
+        @media screen and (max-width:650px){
+                .col-sm-6-medium,.col-sm-6-med,.col-sm-12.d-flex.flex-wrapping>*{
+                flex: 0 0 100%;
+                max-width: 100%;
+                }	
+        	.d-block-650{
+        		display:block !important;
+                margin:1.3rem 0rem !important;
+                
+				
+        	}
+        	.container-full{
+        		margin-right:unset;
+        	}
+        	.col-sm-12-small-assest{
+        		width:100%;
+        		padding:unset;
+        	}
+        }
+        @media screen and (max-width:350px){
+        	.container-full{
+        		margin-left:unset;
+        		margin-right:unset;
+                width: 100%;
+        		padding:unset;
+        	}
+        }
+        html,body{
+        /*background-color: #e5e7eb;*/
+        }
+        .focused.form-group>label,.focused.form-group>input,.focused.form-group>input::placeholder{
+        	color:rgb(85, 26, 139);
+        }
+            .background{
+            background-image: url('https://devpro-ffe.cs111.force.com/mentorship/resource/1658931889000/Mask_Group_14?');
+            height: 80vh;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        	padding:unset;
+        	}
+        	.set-back-color{
+        		height:80vh;
+                background-image: linear-gradient(to right,blue, rgba(255,0,0,0));
+                opacity: 0.6;
+        	}
+        .vertical-center{
+        position: relative;
+        display: table;
+        }
+        .vertical-center>*{
+            display: table-cell;
+            vertical-align: middle;
+            height: 100%;
+        }
+    </style>
+    <script>
+    !(function () {
+        "use strict";
+        angular.module("jkAngularRatingStars", ["jkAngularRatingStars.templates"]);
+    })(),
+        (function () {
+            angular.module("jkAngularRatingStars.templates", []).run([
+                "$templateCache",
+                function ($templateCache) {
+                    $templateCache.put(
+                        "rating-stars-directive.html",
+                        '<div\n  class="jk-rating-stars-container"\n  layout="row" >\n\n  <a\n    class="button"\n    ng-click="ctrl.setRating(0)"\n    ng-if="!ctrl.readOnly" >\n      </a>\n\n  <a\n    class="button star-button"\n    ng-class="item.class"\n    ng-click="ctrl.setRating($index + 1)"\n    ng-repeat="item in ctrl.starsArray" >\n    <i class="material-icons">star</i>\n  </a>\n\n</div>\n'
+                    );
+                },
+            ]);
+                })();
+                (function () {
+                "use strict";
+                
+                function RatingStarsController($scope, $attrs, $timeout) {
+                var that = this;
+                void 0 === that.readOnly && (that.readOnly = !1),
+                (that.initStarsArray = function () {
+                (that.starsArray = that.getStarsArray()), that.validateStars();
+                }),
+                (that.getStarsArray = function () {
+                for (var starsArray = [], index = 0; index < that.maxRating; index++) {
+                var starItem = {
+                    index: index,
+                    class: "star-off"
+                };
+                starsArray.push(starItem);
+            }
+            return starsArray;
+        }),
+        (that.setRating = function (rating) {
+            that.readOnly ||
+                ((that.rating = rating),
+                    that.validateStars(that.rating),
+                    $timeout(function () {
+                        that.onRating({
+                            rating: that.rating
+                        }), $scope.$apply();
+                    }));
+        }),
+        (that.setMouseOverRating = function (rating) {
+            that.readOnly || that.validateStars(rating);
+        }),
+        (that.validateStars = function (rating) {
+            if (that.starsArray && 0 !== that.starsArray.length)
+                for (var index = 0; index < that.starsArray.length; index++) {
+                    var starItem = that.starsArray[index];
+                    rating - 1 >= index ? (starItem["class"] = "star-on") : (starItem["class"] = "star-off");
+                }
+        });
+    }
+    angular.module("jkAngularRatingStars").controller("RatingStarsController", ["$scope", "$attrs", "$timeout", RatingStarsController]);
+    })(),
+        (function () {
+            "use strict";
+            
+            function RatingStarsDirective() {
+                function link(scope, element, attrs, ctrl) {
+                    (!attrs.maxRating || parseInt(attrs.maxRating) <= 0) && (attrs.maxRating = "5"),
+                        scope.$watch("ctrl.maxRating", function (oldVal, newVal) {
+                            ctrl.initStarsArray();
+                        }),
+                        scope.$watch("ctrl.rating", function (oldVal, newVal) {
+                            ctrl.validateStars(ctrl.rating);
+                        });
+                }
+                return {
+                    restrict: "E",
+                    replace: !0,
+                    templateUrl: "rating-stars-directive.html",
+                    scope: {},
+                    controller: "RatingStarsController",
+                    controllerAs: "ctrl",
+                    bindToController: {
+                        maxRating: "@?",
+                        rating: "=?",
+                        readOnly: "=?",
+                        onRating: "&"
+                    },
+                    link: link,
+                };
+            }
+            angular.module("jkAngularRatingStars").directive("jkRatingStars", [RatingStarsDirective]);
+        })();
+    
+    
+    </script>
+</head>
+<body ng-app="menteeDetailApp" ng-controller="menteeDetailController">
+    <div class="loadingSection" id="spinner" ng-if="showSpinner">
+        <div class="loadingBackground"></div>
+        <div>
+            <apex:image url="{!$Resource.loading}" styleClass="loading" />
+        </div>
+    </div>
+    <div >
+        <nav class="navbar fixed-top navbar-light bg-light navbar-expand-lg">
+            <div class="container-fluid container-padding">
+                <div class="navbar-brand">
+                    <div > <a href="#"><apex:image url="{!$Resource.FFEbanner}" styleClass="logo" width="50%" height="50%" /></a></div>
+                </div>
+                <div class="burger">
+                        <span><label for="toggle" style="cursor:pointer;">&#9776;</label> <input type="checkbox" id="toggle" ng-model="burgerToggle"/></span>
+                    </div>
+                <div class="collapse navbar-collapse disp"  ng-class="{checkCss:burgerToggle}" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item "><!--active-->
+                            <a class="nav-link" href="#" ng-click="homepage()" ng-class="{activeColor:activeTab==0}" style="color: #551A8B;">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" ng-click="progDetails()" ng-class="{activeColor:activeTab==1}" style="color: #551A8B;">Modules</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" ng-click="sessionListing()" ng-class="{activeColor:activeTab==2}" style="color: #551A8B;">Sessions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" ng-click="selfAssesmentDetails()" ng-class="{activeColor:activeTab==3}" style="color: #551A8B;">Self Assesment</a>
+                        </li>
+                        <li class="dropdown pmd-dropdown pmd-user-info ml-auto disp smallheader mobheader" style="padding-top:1%" ng-class="{checkCss:burgerToggle}">
+                            <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user dropdown-toggle align-items-center " data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                                <div class="media-body" style="color: #551A8B;">
+                                    <!--{{menteeDetail.Name}} media-body-->
+                                </div>
+                                <i class="material-icons md-light ml-2 pmd-sm"  style="margin-left:unset !important;color: #551A8B;font-family:Verdana,sans-serif;font-size:15px;">{{menteeDetail.Name}}</i>
+                                
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right headerDropDown" role="menu">
+                                <a class="dropdown-item" href="javascript:void(0);" ng-click="editDetails();" ng-class="{activeColor:activeTab==4}" style="color: #551A8B;">Edit Profile</a>
+                                <a class="dropdown-item" href="javascript:void(0);" ng-show="showMentorDetailOption" ng-click="MentorDetailsPopup()" ng-class="{activeColor:activeTab==5}" style="color: #551A8B;">Mentor Details</a>
+                                <a class="dropdown-item" href="javascript:void(0);" ng-click="helpCenter()" style="color: #551A8B;" ng-class="{activeColor:activeTab==6}">Mentee Help Center</a>
+                                <a class="dropdown-item" href="javascript:void(0);" ng-click="signOut();" style="color: #551A8B;" ng-class="{activeColor:activeTab==7}">Logout</a>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dropdown pmd-dropdown pmd-user-info ml-auto disp smallheader   fullheader mr-5" ng-class="{checkCss:burgerToggle}">
+                    <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user media align-items-center smallsize" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                        <img class="mr-2 profile-pic" ng-if="menteeDetail.Profile_Pic_Attachment_Id__c != undefined && menteeDetail.Profile_Pic_Attachment_Id__c != null && menteeDetail.Profile_Pic_Attachment_Id__c != ''" src="{!baseURL}servlet/servlet.FileDownload?file={{menteeDetail.Profile_Pic_Attachment_Id__c}}" width="40" height="40" alt="avatar"/>
+                        <!--<img class="mr-2 profile-pic" ng-if="menteeDetail.Profile_Pic_Attachment_Id__c == undefined || menteeDetail.Profile_Pic_Attachment_Id__c == null || menteeDetail.Profile_Pic_Attachment_Id__c == ''" src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" width="40" height="40" alt="avatar"/>-->
+                        <div ng-if="menteeDetail.Profile_Pic_Attachment_Id__c == undefined || menteeDetail.Profile_Pic_Attachment_Id__c == null || menteeDetail.Profile_Pic_Attachment_Id__c == ''">
+                            <!--<apex:image url="{!URLFOR($Resource.Mentee_user)}"   width="50" height="50"/>-->
+                            <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"   width="50" height="50"/>
+                        </div>
+                        <div class="media-body" style="color: #551A8B;">
+                            <!--{{menteeDetail.Name}}-->
+                        </div>
+                            <!--<i class="material-icons md-light ml-2 pmd-sm"  style="margin-left:unset !important;color: #551A8B;font-family:Verdana,sans-serif;font-size:17px;">{{menteeDetail.Name}}</i>-->
+                        
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right headerDropDown" role="menu">
+                        <a class="dropdown-item" href="javascript:void(0);" ng-click="editDetails();" ng-class="{activeColor:activeTab==4}" style="color: #551A8B;">Edit Profile</a>
+                        <a class="dropdown-item" href="javascript:void(0);" ng-show="showMentorDetailOption" ng-click="MentorDetailsPopup()" ng-class="{activeColor:activeTab==5}" style="color: #551A8B;">Mentor Details</a>
+                        <a class="dropdown-item" href="javascript:void(0);" ng-click="helpCenter()" style="color: #551A8B;" ng-class="{activeColor:activeTab==6}">Mentee Help Center</a>
+                        <a class="dropdown-item" href="javascript:void(0);" ng-click="signOut();" style="color: #551A8B;" ng-class="{activeColor:activeTab==7}">Logout</a>
+                    </ul>
+                </div>
+                
+            </div>
+        </nav>
+        <div class="main ">
+            <div class="container-fluid top-margin snomargin p-0" style="">
+                <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;" ng-if="showProgramDetail">
+                    <div class=" m-auto justify-content-center">
+                        <h4  style="text-align:center;background-color: orange;font-size:55px;"><b class="mt-auto">Modules</b>
+                        </h4>  
+                        <p class="text-center">Student > Modules</p>
+                        
+                    </div>
+                    
+                </div>
+                <div class="row mt-3" ng-if="showProgramDetail">
+                    <!--<div class="col-sm-2 col-sm-left"/> -->
+                    <div class="col-sm-12 col-sm-6-center padding">
+                        
+                        <div class="row">
+                            <div class="d-flex col-sm-12 flex-wrap justify-content-center">
+                                
+                                <div class="card col-sm-3 m-3 col-sm-4-small p-0" ng-repeat="x in programDetails">
+                                    <div class="card-header " style="padding:unset;" ><img src="{{x.programmeRec.Image_URL__c}}" style="width:100%;height: 300px;" /></div>
+                                    <div class="card-body">
+                                        <b class="card-title">{{x.programmeRec.curriculum__c}}</b>
+                                        <span><h4 style="color: #551A8B;"><b>{{x.programmeRec.Name}}</b></h4></span>
+                                        <!--<h5 class="card-title">Curriculam</h5>-->
+                                        <p class="card-text"><div ng-repeat="att in x.attId">
+                                        
+                                        <span>
+                                            {{att.Name}}   
+                                        </span>
+                                        <button class="download btn btn-lg" ng-click="downloadDoc(att.Id)" style="margin-top:1%;">
+                                            <i class="fa fa-download" ></i></button>
+                                        </div>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!-- program details start-->
+                            <!--<table class="table styled-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">SNO</th>
+                                        <th scope="col">Module</th>
+                                        <th scope="col">curriculum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in programDetails" style="background:#fff;">
+                                        <td>{{$index + 1}}</td>
+                                        <td style="text-align:left;">{{x.programmeRec.Name}}</td>
+                                        <td  style="text-align:left;">
+                                            {{x.programmeRec.curriculum__c}}
+                                            <div ng-repeat="att in x.attId">
+                                                <button class="download btn btn-lg" ng-click="downloadDoc(att.Id)" style="margin-top:1%"><i class="fa fa-download"></i></button>
+                                                <span>
+                                                    {{att.Name}}   
+                                                </span>
+                                            </div>
+                                            
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>-->
+                        
+                            <!--<div class="card mobile" ng-repeat="x in programDetails">
+                            <div class="card-header" style="background-color: #2e3192;color:#fff;" >{{x.programmeRec.Name}}</div>
+                            <div class="card-body">{{x.programmeRec.curriculum__c}}
+                                <h5 class="card-title">Curriculam</h5>
+                                <p class="card-text"><div ng-repeat="att in x.attId">
+                                                <button class="download btn btn-lg" ng-click="downloadDoc(att.Id)" style="margin-top:1%;"><i class="fa fa-download" ></i></button>
+                                                <span>
+                                                    {{att.Name}}   
+                                                </span>
+                                            </div>
+                                </p>
+                            </div>
+                        </div>-->
+                    </div>
+                    <!--<div class="col-sm-2 col-sm-right"/>-->
+                </div>
+                <!--Profile-->
+            <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;" ng-if="editable">
+                <div class=" m-auto justify-content-center">
+                    <h3  style="text-align:center;background-color: orange;font-size:55px;"><b class="mt-auto">Edit Profile</b>
+                    </h3>  
+                    <p class="text-center">Student > Edit Profile</p>
+                    
+                </div>
+                
+            </div>
+                <div class="row pt-5" ng-if="editable">
+                    <div class="col-sm-3 col-sm-3-left-user"/>
+                    <div class="col-sm-6 col-sm-6-center-user">
+                        <!-- modal popup to change profile pic-->
+                        <div id="profilePicModal" class="w3-modal  popuppadding">
+                            <div class="w3-modal-content" >
+                                <header class="w3-container" style="background-color:#032559;color:white;">
+                                    <span onclick="document.getElementById('profilePicModal').style.display='none'" 
+                                            class="w3-button w3-display-topright">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    <h1 style="font-weight: 600;">Upload</h1>
+                                </header>
+                                <div class="w3-container">
+                                    <span >
+                                        <div style="font-size: 12pt;padding-block: 60px;">
+                                            <input type="file" id="profileFile" class="uploadFilePopup" accept="image/*" style="padding:4px; text-decoration: none; border-color:red;max-width:49%;"/> 
+                                            <button class="uploadDocButton col-sm-6 buttonWidth buttons" style="width:50%;" ng-click="uploadProfilePic(menteeDetail.Id);">Upload</button>
+                                        </div>
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow">
+                            <div class="card-header bg-white border-0">
+                                <div class="row align-items-center">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form style="" class="userformpadd">
+                                    <div class="pl-lg-4">
+                                        <div class="row" style="justify-content:center;">
+                                            <!--<div class="col-lg-4">
+                                            </div>-->
+                                            <div class="col-lg-4">
+                                                <span>
+                                                    <div ng-hide="menteeDetail.Profile_Pic_Attachment_Id__c == undefined || menteeDetail.Profile_Pic_Attachment_Id__c == null || menteeDetail.Profile_Pic_Attachment_Id__c == ''">
+                                                        <img src="{!baseURL}servlet/servlet.FileDownload?file={{menteeDetail.Profile_Pic_Attachment_Id__c}}" class="upload-profile-pic" /> 
+                                                    </div>
+                                                    <div ng-show="menteeDetail.Profile_Pic_Attachment_Id__c == undefined || menteeDetail.Profile_Pic_Attachment_Id__c == null || menteeDetail.Profile_Pic_Attachment_Id__c == ''">
+                                                        <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"  class="upload-profile-pic"  / >
+                                                    </div>
+                                                    <button class="upload-profile-pencil" onclick="document.getElementById('profilePicModal').style.display='block'">
+                                                        <i class='fa fa-pencil' style='font-size:28px;color:#fff;'></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <!--<div class="col-lg-4">-->
+                                                <!--button class="download"  style="margin-top:85%;background-color:#ff793c;"><i class='fa fa-pencil' style='font-size:36px'></i>Change</button-->  
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                    <h3 class="heading-small  mb-4" style="color: rgb(85, 26, 139);"><b>User Information</b></h3>
+                                    <div class="">
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-first-name">First name</label>
+                                                    <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="menteeDetail.FirstName" ng-model="menteeDetail.FirstName" maxlength="37"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-last-name">Last name</label>
+                                                    <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="menteeDetail.LastName" ng-model="menteeDetail.LastName" maxlength="77"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-username">FFEUID</label>
+                                                    <input type="text" id="input-username" class="form-control form-control-alternative" value="{{menteeDetail.FFE_ID__c}}" ng-model="menteeDetail.FFE_ID__c" disabled="true"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-email">Email address</label>
+                                                    <input type="email" id="input-email" class="form-control form-control-alternative" value="{{menteeDetail.Email}}" ng-model="menteeDetail.Email" disabled="true"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-first-name">Phone</label>
+                                                    <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="Phone" value="menteeDetail.Phone" ng-model="menteeDetail.Phone" maxlength="11"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-last-name">College Name</label>
+                                                    <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="College Name" value="menteeDetail.Mentee_College_Name__c" ng-model="menteeDetail.Mentee_College_Name__c" disabled="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-first-name">College Location</label>
+                                                    <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="College Location" value="menteeDetail.College_Location__c" ng-model="menteeDetail.College_Location__c" maxlength="200"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-last-name">Gender</label>
+                                                    <!--input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Gender" value="menteeDetail.Gender__c" ng-model="menteeDetail.Gender__c" /-->
+                                                    <select class="form-control" style="width:100%;"  name="Gender" ng-model="menteeDetail.Gender__c">
+                                                        <option ng-repeat="option in genderPicklistVal" value="{{option}}">{{option}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4"/>
+                                    
+                                    <!-- Programs details >
+                                    <h3 class="heading-small text-muted mb-4">Programs information</h3>
+                                    <div class="pl-lg-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="programs">Programs: <ul ng-repeat="module in moduleList"><li>{{module}}</li></ul></p>
+
+                                            </div>
+
+                                            <div class="col-md-6">
+                                            <h3 >
+                                                Selected Programs
+                                            </h3>
+                                            <md-input-container class="" style="width:70%;">
+                                                <md-select  ng-model="programSelected" multiple="true" style="border: 1px solid #ccc;overflow: hidden;"  md-on-close="">
+                                                    <md-select-header class="demo-select-header">
+                                                        <input ng-model="searchLoc" type="search" class="demo-header-searchbox md-text"  />
+                                                    </md-select-header>
+                                                    <md-optgroup >
+                                                        <md-button class="buttonDropdown" ng-if="isSelectedApp2" layout-fill='' value="all" ng-click="selectedProg()">Select All</md-button >
+                                                        <md-button class="buttonDropdown" ng-if="!isSelectedApp2" layout-fill='' value="all" ng-click="selectedProg()">Deselect All</md-button>
+                                                        <md-option ng-value="gender" ng-repeat="gender in moduleList">{{gender}}</md-option>
+                                                    </md-optgroup>
+                                                </md-select>
+                                            </md-input-container>
+                                            </div>
+                                        </div>
+                                    </div-->
+
+
+                               
+                                    <!-- Address -->
+                                    <h3 class="heading-small  mb-4" style="color: rgb(85, 26, 139);"><b>Contact information</b></h3>
+                                    <div class="pl-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-city">City</label>
+                                                    <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="City" value="menteeDetail.MailingCity" ng-model="menteeDetail.MailingCity" maxlength="37"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group focused">
+                                                    <label class="form-control-label" for="input-country">Country</label>
+                                                    <input type="text" id="input-country" class="form-control form-control-alternative" placeholder="Country" value="menteeDetail.MailingCountry" ng-model="menteeDetail.MailingCountry" maxlength="77"/>
+                                                </div>
+                                            </div>
+                                            <!--div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="input-country">Postal code</label>
+                                                    <input type="number" id="input-postal-code" class="form-control form-control-alternative" placeholder="Postal code" value="" ng-model="menteeDetail.MailingPostalCode" />
+                                                </div>
+                                            </div-->
+                                        </div>
+                                    </div>
+                                    <hr class="my-4" />
+                                          <!-- Programs details -->
+                                    <h3 class="heading-small  mb-4" style="color: rgb(85, 26, 139);"><b>Programs information</b></h3>
+                                          <div class="pl-lg-6">
+                                           <ul ng-repeat="prog in finalListtoDisp" class="pl-0" style="list-style:none;" >
+                                               <li style="color:rgb(85, 26, 139);" ><input type="checkbox" ng-model="prog.selected" ng-click="selectedModule(prog.Name,prog.selected)"/>&nbsp;{{prog.Name}}&nbsp;</li>
+                                              </ul>
+                                          </div>
+                                          <hr class="my-4" />
+                                    <div style="text-align: center;">
+                                        <buton class="download btn btn-lg buttons col-sm-5 " ng-click="saveMenteeDetails()">Save</buton>
+                                        <buton class="download btn btn-lg buttons col-sm-5 cancelButton" ng-click="homepage();">Cancel</buton>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-sm-3-left-user"/>
+                </div>
+                <!--Sessions-->
+                <div class="row  margin-sessions d-flex justify-content-center" ng-show="showSessionListing">
+                    <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;">
+                        <div class=" m-auto justify-content-center">
+                            <h4  style="text-align:center;background-color: orange;font-size:55px;"><b class="mt-auto">Sessions</b>
+                            </h4>  
+                            <p class="text-center" >Student > All Sessions</p>
+                            
+                        </div>
+                        
+                    </div>
+                    
+                    <!--<div class="col-sm-2  col-sm-left"/>-->
+                    <div class="col-sm-8 col-sm-8-center col-sm-8-center-small mt-4">
+                        <div class=" container-full" style="margin: unset;width: 100%;padding: unset;" ng-show="!showNoSessions">
+                        <div class="row d-flex card p-3 justify-content-center " style="flex-direction: row;margin:unset;">
+                            
+                            
+                           <!-- <div class="col-sm-6  p-2 col-sm-6-medium  d-flex flex-wrap">
+                                <div class="col-sm-12 d-flex justify-content-center"><b>Profile</b></div>
+                                <div class="col-sm-12 d-flex justify-content-center flex-wrap">
+                                    <img ng-if="menteeDetail.Profile_Pic_Attachment_Id__c == undefined || menteeDetail.Profile_Pic_Attachment_Id__c == null || menteeDetail.Profile_Pic_Attachment_Id__c == ''" src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" style="border-radius: 50%;max-width: inherit;width:inherit;max-width: 180px;max-height: 150px;" />
+                                    <img ng-if="menteeDetail.Profile_Pic_Attachment_Id__c != undefined && menteeDetail.Profile_Pic_Attachment_Id__c != null && menteeDetail.Profile_Pic_Attachment_Id__c != ''" src="{!baseURL}servlet/servlet.FileDownload?file={{menteeDetail.Profile_Pic_Attachment_Id__c}}" style="border-radius: 50%;max-width: inherit;width:inherit;max-width: 100px;max-height: 100px;"  />
+                                    <div class="col-sm-12"  style="color: #551A8B;text-align: center;">
+                                        {{menteeDetail.Name}}
+                                    </div>
+                                    
+                                </div>
+                                <div class="d-flex justify-content-center col-sm-12 flex-wrap">
+                                    <div class="col-sm-12 justify-content-center d-flex">
+                                    </div>
+                                    <div class="col-sm-12 justify-content-around d-flex">
+                                        <button class="btn btn-light" style="border: solid 1px; background: #551A8B;color:#fff;max-height: 50px;border: solid 1px; background: orange;color:#fff;color:#fff;border-radius: 15px;background: orange !important;border-color:orange;" ng-click="editDetails();">
+                                            <b> Edit</b>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="col-sm-12  p-2 col-sm-6-medium ">
+                                <div class="col-sm-12 justify-content-center d-flex"><b>Scheduled Meeting</b></div>
+                                <div class="col-sm-12 d-flex flex-wrap justify-content-center">
+                                    <div class="w-100 d-flex justify-content-center mt-5" style="height: 135px;">
+                                        <!--<i class="fa fa-calendar"  style="font-size:50px;"/>    -->
+                                        <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                                            <img class="mr-2" style="border-radius: 50%;border: outset;" src="{!$Resource.Mentorship_Calender}" width="100" height="100" alt="avatar"/>
+                                        </a>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-sm-12 justify-content-center d-flex">
+                                    <b>Total Upcoming meetings</b>
+                                </div>
+                                <div class="col-sm-12 justify-content-around d-flex">
+                                    <div class="col-sm-12 justify-content-around d-flex">
+                                        <b>{{scheduledSesssions}} </b>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="col-sm-4  p-2 col-sm-6-medium flex-wrap d-flex justify-content-center m-3-top">
+                                <div class="col-sm-12 justify-content-center d-flex ">Upcoming Meeting</div>
+                                <div class="col-sm-12 d-flex justify-content-center flex-wrap mt-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16" style="height: 100px;width: unset;">
+                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                    </svg>
+                                    
+                                    <div class="col-sm-12 d-flex justify-content-center mt-5">
+                                        {{recSessionDay}}&nbsp; {{recentSessionDetails}}
+                                        &nbsp;&nbsp;&nbsp; IST
+                                    </div>
+                                    <div class="col-sm-12 d-flex justify-content-center">
+                                        
+                                    </div>
+                                    <hr/>
+                                    
+                                </div>
+                            </div>-->
+                            <!--<div class="col-sm-3  p-2 col-sm-6-medium m-3-top">
+<div class="col-sm-12 justify-content-center d-flex ">Join meeting</div>
+<div class="col-sm-12 d-flex justify-content-center flex-wrap mt-3">
+
+<div class="col-sm-12 d-flex justify-content-center">
+Your Upcoming meeting is scheduled to start in :
+</div>
+
+<div class="col-sm-12 d-flex justify-content-center">
+<b>0d 14h 53 min 50s</b>
+</div>
+</div>
+</div>-->
+                            
+                            
+                        </div>
+                        <div class="row p-3 mt-3 col-sm-12  padd-md" style="flex-direction: row;padding-left: unset !important;margin:unset;padding-right: unset !important;">
+                            <div class="col-sm-12 d-flex flex-wrapping" style="border:unset;padding-left: unset !important;margin-right: unset !important;" >
+                                <div class="col-sm-6  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;padding-left: unset !important;margin-left:unset !important;">
+                                    <div class="col-sm-3">
+                                        <span class="fas " style="font-size:40px;">🏆</span>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="col-sm-12">
+                                            <b> {{totalSesssions}}</b>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <b>  Total Sessions Created </b>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="col-sm-6  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;">
+                                    <div class="col-sm-3">
+                                        
+                                        
+                                        <i class="fa fa-bullseye"  style="font-size:40px;" aria-hidden="true"></i>
+                                        
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="col-sm-12">
+                                            <b> {{completedSesssions}}</b>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <b>Total Sessions Completed   </b>
+                                        </div>
+                                    </div> 
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                        <!-- session details start-->
+                        <div ng-show="showNoSessions" style="" class="fontsSize">
+                            No Session has been created by mentor.
+                        </div>
+                        <div class="card text-center shadow-lg bg-body rounded w-100" style="width:fit-content;margin-left:0px;box-shadow:unset;" ng-hide="showNoSessions" >
+                            <!--<div class="card-header">
+                                <h3 style="text-align: center;font-weight: 600;">
+                                    ALL SESSIONS
+                                </h3>
+                            </div>-->
+                            <div class="card-body w-100 full-table">
+                                <div class="progress" style="margin-top: 2%;">
+                                    <!-- <div style="text-align:center;">{{sessionPercentComputation}}% Complete</div> -->
+                                    <div class="progress-bar progress-bar-animated progress-bar-striped" role="progressbar"
+                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="200" ng-style="{width : ( sessionPercentComputation + '%' ) }">
+                                        <!--<span ng-if="sessionPercentComputation > 6">{{sessionPercentComputation}}% Complete</span>-->
+                                    </div>
+                                    
+                                </div>
+                                <span >{{sessionPercentComputation}}% Complete</span>
+                                
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-12 col-sm-12-small full-table">
+                            
+                            
+                            <table class="table styled-table" style="    table-layout: fixed;" ng-hide="showNoSessions">
+                                <thead > 
+                                    <tr>
+                                        <!--<th scope="col" style="">Description</th>-->
+                                        <th scope="col">Session Topics</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Start Time</th>
+                                        <th scope="col">End Time</th>
+                                       
+                                        <th scope="col">Link</th>
+                                        
+                                        
+                                        <th scope="col" style="width: 20%;">More Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="session in sessionList">
+                                        <!--<td>{{session.Description__c}}</td>-->
+                                        <td class="">
+                                            <p ng-bind-html="" style="margin:unset;">{{session.Module__c}}</p>
+                                            <!--<div ng-if="session.Meeting_Link__c!==''"> <a class="btn btn-warning" style="color:#fff;" href="{{session.Meeting_Link__c}}">Join</a></div>-->
+                                            
+                                        </td>
+                                         <td class="pt-3">
+                                            {{session.Status__c}}
+                                        </td>
+                                        <td class="pt-3">{{session.Date__c}}</td>
+                                        <td class="pt-3">{{session.Time__c | date:'shortTime'}}</td>
+                                        <td class="pt-3">{{session.End_time__c | date:' hh:mma'}}</td>
+                                       
+                                        <td>
+                                            <div ng-if="session.Meeting_Link__c!==''"> <a class="btn btn-warning w-75 w-75-100" style="color:#fff;border-radius: 15px;" href="{{session.Meeting_Link__c}}">Join</a></div>
+                                        </td>
+                                       
+                                        
+                                        
+                                        <td>
+                                            <div class="btn-group dropright">
+                                                <a class="dropdown-header" onclick="document.getElementById('feedbackPopup').style.display='block'"><i class="fa fa-comments" aria-hidden="true" style="float: right;font-size:1.5rem;"></i></a>
+                                                <a class="dropdown-item" href="#" ng-click="docUploadPopup(session)"><i class="fa fa-upload" aria-hidden="true" style="float: right;font-size:1.5rem;"></i></a>
+                                                <!--<button type="download btn btn-lg"  ng-click="viewSessionDetails($index)" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="Background-color:#F39C12;color: white;">
+More 
+</button>
+<div class="dropdown-menu" style="width: max-content;">
+
+</div>-->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                        <div class="card mobile"  ng-show="!showNoSessions">
+                            <div class="card-header" style="text-align:center;"><h3 style="text-align: center;font-weight: 600;">
+                                ALL SESSIONS
+                                </h3>
+                                <div class="progress" style="margin-top: 2%;">
+                                    
+                                    <div class="progress-bar progress-bar-animated progress-bar-striped" role="progressbar"
+                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="200" ng-style="{width : ( sessionPercentComputation + '%' ) }">
+                                        
+                                    </div>
+                                </div>
+                                <span >{{sessionPercentComputation}}% Complete</span>
+                            </div>
+                        </div>
+                        <div class="card mobile" ng-repeat="session in sessionList">
+                            <div class="card-header" style="background-color: #2e3192;color:#fff;">
+                                <b>Title :</b> {{session.Description__c || 'Not available'}}
+                            </div>
+                            <div class="card-body">
+                                
+                                <h5 class="card-title"><b>Session Date :</b> {{session.Date__c}}</h5>
+                                <p class="card-title"><b>Session Time </b></p>
+                                <p>
+                                    <b>From : </b> {{session.Time__c | date:'shortTime'}} <b> to :</b> {{session.End_time__c | date:'shortTime'}}
+                                </p>
+                                <p class="card-text">
+                                    <b> Meeting Link :</b> <a class="btn btn-warning " style="color:#fff;border-radius: 15px;" href="{{session.Meeting_Link__c}}">Join</a>
+                                </p>
+                                <h5 class="card-text"><b>status : </b>{{session.Status__c}}</h5>
+                                <div class="btn-group dropright">
+                                    <button type="download btn btn-lg"  ng-click="viewSessionDetails($index)" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="Background-color:#F39C12;">
+                                        More Actions<i class="	fa fa-chevron-circle-down down" style="float: right;font-size: 17px;padding:2px;font-size:1.5rem;"></i>
+                                    </button>
+                                    <div class="dropdown-menu" style="width: max-content;">
+                                        <li><a class="dropdown-header" onclick="document.getElementById('feedbackPopup').style.display='block'" >Feedback <i class="fa fa-pencil" aria-hidden="true" style="float: right;"></i></a></li>
+                                        <li><a class="dropdown-item" href="#" ng-click="docUploadPopup(session)" style="font-size:1.5rem;">Upload Docs<i class="fa fa-upload" aria-hidden="true" style="float: right;"></i></a></li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="feedbackPopup" class="w3-modal popuppadding">
+                            <div class="w3-modal-content">
+                                <header class="w3-container contain" style="">
+                                    <span  ng-click="closeFeedback()"
+                                            class="w3-button w3-display-topright" style="top:15px;" >
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    <h3 style="font-weight: 600;">Feedback</h3>
+                                </header>
+                                <div class="w3-container" style="padding-left:10%; padding-right:10%;">
+                                    <div class="row">
+                                        <!--<div class="col-md-2" >col-md-8 
+                                        </div>-->
+                                        <div class="" style="text-align-last: center;margin-top:1%;width:100%;" >
+                                            <div class="smallpadding" ng-class="{paddingbtn:showNoFeedbackByMentor==true}"  ><!--ng-class="paddingbtn:showNoFeedbackByMentor==true"-->
+                                                <button type="button"  class="btn btn-primary buttons" style="" ng-click="feedbackByMentee()">Your Feedback</button>
+                                                <button type="button"  class="btn btn-primary buttons" ng-class="{marginBtn:showNoFeedbackByMentor==true}"  style="Background-color:#F39C12;"  ng-show="showNoFeedbackByMentor" ng-click="showFeedbackByMentor()">Mentor Feedback</button>  
+                                                <p/>
+                                                <!--<p ng-hide="showNoFeedbackByMentor">
+                                                    No feedback given by mentor
+                                                </p>-->
+                                            </div>
+                                            <p ng-hide="showNoFeedbackByMentor">
+                                                No feedback given by mentor
+                                            </p>
+                                            <!--<hr/>-->
+                                            <div ng-show="MentorFeedback">
+                                                <div class="card" style="width:100%;margin-left:0%;box-shadow: unset;margin-top:3%;">
+                                                    <div class="card-body">
+                                                        <div >
+                                                            <blockquote class="blockquote mb-0">
+                                                                <div class="form-group">
+                                                                    <div class="" >
+                                                                        <jk-rating-stars  max-rating="5"  rating="mentorRating"  on-rating="onMentorRating(rating)" read-Only="true">
+                                                                        </jk-rating-stars>
+                                                                    </div>
+                                                                    <div style="margin-top:2%;font-size:16px;">
+                                                                        {{mentorDescription}}
+
+                                                                    </div>
+                                                                </div>
+                                                            </blockquote>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div ng-show="showAllMenteeFeedback">
+                                                <div class="card" ng-show="MenteeFeedback" style="width:100%;margin-left:0%;box-shadow: unset;margin-top:3%;">
+                                                    <div class="card-body">
+                                                        <div class="" ng-disabled="true" disabled="true">
+                                                            <jk-rating-stars 
+                                                                                max-rating="5" 
+                                                                                rating="menteeRating" 
+                                                                                on-rating="onMenteeRating(rating)" read-Only="true">
+                                                            </jk-rating-stars>
+                                                        </div>
+                                                        <blockquote class="blockquote mb-0">
+                                                            <div class="form-group" style="margin-top:2%;font-size:16px;">
+                                                                {{menteeDescription}}
+                                                                <!--textarea class="form-control" rows="3" id="comment" label="comment" placeholder="feedback Comment" 
+ng-disabled="disableInput" ng-model="menteeDescription"></textarea-->   
+                                                            </div>
+                                                        </blockquote>
+                                                    </div>
+                                                </div>
+                                                <div class="card" ng-show="giveFeedback" style="width:100%;margin-left:0%;">
+                                                    <div class="card-body">
+                                                        <div class="" >
+                                                            <div>
+                                                                Give Feedback
+                                                            </div>
+                                                            <jk-rating-stars 
+                                                                             max-rating="5" 
+                                                                             rating="menteeRating" 
+                                                                             on-rating="onMenteeRating(rating)" read-Only="disableInput">
+                                                            </jk-rating-stars>
+                                                        </div>
+                                                        <blockquote class="blockquote mb-0">
+                                                            <div class="form-group" style="margin-top:2%;">
+                                                                <textarea class="form-control" rows="3" id="comment" label="comment" placeholder="feedback Comment" 
+                                                                            ng-disabled="disableInput" ng-model="menteeDescription" maxlength="200"></textarea>   
+                                                            </div>
+                                                            <button type="button" class="btn btn-primary mob-center buttons" ng-click="submitFeedBack()">Submit</button>
+                                                        </blockquote>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="col-md-2 " >
+                                        </div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Upload doc popup-->
+                        <div id="docsPopup" class="w3-modal popuppadding">
+                            <div class="w3-modal-content">
+                                <header class="w3-container " style="">
+                                    <span  ng-click="closeDocumentPopup()"
+                                            class="w3-button w3-display-topright" style="top: 15px;" >
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    
+                                </header>
+                                <div class="w3-container  mb-lg-5">
+                                    
+                                    <div class=" mb-lg-5 mt-4 row">
+                                        <h1 class="col-sm-12" style="font-weight: 500;font-size: 25px;"><center>Upload Docs</center></h1>
+                                        <div class="col-sm-12 d-flex col-sm-12">
+                                            
+                                            <div style="font-size: 12pt;padding-block: 60px;border: 2px dashed #2e3192;flex-flow: wrap;" class="d-flex col-sm-12">
+                                                <input type="file" id="attachmentFile" class="col-sm-12 uploadFilePopup" accept="application/pdf,application/vnd.ms-excel" style="padding:4px; text-decoration: none; border-color:red;"/> 
+                                                <button class="uploadDocButton col-sm-12 buttonWidth buttons" style="width:50%;" ng-click="uploadDoc(selectedSession.Id);">Upload</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!--<div class="col-sm-2 col-sm-right"/>-->
+                </div>
+
+                <div class="container-fluid pt-5" ng-if="showSelfAssesment" style="background:orange;color:#fff;margin:unset;padding-left:10%;padding-right:10%;height:15rem;height:40vh;">
+                    <div class="d-flex flex-wrap text-center ">
+                        <div class="col-12 justify-content-center p-1" style="font-size:55px;"><h4 style="font-size:35px;"><b>Pre Self-Assesment Form</b></h4></div>
+                        <div class="col-12" style="color:#fff;padding: 1%;">
+                            This is a Mandatory Pre-Assesment form that will help your Mentor better understand your needs and plan your Mentoring sessions accordingly.
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-5 mobquestionmargin" ng-if="showSelfAssesment">
+                    <div class="col-sm-2"/>
+                    <div class="col-sm-8  col-sm-8-center">
+                    	<center><h4><b> Please rate yourself between 1-5 for each question.</b></h4> </center> 
+                        <!-- SelfAssesment Page Start -->
+                        <div class="card " style="border:unset;box-shadow:unset;" >
+                            <!--<div class="card-header" style="background-color: orange;color: #ffffff;">
+                                
+                            </div>-->
+                            <div class="card-body card-padding"><!--1-Bad,2-Better,3-Good ,4-Very Good,5-Excellent-->
+                                
+                                <div class="row" >
+                                    <div class="col-sm-12 d-flex flex-wrap justify-content-around">
+                                        
+                                        <div class="col-md-3 col-md-6-align">
+                                            <span style="font-size:50px;"><!--&#128545;-->
+                                                <apex:image url="{!URLFOR($Resource.Emoji,'Emoji/Bad.png')}" width="50" height="50"/>
+                                            </span>
+                                            <div class=" card">
+                                                
+                                                1:bad</div>
+                                        </div>                                        
+                                        
+                                        <div class="col-md-3 col-md-6-align">
+                                            
+                                            <span  style="font-size:50px;">
+                                                <!--&#128533;-->
+                                                <apex:image url="{!URLFOR($Resource.Emoji,'Emoji/Better.png')}" width="50" height="50"/>
+                                            </span>
+                                            <div class="  card">
+                                                
+                                                2:better</div>
+                                        </div>                                        
+                                        
+                                        <div class="col-md-3 col-md-6-align">
+                                            
+                                            <span  style="font-size:50px;">
+                                                <!--&#128529;-->
+                                                <apex:image url="{!URLFOR($Resource.Emoji,'Emoji/Good.png')}" width="50" height="50"/>
+                                            </span>
+                                            <div class=" card">   
+                                                
+                                                3:good
+                                            </div>
+                                        </div>                                        
+                                        
+                                        <div class="col-md-3 col-md-6-align">
+                                            
+                                            <span style="font-size:50px;"> 
+                                                <!--&#128522;-->
+                                                <apex:image url="{!URLFOR($Resource.Emoji,'Emoji/Verygood.png')}" width="50" height="50"/>
+                                            </span>
+                                            <div class="  card">    
+                                                4:Very good
+                                            </div>
+                                        </div>                                        
+                                        
+                                        <div class="col-md-3 col-md-6-align">
+                                            
+                                            <span style="font-size:50px;"> <!--&#128525;-->
+                                            <apex:image url="{!URLFOR($Resource.Emoji,'Emoji/Excellent.png')}" width="50" height="50"/>
+                                            </span>
+                                            <div class=" card">    
+                                                5:Excellent
+                                            </div>
+                                        </div>                                        
+                                        
+                                    </div>
+                                </div>
+                                <div class="card" ng-repeat="x in selfAssessmentQuestions track by $index">
+                                    <div class="card-header d-flex" style="background:unset;color:#2e3192;border-bottom:unset;">
+                                        <div class="col-sm-9 p-0"><b>{{x.templateQuestion}}</b></div>
+                                        <div class="col-sm-3 d-flex justify-content-end">
+                                            <i class="fa fa-plus" style="color:orange;cursor:pointer; " ng-click="showQA($index);" />
+                                        </div>
+                                    </div>
+                                    <div class="card-body" style="color:#2e3192;display:none;" ng-if="$index===0" ng-class="{'card-show': $index===0}">
+                                        <div ng-repeat="y in x.allQuestions"  class="d-flex mt-2 mb-2 d-block-650">
+                                            <div class="col-sm-9 col-sm-12-small-assest" style="padding:unset;">{{y.questionRec.Question__c}}</div>
+                                            <div class="col-sm-3 col-sm-12-small-assest">
+                                                <div ng-if="y.questionRec.Type__c =='Picklist'">
+                                                    <select ng-model="y.questionRec.FinalAnswer__c" class="form-control">
+                                                        <option ng-repeat="z in y.optionList" > {{z}}</option>
+                                                    </select>
+                                                    <p>{{optionValues}}</p>
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Checkbox'">
+                                                    <input type="{{y.questionRec.Type__c}}" ng-model="y.questionRec.FinalAnswer__c" />
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Text'">
+                                                    <input type="y.questionRec.Type__c" ng-model="y.questionRec.FinalAnswer__c" class="form-control" maxlength="200"/>
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Date'">
+                                                    <input type="date" ng-model="y.questionRec.FinalAnswer__c" class="form-control"/>
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Number'">
+                                                    <input type="number" ng-model="y.questionRec.FinalAnswer__c"  class="form-control" ng-keyup="checkForRating(y.questionRec.FinalAnswer__c)"/>
+                                                </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body" style="color:#2e3192;display:none;" ng-if="$index>0" ng-class="{'card-show': x.show}">
+                                        <div ng-repeat="y in x.allQuestions"  class="d-flex mt-2 mb-2 d-block-650">
+                                            <div class="col-sm-9 col-sm-12-small-assest" style="padding:unset;">{{y.questionRec.Question__c}}</div>
+                                            <div class="col-sm-3 col-sm-12-small-assest">
+                                                <div ng-if="y.questionRec.Type__c =='Picklist'">
+                                                    <select ng-model="y.questionRec.FinalAnswer__c" class="form-control">
+                                                        <option ng-repeat="z in y.optionList" > {{z}}</option>
+                                                    </select>
+                                                    <p>{{optionValues}}</p>
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Checkbox'">
+                                                    <input type="{{y.questionRec.Type__c}}" ng-model="y.questionRec.FinalAnswer__c" />
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Text'">
+                                                    <input type="y.questionRec.Type__c" ng-model="y.questionRec.FinalAnswer__c" class="form-control" maxlength="200"/>
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Date'">
+                                                    <input type="date" ng-model="y.questionRec.FinalAnswer__c" class="form-control"/>
+                                                </div>
+                                                <div ng-if="y.questionRec.Type__c =='Number'">
+                                                    <input type="number" ng-model="y.questionRec.FinalAnswer__c" min="1" max="5" class="form-control" ng-keyup="checkForRating(y.questionRec.FinalAnswer__c)"/>
+                                                </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<table class="table mentorTable">
+                                   
+                                    <tbody class="table-body">
+                                        
+                                        <tr ng-repeat="x in selfAssessmentQuestions" class="table-row">
+                                            <td style="text-align: left;font-size: 20px;"><b>{{x.templateQuestion}}</b></td>
+                                            <td>
+                                                <table class="mentorTable">
+                                                    <thead>
+                                                    </thead>
+                                                    <tbody class="">
+                                                        <tr ng-repeat="y in x.allQuestions" >
+                                                            <td style="text-align: left;width: 65%;"><b>{{y.questionRec.Question__c}}</b></td>
+                                                            <td style="text-align: right">
+                                                                <div ng-if="y.questionRec.Type__c =='Picklist'">
+                                                                    <select ng-model="y.questionRec.FinalAnswer__c" class="form-control">
+                                                                        <option ng-repeat="z in y.optionList" > {{z}}</option>
+                                                                    </select>
+                                                                    <p>{{optionValues}}</p>
+                                                                </div>
+                                                                <div ng-if="y.questionRec.Type__c =='Checkbox'">
+                                                                    <input type="{{y.questionRec.Type__c}}" ng-model="y.questionRec.FinalAnswer__c" />
+                                                                </div>
+                                                                <div ng-if="y.questionRec.Type__c =='Text'">
+                                                                    <input type="y.questionRec.Type__c" ng-model="y.questionRec.FinalAnswer__c" class="form-control" maxlength="200"/>
+                                                                </div>
+                                                                <div ng-if="y.questionRec.Type__c =='Date'">
+                                                                    <input type="date" ng-model="y.questionRec.FinalAnswer__c" class="form-control"/>
+                                                                </div>
+                                                                <div ng-if="y.questionRec.Type__c =='Number'">
+                                                                    <input type="number" ng-model="y.questionRec.FinalAnswer__c" class="form-control" ng-keyup="checkForRating(y.questionRec.FinalAnswer__c)"/>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>-->
+                                <div class="d-flex justify-content-around mt-3 mb-3" ng-if="!menteeDetail.is_SelfAssesment_Completed__c">
+                                    <button type="button" class="download btn btn-lg buttons col-sm-5" ng-click="saveResult()" style="" >Save</button>
+                                    <button type="button" class="download btn btn-lg buttons col-sm-5 cancelButton" ng-click="" style="" >Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-sm-2"/>
+                    <!--<div class="mobilequestions">
+                        <div class="card ">
+                            <div class="card-header" style="background-color: #2e3192;color: #fff;">
+                                Pre Self Assesment question and answers
+                            </div>
+                            <div class="row card-body" >
+                                <div class="col-md-6 col-md-6-align">
+                                    <b>1</b>
+                                </div>                                        
+                                <div class="col-md-6 col-md-6-align-right">
+                                    
+                                    for bad</div>
+                                <div class="col-md-6 col-md-6-align">
+                                    
+                                    <b>2</b>
+                                </div>                                        
+                                <div class="col-md-6 col-md-6-align-right">
+                                    
+                                    for better</div>
+                                <div class="col-md-6 col-md-6-align">
+                                    
+                                    <b>3</b>
+                                </div>                                        
+                                <div class="col-md-6 col-md-6-align-right">
+                                    
+                                    for good</div>
+                                <div class="col-md-6 col-md-6-align">
+                                    
+                                    <b>4</b>
+                                </div>                                        
+                                <div class="col-md-6 col-md-6-align-right">
+                                    
+                                    for Very good</div>
+                                <div class="col-md-6 col-md-6-align">
+                                    
+                                    <b>5</b>
+                                </div>                                        
+                                <div class="col-md-6 col-md-6-align-right">
+                                    
+                                    for Excellent</div>
+                            </div>
+                        </div>  
+                        <div class="card " ng-repeat="x in selfAssessmentQuestions">
+                            <div class="card-header" style="background-color: #2e3192;color: #fff;">
+                                {{x.templateQuestion}}
+                            </div>
+                            <div class="card-body" ng-repeat="y in x.allQuestions" style="padding-top:0.5rem;padding-bottom:0.5rem;">
+                                {{y.questionRec.Question__c}}
+                                <div ng-if="y.questionRec.Type__c =='Picklist'">
+                                    <select ng-model="y.questionRec.FinalAnswer__c" class="form-control">
+                                        <option ng-repeat="z in y.optionList" > {{z}}</option>
+                                    </select>
+                                    <p>{{optionValues}}</p>
+                                </div>
+                                <div ng-if="y.questionRec.Type__c =='Checkbox'">
+                                    <input type="{{y.questionRec.Type__c}}" ng-model="y.questionRec.FinalAnswer__c" />
+                                </div>
+                                <div ng-if="y.questionRec.Type__c =='Text'">
+                                    <input type="y.questionRec.Type__c" ng-model="y.questionRec.FinalAnswer__c" class="form-control" maxlength="200"/>
+                                </div>
+                                <div ng-if="y.questionRec.Type__c =='Date'">
+                                    <input type="date" ng-model="y.questionRec.FinalAnswer__c" class="form-control"/>
+                                </div>
+                                <div ng-if="y.questionRec.Type__c =='Number'">
+                                    <input type="number" ng-model="y.questionRec.FinalAnswer__c" class="form-control" ng-keyup="checkForRating(y.questionRec.FinalAnswer__c)"/>
+                                </div>
+                            </div>
+                            <div class="card-body" style="padding:0.8rem;">
+                                
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3 mb-3">
+                            <button type="button" class="download btn btn-lg buttons col-sm-5" ng-click="saveResult()" style="" >Save</button>
+                        </div>
+                    </div>-->
+                </div>
+                
+            </div>
+                <!-- selfAssesment page end-->
+                        <!-- Help center detail page start-->
+                        <div style="width:100%;" ng-if="showHelpPage" class="helpPage margin-metorshipdetails ">
+                            <div class="container-fluid d-flex justify-content-center" style="background-color: orange;height:15rem;color: #fff;">
+                                <div class=" m-auto justify-content-center">
+                                	<h4  style="text-align:center;background-color: orange;font-size:55px"><b class="mt-auto">Help Centre</b>
+                                    </h4>  
+                                    <p class="text-center">Student > Help Centre</p>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class=" container card"  style="padding:unset;margin-top:3%;max-width: max-content;border-radius: 25px 25px 25px 25px;">
+                                <!--<h4 class="card-title" style="text-align:center;background-color: #2e3192;color: #fff;padding: 15px;margin-top:unset;"><b>Help Centre</b></h4>-->
+                                <hr style="display:none;"/>
+                                <div class="col-md-8" style="max-width: inherit;">
+                                    <p class="m-3"><span style="color:#551A8B;">Click here to download mentorship guide</span>&nbsp;<button class="buttons" style="border:unset;" ng-click="getHelpDoc()"><i class="fa fa-download" aria-hidden="true" style="font-size:20px;color:#fff;"></i></button> </p>
+                                        <!--p><a href="{!$Label.Mentor_youtube_link}"><b>&nbsp;Take a tour</b>&nbsp;<i class="fa fa-youtube" style="font-size:28px;color:red"></i></a></p-->
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- help center detail end-->
+                        <!-- Mentor Details start-->
+        <div style="width:100%;" ng-if="showMentorDetails && !editable" class="helpPage margin-metorshipdetails">
+            <div class="card container"  style="margin-top:10%;padding:unset;">
+                <h4 class="card-title" style="text-align:center;background-color: orange;color: #fff;padding: 15px;margin-top:unset;"><b>Mentor Details</b></h4>
+                <hr style="display:none;"/>
+                <div class="col-md-8" style="padding:20px;padding-top:unset;">
+                    <b>
+                        <div>Name : <span style="font-weight:500;"> {{mentorDetails.Name}}</span></div>
+                        <div>Phone : <span style="font-weight:500;">{{mentorDetails.Phone}}</span></div>
+                        <div>Email :<span style="font-weight:500;"> {{mentorDetails.Email}}</span></div>
+                        <div>Gender :<span style="font-weight:500;"> {{mentorDetails.Gender__c}}</span></div>
+                        <div>Branch of study :<span style="font-weight:500;"> {{mentorDetails.Branch_Areas_of_Practice_Study__c}}</span></div>
+                        <div>Organization :<span style="font-weight:500;"> {{mentorDetails.Corporate__c}}</span></div>
+                        <div>Years of work experience :<span style="font-weight:500;"> {{mentorDetails.Years_of_Work_Experience__c}}</span></div>
+                        <div>Language Known :<span style="font-weight:500;"> {{mentorDetails.Spoken_Languages__c}}</span></div>
+                    </b>
+                </div>
+            </div>
+        </div>
+        <!-- mentee details -->
+            <div calss="row" ng-if="showHomepage">
+                <!--div class="col-sm-12">
+                    <div style="height:100%;">
+                        <div>
+                            <div class="row" style="height:100%;">
+                                <div class="col-md-6 small-height" style="background-color:Orange;height:400px">
+                                    <div class="w3-container preliner" style="width: 100%;height: 100%;">
+                                        
+                                            <p class="js-nametag fontsSize" style="font-size: x-large;font-weight: 800;color: white;">Helping bright students achieve their dreams
+                                                Transforming future generations
+                                                one scholar at a time.
+                                                14,800 students with a scholarship amount more then $11.4 million.
+                                            </p>
+                                            <p class="js-nametag fontsSize" style="font-size: x-large;font-weight: 800;color: white;">Helping her become financially
+                                                stronger today, So she can be the strength of the society tomorrow.
+                                                5000+ Girls Scholars
+                                            </p>
+                                            <p class="js-nametag" style="font-size: x-large;font-weight: 800;color: white;">
+                                            </p>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6 small-home-page" style="height: 400px;">
+                                    <div class="w3-container" style="margin-left: -30px;">
+                                        <div class="js-nametag" style="width:100%;height:100%;">
+                                            <img src="https://mentoring-ffe.org/static/img/hero03.jpg" class="banner" width="100%" />  
+                                        </div>
+                                        <div class="js-nametag" style="width:100%;height:100%;">
+                                            <img src="https://mentoring-ffe.org/static/img/hero01.jpg" class="banner" width="100%" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row welcomeDiv" >
+                                <div class="col-md-3"></div>
+                                <div class="col-md-6">
+                                    <p style="font-family: 'roboto';color: #232323;font-size: 25px;padding-bottom: 30px;" class="fontsSize">
+                                        Welcome to FFE’s Mentoring Program.<br/>
+                                        We hope you will make the most of this opportunity. Wishing you all the best on your mentoring journey!.
+                                        <br/>
+                                        Please feel free to email us at mentoring@ffe.org if you have any questions.
+                                    </p>
+                                </div>
+                                <div class="col-md-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div-->
+                <!--<div class="col-md-1"></div>
+                <div class="col-md-10" style="max-width:80%;margin-left:10%;">
+                    <div class="card">
+                        <div class="card-body"> 
+                            <div class="row">
+                                <div class="col-md-4 d-flex justify-content-center">
+                                    <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                                        <img class="mr-2" style="border-radius: 50%;" ng-if="menteeDetail.Profile_Pic_Attachment_Id__c != undefined && menteeDetail.Profile_Pic_Attachment_Id__c != null && menteeDetail.Profile_Pic_Attachment_Id__c != ''" src="{!baseURL}servlet/servlet.FileDownload?file={{menteeDetail.Profile_Pic_Attachment_Id__c}}" width="100" height="100" alt="avatar"/>
+                                        <img class="mr-2" style="border-radius: 50%;" ng-if="menteeDetail.Profile_Pic_Attachment_Id__c == undefined || menteeDetail.Profile_Pic_Attachment_Id__c == null || menteeDetail.Profile_Pic_Attachment_Id__c == ''" src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" width="100" height="100" alt="avatar"/>
+                                        <div  style="color: #551A8B;">
+                                            {{menteeDetail.Name}}
+                                        </div>
+                                            <button type="button" style="border: solid 1px;margin-top:10%" ng-click="editDetails();" class="btn btn-light">Edit</button>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                                        <img class="mr-2" style="border-radius: 50%;border: outset;" src="{!$Resource.Mentorship_Calender}" width="100" height="100" alt="avatar"/>
+
+                                       
+                                    </a>
+                                    <div  style="color: #551A8B;">
+                                        Upcoming Meetings
+                                    </div>                                        
+                                        <button type="button" style="border: solid 1px;margin-top:3%" ng-click="editDetails();" class="btn btn-light">Edit</button>
+                                </div>
+                                <div class="col-md-4">
+
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <div class="col-md-1"></div>-->
+                <div class="container-fluid background mt-3 mb-5">
+                    <!--<img src="https://news.lafayette.edu/wp-content/blogs.dir/2/files/2021/10/Inauguration-32-Nicole-Hurd.jpg" style="width:100%;"/>-->
+                    <div class="col-sm-12 set-back-color">
+                        <div class="col-sm-8 h-100 vertical-center" style="color:#fff" >
+                            <div class="col-sm-12" style="    font-size: x-large;">
+                                <h2>Welcome To<br/><b> FFE Mentoring Progam</b></h2>
+                                <p class="m-0">We hope you will make the most of this opportunity.</p>
+                                <p>Wishing you all the best on your mentoring journey.</p>
+                                <hr class="w-25"/>
+                                <p>Feel free to email us if you have any questions at mentoring@ffe.org</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mt-5  d-flex d-block-900">
+                         <div class="col-sm-6 mb-5 col-sm-12-900" >
+                            
+                            <h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>About FFE:</b></h3>
+                            <p class="text-justify mt-4 mb-4" style="font-size: larger;">The Foundation For Excellence (FFE) is a registered, US based non-profit -organization founded by the renowned serial entrepreneur, Dr. Prabhu Goel and Mrs. Poonam Goel. 
+                                The Foundation for Excellence India Trust (FFEIT) is a registered, public Charitable Trust in India and works in association with FFE.</p>
+                            <p  class="text-justify mt-4 mb-4" style="font-size: larger;">The mission of FFE is to transform the lives of academically brilliant but financially needy students in India by awarding merit cum means scholarships. In the twenty-eight years since its inception in 1994,
+                                FFE has already helped over 28,782 scholars across India awarding over 81,590 scholarships in excess of ~Rs. 276.12 Crores.</p>
+                            <p class="text-justify mt-4 mb-4" style="font-size: larger;">
+                                FFE currently supports close to 4000 Engineering students enrolled in different Engineering degree courses across India through merit cum means 
+                                scholarships. FFE is committed to the overall well-being, skill development and employability of its scholars.
+                             </p>
+                             <p class="text-justify mt-4 mb-4 " style="font-size: larger;">
+                                 To meet these objectives, Skill Development/Training programs (for 1st and 2nd-year scholars) and a Mentoring Program (for 3rd-year scholars) are being offered to FFE scholars. 
+                                 FFE is striving to make our scholars more confident individuals who can transition from “Campus to Corporate” smoothly.
+                             </p>
+                             <h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>Mentoring Milestone</b></h3>
+                             <img src="https://devpro-ffe.cs111.force.com/mentorship/resource/1659358596000/mentor_milestone?" class="w-100" /><!-- m-auto-->
+                        </div> 
+                        <div class="col-sm-6 col-sm-12-900">
+                            <!--<h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>Mentoring Milestone</b></h3>
+                            <img src="https://devpro-ffe.cs111.force.com/mentorship/resource/1659358596000/mentor_milestone?" class="w-100" />--><!-- m-auto-->
+                            <h3 class="mb-3" style="color: #551A8B;text-decoration: underline;"><b>Mentoring Program Overview:</b></h3>
+                             <p class="text-justify" style="font-size: larger;"><em>Mentoring is to support and encourage people to manage their own learning in order that they may maximize their potential, develop their skills, improve their performance and become the person they want to be.</em>
+                            " Eric Parsloe, The Oxford School of Coaching and Mentoring.</p>
+                            <p  class="text-justify" style="font-size: larger;">FFE has identified key skill gaps and mentoring needs of its Engineering scholars, designed a curriculum to address those needs and through mentors, plans to implement the curriculum. We are confident that Mentors who are experienced, senior professionals from industry, through this program can enable scholars succeed in acquiring confidence, skills and other attributes, towards job-readiness. </p>
+                            <div class="col-sm-12 d-flex justify-content-center"><img src="https://devpro-ffe.cs111.force.com/resource/1659422179000/portal_Image" class="w-50"/>   </div>
+                            <h4 class="mb-3 text-center" style="color: #551A8B;text-decoration: underline;"><b> Mentorship Program-Modules</b></h4>
+                            <p class="text-justify" style="font-size: larger;">
+                                FFE scholars are currently pursuing degrees in more than 300 Engineering colleges across India.
+                                In order to maximize its reach, the mentoring program will be offered in two forms:
+                            </p >
+                            <p class="text-justify" style="font-size: larger;">
+                                <ol style="font-size: larger;">
+                                    <li>
+                                        Remote Mentoring Program which will allow mentors and mentees located in different cities/towns to connect. Meetings will be conducted over zoom/skype/ phone call.
+                                    </li> 
+                                    <li>
+                                        In-Person Mentoring Program for mentors and mentees from a common geographical location. Meetings can be held at the mentor’s office or at a convenient location
+                                    </li>
+                            </ol>
+                        </p>
+                        <p class="text-justify" style="font-size: larger;">
+                            The program can be a hybrid model with some face-to-face sessions and many more remote modules. 
+                            The curriculum provides the framework and guidelines for the sessions to be conducted but at the same time is open to flexibility and customization.
+                        </p>
+                        <p class="text-justify" style="font-size: larger;">
+                            Thank you for your interest in this Program
+                        </p>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    
+                <div class="col-sm-12 mb-5 pb-5 ">
+                    <!--<div class="col-sm-12 mb-5 " >
+                        <h3><b style="color: #551A8B;text-decoration: underline;">MENTORSHIP PROGRAM-MODULES</b></h3>
+                    </div>-->
+                    <!--<div class="col-sm-12 mt-5 p-0  d-flex d-block-900">
+                        <div class="col-sm-6 d-flex p-0 col-sm-12-900 justify-content-center">
+                            
+                            <div class="col-sm-6 justify-content-center text-center col-sm-12-900" style="">
+                                <div style="width: fit-content;color:#551A8B;border:1px solid;border-radius:20%;" class="m-auto p-5">
+                                    <span class="justify-content-center h4 pt-4">PROGRAM HIGHLIGHTS</span>
+                                    <ul class="justify-content-center pt-4 text-justify" >
+                                        <li class="p-1">Remote Mentorship Program</li>
+                                        <li class="p-1">In-house Technology platform</li>
+                                        <li class="p-1">Facilitated by Video Interface</li>
+                                        <li class="p-1">Structured Content</li>
+                                        <li class="p-1">Tracking and Mentoring</li>
+                                        <li class="p-1">Qualitative Feedback</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-6 mb-5 col-sm-12-900">
+                            <img src="https://devpro-ffe.cs111.force.com/resource/1659086992000/portal_Image" class="w-100" />                            
+                        </div>
+                    </div>-->
+            </div>
+                </div>
+                <div class="container container-full">
+                    <!--<div class="row d-flex card p-3 justify-content-center " style="flex-direction: row;">
+                        
+                        
+                        <div class="col-sm-4  p-2 col-sm-6-medium  d-flex flex-wrap">
+                            <div class="col-sm-12 d-flex justify-content-center">Profile</div>
+                            <div class="col-sm-12">
+                                <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" style="border-radius: 50%;max-width: inherit;width:inherit;" />
+                                <div  style="color: #551A8B;text-align: center;">
+                                    {{menteeDetail.Name}}
+                                </div>
+                                
+                            </div>
+                            <div class="d-flex justify-content-center col-sm-12 flex-wrap">
+                                <div class="col-sm-12 justify-content-center d-flex">
+                                </div>
+                                <div class="col-sm-12 justify-content-around d-flex">
+                                    <button class="btn btn-light" style="border: solid 1px; background: #551A8B;color:#fff;" ng-click="editDetails();">
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4  p-2 col-sm-6-medium ">
+                            <div class="col-sm-12 justify-content-center d-flex">Scheduled Meeting</div>
+                            <div class="col-sm-12 d-flex flex-wrap justify-content-center">
+                                <div class="w-100 d-flex justify-content-center mt-5" style="height: 135px;">
+                                    
+                                    <a href="javascript:void(0);" style="text-decoration:none;" class="btn-user" data-toggle="dropdown" data-sidebar="true" aria-expanded="false">
+                                        <img class="mr-2" style="border-radius: 50%;border: outset;" src="{!$Resource.Mentorship_Calender}" width="100" height="100" alt="avatar"/>
+                                        
+                                        
+                                    </a>
+                                </div>
+                                
+                            </div>
+                            <div class="col-sm-12 justify-content-center d-flex">
+                                Total Upcoming meetings
+                            </div>
+                            <div class="col-sm-12 justify-content-around d-flex">
+                                <div class="col-sm-12 justify-content-around d-flex">
+                                    <b>{{scheduledSesssions}} </b>
+                               
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4  p-2 col-sm-6-medium flex-wrap d-flex justify-content-center m-3-top">
+                            <div class="col-sm-12 justify-content-center d-flex ">Upcoming Meeting</div>
+                            <div class="col-sm-12 d-flex justify-content-center flex-wrap mt-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16" style="height: 100px;width: unset;">
+                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                    </svg>
+
+                                <div class="col-sm-12 d-flex justify-content-center mt-5">
+                                    {{recSessionDay}}&nbsp; {{recentSessionDetails}}
+                                    &nbsp;&nbsp;&nbsp; IST
+                                </div>
+                                <div class="col-sm-12 d-flex justify-content-center">
+                                   
+                                </div>
+                                <hr/>
+                            
+                            </div>
+                        </div>
+                        <div class="col-sm-3  p-2 col-sm-6-medium m-3-top">
+                            <div class="col-sm-12 justify-content-center d-flex ">Join meeting</div>
+                            <div class="col-sm-12 d-flex justify-content-center flex-wrap mt-3">
+                                
+                                <div class="col-sm-12 d-flex justify-content-center">
+                                    Your Upcoming meeting is scheduled to start in :
+                                </div>
+                                
+                                <div class="col-sm-12 d-flex justify-content-center">
+                                    <b>0d 14h 53 min 50s</b>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>-->
+                    <!--<div class="row   p-3 mt-3 col-sm-12  padd-md" style="flex-direction: row;padding-left: unset !important;">
+                        <div class="col-sm-12 d-flex flex-wrapping" style="border:unset;padding-left: unset !important;margin-right: unset !important;" >
+                            <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;padding-left: unset !important;margin-left:unset !important;">
+                                <div class="col-sm-3">
+                                    <span class="fas " style="font-size:40px;">🏆</span>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="col-sm-12">
+                                        {{totalSesssions}}
+                                    </div>
+                                    <div class="col-sm-12">
+                                        Total Sessions    
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;margin-right: unset !important;">
+                                <div class="col-sm-3">
+                                    <i class="fa fa-handshake-o" style="font-size:40px;" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="col-sm-12">
+                                        {{assignedMentorCount}}
+                                    </div>
+                                    <div class="col-sm-12">
+                                        Connections    
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;margin-right: unset !important;">
+                                <div class="col-sm-3">
+                                    
+                                    <i class="fa fa-graduation-cap" style="font-size:40px;" aria-hidden="true"></i>
+                                    
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="col-sm-12">
+                                        4
+                                    </div>
+                                    <div class="col-sm-12">
+                                        Courses    
+                                    </div>
+                                </div>                    
+                            </div>
+                            <div class="col-sm-3  p-2 col-sm-6-med d-flex justify-content-center card m-2" style="flex-direction: row;">
+                                <div class="col-sm-3">
+                                    
+                                    
+                                    <i class="fa fa-bullseye"  style="font-size:40px;" aria-hidden="true"></i>
+                                    
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="col-sm-12">
+                                        {{completedSesssions}}
+                                    </div>
+                                    <div class="col-sm-12">
+                                        Completed Sessions    
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>-->
+                    <!--<div class="row  p-3 mt-3 " style="flex-direction: row;">
+<div class="col-sm-12 d-flex">
+<div class="col-sm-3 card">
+<div class="col-sm-12 d-flex ">Connections</div>
+</div>
+<div class="col-sm-3 card">
+<div class="col-sm-12 d-flex ">Upcoming Meetings(1)</div>
+</div>
+<div class="col-sm-6 card">
+<div class="col-sm-12 d-flex ">Goals(9)</div>
+</div>
+</div>
+</div>-->
+                </div>
+            </div>
+            
+        </div>
+        <script>
+        var maxStringSize = 6000000;    //Maximum String size is 6,000,000 characters
+        var maxFileSize = 4350000;      //After Base64 Encoding, this is the max file size
+        var chunkSize = 950000;         //Maximum Javascript Remoting message size is 1,000,000 characters
+        var attachment;
+        var attachmentName;
+        var fileSize;
+        var positionIndex;
+        var doneUploading;
+        var appId;
+        var baseURL = '{!baseURL}';
+        
+        //Method to prepare a file to be attached to the Account bound to the page by the standardController
+        function uploadFile(param) {
+             debugger;
+            appId = param;
+            if(appId != "") {
+                var file = document.getElementById('attachmentFile').files[0];
+                console.log(file);
+                if(file != undefined) {
+                    // debugger;
+                    if(file.size <= maxFileSize) {
+                        attachmentName = file.name;
+                        var fileReader = new FileReader();
+                        fileReader.onloadend = function(e) {
+                            attachment = window.btoa(this.result);  //Base 64 encode the file before sending it
+                            positionIndex=0;
+                            fileSize = attachment.length;
+                            console.log("Total Attachment Length: " + fileSize);
+                            doneUploading = false;
+                            if(fileSize < maxStringSize) {
+                                uploadAttachment(null);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Internal error',
+                                    text: 'Base 64 Encoded file is too large.  Maximum size is ' + maxStringSize + ' your file is ' + fileSize + '.',
+                                }) 
+                            }
+                            
+                        }
+                        fileReader.onerror = function(e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'There was an error reading the file.  Please try again.',
+                            })
+                            
+                        }
+                        fileReader.onabort = function(e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'There was an error reading the file.  Please try again.',
+                            })
+                        }
+                        
+                        fileReader.readAsBinaryString(file);  //Read the body of the file
+                        
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Internal error',
+                            text: 'File must be under 4.3 MB in size.  Your file is too large.  Please try again.',
+                        })
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Internal error',
+                        text: 'You must choose a file before trying to upload it',
+                    })
+                }
+            }else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Internal error',
+                    text: 'Cannot upload document',
+                })
+            }
+            
+        }
+        
+        //Method to send a file to be attached to the Account bound to the page by the standardController
+        //Sends parameters: Account Id, Attachment (body), Attachment Name, and the Id of the Attachment if it exists to the controller   
+        function uploadAttachment(fileId) {
+            // $scope.showSpinner = true;
+            var attachmentBody = "";
+            if(fileSize <= positionIndex + chunkSize) {
+                attachmentBody = attachment.substring(positionIndex);
+                doneUploading = true;
+            } else {
+                attachmentBody = attachment.substring(positionIndex, positionIndex + chunkSize);
+            }
+            console.log("Uploading " + attachmentBody.length + " chars of " + fileSize);
+            MenteePortal_Controller.doUploadAttachment(
+                appId, attachmentBody, attachmentName, 
+                function(result, event) {
+                    console.log(result);
+                    if(event.status){
+                        document.getElementById('docsPopup').style.display='none';
+                        Swal.fire(
+                            '',
+                            'Uploaded document successfully!',
+                            'success'
+                        )
+                    }
+                    if(event.type === 'exception') {
+                        console.log("exception");
+                        console.log(event);
+                    } else if(event.status) {
+                        
+                        if(result.substring(0,3) == '00P') {
+                            if(doneUploading == true) {
+                                MenteePortal_Controller.doUploadAttachment(appId, function(result, event) {
+                                    if(event.status && result) {
+                                        document.getElementById('jumboText').innerHTML = 'Document uploaded successfully.';
+                                        document.getElementById('docsPopup').style.display='none';
+                                        //$scope.showSpinner = false;
+                                    }
+                                    
+                                });
+                                /* window.open("/", "_blank");
+                                window.location.reload(); */
+                            } else {
+                                positionIndex += chunkSize;
+                                uploadAttachment(result);
+                            }
+                        }
+                    } else {
+                        console.log(event.message);
+                    }
+                },
+                {buffer: true, escape: true, timeout: 120000}
+            );
+        }
+        
+        function uploadProfilePic(param) {
+            menteeId = param;
+            if(menteeId != "") {
+                var file = document.getElementById('profileFile').files[0];
+                console.log(file);
+                if(file != undefined) {
+                    if(file.size <= maxFileSize) {
+                        attachmentName = file.name;
+                        var fileReader = new FileReader();
+                        fileReader.onloadend = function(e) {
+                            attachment = window.btoa(this.result);  //Base 64 encode the file before sending it
+                            positionIndex=0;
+                            fileSize = attachment.length;
+                            console.log("Total Attachment Length: " + fileSize);
+                            doneUploading = false;
+                            if(fileSize < maxStringSize) {
+                                uploadProfile(null);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Internal error',
+                                    text: 'Base 64 Encoded file is too large.  Maximum size is ' + maxStringSize + ' your file is ' + fileSize + '.',
+                                })
+                            }
+                        }
+                        fileReader.onerror = function(e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'There was an error reading the file.  Please try again.',
+                            })
+                        }
+                        fileReader.onabort = function(e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'There was an error reading the file.  Please try again.',
+                            })
+                        }
+                        fileReader.readAsBinaryString(file);  //Read the body of the file
+                        
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Internal error',
+                            text: 'File must be under 4.3 MB in size.  Your file is too large.  Please try again.',
+                        })
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Internal error',
+                        text: 'You must choose a file before trying to upload it',
+                    })
+                }
+            }else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Internal error',
+                    text: 'Cannot upload document',
+                })
+            }
+        }
+        
+        //Method to send a file to be attached to the Account bound to the page by the standardController
+        //Sends parameters: Account Id, Attachment (body), Attachment Name, and the Id of the Attachment if it exists to the controller   
+        function uploadProfile(fileId) {
+            var attachmentBody = "";
+            if(fileSize <= positionIndex + chunkSize) {
+                attachmentBody = attachment.substring(positionIndex);
+                doneUploading = true;
+            } else {
+                attachmentBody = attachment.substring(positionIndex, positionIndex + chunkSize);
+            }
+            console.log("Uploading " + attachmentBody.length + " chars of " + fileSize);
+            MenteePortal_Controller.doUploadProfilePic(
+                menteeId, attachmentBody, attachmentName, 
+                function(result, event) {
+                    console.log(result);
+                    if(event.type === 'exception') {
+                        console.log("exception");
+                        console.log(event);
+                    } else if(event.status) {
+                        if(result.substring(0,3) == '00P') {
+                            if(doneUploading == true) {
+                                Swal.fire(
+                                    '',
+                                    'Profile picture updated successfully!',
+                                    'success'
+                                )
+                                location.reload(true);
+                                
+                            } else {
+                                positionIndex += chunkSize;
+                                uploadAttachment(result);
+                            }
+                        }
+                    } else {
+                        console.log(event.message);
+                    }
+                },
+                {buffer: true, escape: true, timeout: 120000}
+            );
+        }
+        </script>
+        <script>
+        var data = '{!JSENCODE(pageLoadInstanceString)}';
+        //data = data.replace(/['"]+/g, '');
+        //data = data.replace(/'/g, "\\'");
+
+        var pageLoadData = JSON.parse(data);
+        var app = angular.module('menteeDetailApp', ['ngMaterial' , 'jkAngularRatingStars','ngSanitize']);  
+        app.controller('menteeDetailController', function($scope) {
+            debugger;
+            $scope.showHelpPage = false;
+            $scope.showSpinner = false;
+            $scope.myText = "My name is:<ol><li>This example includes the &quot;angular-sanitize.js&quot;</li><li>This example includes the &quot;angular-sanitize.js&quot;</li><li>This example includes the &quot;angular-sanitize.js&quot;</li></ol>";
+            $scope.myNewtext ="&lt;ol&gt;&lt;li&gt;This example includes the &amp;quot;angular-sanitize.js&amp;quot;&lt;/li&gt;&lt;li&gt;This example includes the &amp;quot;angular-sanitize.js&amp;quot;&lt;/li&gt;&lt;li&gt;This example includes the &amp;quot;angular-sanitize.js&amp;quot;&lt;/li&gt;&lt;/ol&gt";
+            $scope.allProgrammes = pageLoadData.allProgrammes;
+            var menteeId = '{!$CurrentPage.parameters.Id}';
+            $scope.menteeDetail; 
+            $scope.editable = false;
+            
+            $scope.showDetails = false;
+            $scope.showProgramDetail = false;
+            $scope.showSessions = false;
+            $scope.showHomepage = true;
+            $scope.showSelfAssesment = false;
+            $scope.mentorDescription = '';
+            $scope.menteeDescription = '';
+            $scope.mentorRating = 0;
+            $scope.menteeRating = 0;
+            $scope.showNoSessions = false;
+            $scope.genderPicklistVal = pageLoadData.picklistValues.mentorGender;
+            
+            $scope.selfAssessmentQuestions=	pageLoadData["selfAssessmentQuestions"]; 
+            for(var i =0;i<$scope.selfAssessmentQuestions.length;i++){
+                for(var j =0;j<$scope.selfAssessmentQuestions[i].allQuestions.length;j++){
+                    if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Type__c == 'Number'){
+                        $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c =  parseInt($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c);                                  
+                    }
+                }
+            }
+            console.log($scope.selfAssessmentQuestions);
+            $scope.selfAssessmentQuestions.map(selfs=>{
+                	selfs.show=false;
+                })
+                $scope.showQA=function(index){
+                $scope.selfAssessmentQuestions.map((selfs,i)=>{
+                	if(index===i){
+                	selfs.show=!selfs.show;
+                console.log('IN',selfs.show,index);
+                }
+                console.log(selfs.show,index);
+                }	)
+            }
+            $scope.selfAssessmentAnswers = [];
+            $scope.checkboxVal;
+            $scope.optionValues ;
+            $scope.moduleList = [];
+            $scope.CurrentDate = new Date();
+            $scope.getMenteeDetails = function() {
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.getMenteeContactDetails}',
+                    menteeId,
+                    function(result, event){
+                        
+                        if(event.status){
+                            $scope.menteeDetail = result;    
+                            if($scope.menteeDetail.Modules__c != undefined){
+                                $scope.moduleList = $scope.menteeDetail.Modules__c.split(';');
+                            }
+                                debugger;
+
+                                                    $scope.finalListtoDisp = [];
+                                for(var i=0;i<$scope.allProgrammes.length;i++){
+                                        if($scope.moduleList.includes($scope.allProgrammes[i].Name)){
+                                            $scope.finalListtoDisp.push({Name : $scope.allProgrammes[i].Name, selected : true});
+                                        }else{
+                                            debugger;
+                                            $scope.finalListtoDisp.push({Name : $scope.allProgrammes[i].Name, selected : false});
+                                        }
+                                
+                                }
+
+
+                           // }
+                            if($scope.menteeDetail.is_SelfAssesment_Completed__c == false){
+                                $scope.selfAssesmentDetails();
+                                Swal.fire('Please complete the Pre Self Assesment', '', 'info')
+                                
+                            }
+                            $scope.$apply();                                        
+                        }
+                        $scope.showSpinner = false;               
+                    },
+                    {escape: true}
+                );
+            }
+            $scope.modulesSelected = [];
+            $scope.selectedModule = function(param1,event){
+                debugger;
+          
+            }
+               
+
+            $scope.getMenteeDetails();
+            
+            $scope.uploadDoc = function(param){
+                 debugger;
+                uploadFile(param)
+            }
+            
+            
+            $scope.editDetails = function(){
+                $scope.activeTab=4;
+                $scope.showMentorDetails = false;
+                $scope.burgerToggle=false;
+                $scope.editable = true;
+                $scope.showDetails = false;
+                $scope.showProgramDetail = false;
+                $scope.showHomepage = false;
+                $scope.showSessionListing = false;
+                $scope.showSelfAssesment = false;
+                $scope.showHelpPage = false;
+                
+            }
+            
+            $scope.helpCenter = function(){
+                $scope.activeTab=6;
+                $scope.burgerToggle=false;
+                $scope.editable = false;
+                $scope.showDetails = false;
+                $scope.showProgramDetail = false;
+                $scope.showHomepage = false;
+                $scope.showSessionListing = false;
+                $scope.showSelfAssesment = false;
+                $scope.showHelpPage = true;
+                $scope.showMentorDetails = false;
+            }
+
+            $scope.MentorDetailsPopup = function(){
+                $scope.activeTab=5;
+                $scope.burgerToggle=false;
+                $scope.editable = false;
+                $scope.showDetails = false;
+                $scope.showProgramDetail = false;
+                $scope.showHomepage = false;
+                $scope.showSessionListing = false;
+                $scope.showSelfAssesment = false;
+                $scope.showHelpPage = false;
+                $scope.showMentorDetails = true;
+            }
+            
+                        $scope.getHelpDoc = function () {
+                $scope.showSpinner = true;
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.MenteePortal_Controller.getHelpDoc}',
+                function (result, event) {
+                    $scope.showSpinner = false;
+                    $scope.$apply();
+                    if (event.status) {
+                        /*  Swal.fire(
+                            '',
+                            'Profile Updated successfully!',
+                            'success'
+                        )  */
+                        if(result != null){
+                            $scope.downloadDoc(result);
+                        }
+                    }
+                }, {
+                    escape: true
+                }
+            );
+        }
+            
+            $scope.checkForRating = function(param){
+                console.log(param)
+                if(param > 5){
+                    Swal.fire({
+                                icon: 'info',
+                                title: '',
+                                text: 'rate yourself on the scale of 5',
+                            });
+                    return;
+                }
+            }
+            
+            $scope.genderSelected = [];
+            $scope.searchLoc ;
+            $scope.isSelectedAppl = true;
+            $scope.isSelectedApp2 = true;
+            $scope.selectedProg = function () {
+                debugger;
+                        if ($scope.isSelectedApp2) {
+                            for (var i = 0; i < $scope.allProgrammes.length; i++) {
+                                $scope.genderSelected.push($scope.allProgrammes[i]);
+                                $scope.isSelectedApp2 = false;
+                            }
+                        } else if (!$scope.isSelectedApp2) {
+                            $scope.genderSelected = [];
+                            $scope.isSelectedApp2 = true;
+                        }
+                    }
+            
+            $scope.homepage = function(){
+                $scope.activeTab=0;
+                $scope.burgerToggle=false;
+                $scope.showProgramDetail = false;
+                $scope.showSessionListing = false;
+                $scope.showDetails = false;
+                $scope.editable = false;
+                $scope.showHomepage = true;
+                $scope.showSelfAssesment = false;
+                $scope.showHelpPage = false;
+                $scope.showMentorDetails = false;
+            }
+            
+            $scope.progDetails = function() {
+                $scope.activeTab=1;
+                $scope.burgerToggle=false;
+                $scope.showDetails = false;
+                $scope.showProgramDetail = true;
+                $scope.showSessionListing = false;
+                $scope.editable = false;
+                $scope.showHomepage = false;
+                $scope.showMentorFeedback = false;
+                $scope.showSelfAssesment = false;
+                $scope.showHelpPage = false;
+                $scope.showMentorDetails = false;
+            }
+            
+            $scope.programDetails =[];
+            $scope.sessionList = [];	
+            $scope.getprogramDetail = function(){
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.getProgramDetails}',
+                    function(result,event){
+                        if(event.status){
+                            
+                            $scope.programDetails=result;
+                            $scope.$apply();
+                        }
+                        else if (event.type==='exception'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }
+                        $scope.showSpinner = false;
+                    },
+                    {escape:true}
+                );
+            }
+            $scope.getprogramDetail();
+            $scope.mentorDetails;
+            $scope.showMentorDetailOption = true;
+            $scope.getMentorDetail = function(){
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.getMentorDetails}',
+                    menteeId,
+                    function(result,event){
+                        if(event.status){
+                        if(result != null){
+                            $scope.mentorDetails=result;
+                        $scope.$apply();
+                        }else{
+                            $scope.showMentorDetailOption = false;
+                        }
+                            
+                        }
+                        else if (event.type==='exception'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }
+                        $scope.showSpinner = false;
+                    },
+                    {escape:true}
+                );
+            }
+            $scope.
+            
+            getMentorDetail();
+            $scope.sessionListing = function(){
+                $scope.activeTab=2;
+                $scope.burgerToggle=false;
+                $scope.showProgramDetail = false;
+                $scope.showSessionListing = true;
+                $scope.showDetails = false;
+                $scope.editable = false;
+                $scope.showHomepage = false;
+                $scope.showMentorFeedback = false;
+                $scope.showSelfAssesment = false;
+                $scope.showHelpPage = false;
+                $scope.showMentorDetails = false;
+            } 
+            
+            $scope.getSessionDetail = function(){
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.getAllSession}',
+                    menteeId,
+                    function(result,event){
+                        if(event.status){
+                            if(result != undefined || result != null){
+                                for(var i=0;i<result.length;i++){
+                                    if(result[i].Agenda__c != undefined){
+                                        result[i].Agenda__c = result[i].Agenda__c.replaceAll('&lt;','<');
+                                        result[i].Agenda__c = result[i].Agenda__c.replaceAll('&gt;','>');
+                                        result[i].Agenda__c = result[i].Agenda__c.replaceAll('&amp;quot;','"');
+                                        result[i].Agenda__c = result[i].Agenda__c.replaceAll('&amp;','&');
+                                    }
+                                }
+                            }
+                            $scope.sessionList = result;
+                            if($scope.sessionList == undefined || $scope.sessionList == null || $scope.sessionList.length == 0){
+                                $scope.showNoSessions = true;
+                            }else{
+                                $scope.showNoSessions = false;
+                                for(var i=0;i< $scope.sessionList.length;i++){
+                                    var sessionDate = $scope.sessionList[i].Date__c ;
+                                    $scope.sessionList[i].Time__c = $scope.sessionList[i].Time__c + $scope.sessionList[i].Date__c - 19800000;
+                                        $scope.sessionList[i].End_time__c = $scope.sessionList[i].End_time__c + $scope.sessionList[i].Date__c- 19800000;
+                                    var dateObject = new Date(sessionDate);
+                                    
+                                    var humanDateFormat = dateObject.toLocaleString();
+                                    $scope.sessionList[i].Date__c = humanDateFormat.split(",")[0];
+                                    
+                                }
+                                $scope.totalHours = $scope.sessionList[0].Mentor_Mentee_Association__r.Total_Mentoring_Hours__c;
+                                $scope.hoursCompleted = $scope.sessionList[0].Mentor_Mentee_Association__r.Duration_of_Sessions_Attended__c;
+                                $scope.sessionPercentComputation=0;
+                                if($scope.hoursCompleted>0) $scope.sessionPercentComputation = (($scope.hoursCompleted * 100.00) / $scope.totalHours);
+                                $scope.sessionPercentComputation=$scope.sessionPercentComputation>100?100:$scope.sessionPercentComputation;
+                                /* console.log($scope.sessionPercentComputation);
+                                console.log($scope.hoursCompleted );
+                                console.log($scope.totalHours );*/
+                                if($scope.sessionPercentComputation)
+                                    $scope.sessionPercentComputation =  Math.round($scope.sessionPercentComputation);
+                            }
+                            $scope.$apply();
+                            
+                        }
+                        else if (event.type==='exception'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }
+                        $scope.showSpinner = false;
+                    },
+                    {escape:true}
+                );
+            }
+            
+            $scope.getSessionDetail();
+            $scope.viewSessionDetails = function(index){
+                $scope.menteeFeedback = [];
+                $scope.showReschedule = false;
+                $scope.showMentorFeedback = false;
+                $scope.showMentorFeedback = false;
+                $scope.showSelfAssesment = false;
+                if($scope.sessionList.length > 0)
+                    
+                    $scope.session  = $scope.sessionList[index] ;
+                $scope.showDetails = true;
+                $scope.mentorDescription = '';
+                $scope.menteeDescription = '';
+                $scope.mentorRating = 0;
+                $scope.menteeRating = 0;
+                $scope.mentorFeedback = '';
+                $scope.showNoFeedbackByMentor = false;
+                $scope.MentorFeedback = false;
+                $scope.MenteeFeedback = false;
+                $scope.giveFeedback = false;
+                $scope.showAllMenteeFeedback = true;
+                $scope.showHelpPage = false;
+                $scope.showMentorDetails = false;
+                
+                $scope.rescheduleSession = $scope.sessionList[index];
+                $scope.rescheduleSessionDate = new Date($scope.rescheduleSession.Date__c);
+                
+                if($scope.sessionList[index].Feedbacks__r != null){
+                    
+                    for(var i=0;i<$scope.sessionList[index].Feedbacks__r.length; i++){
+                        if($scope.sessionList[index].Feedbacks__r[i].Feedback_given_by__c == "MENTOR"){
+                            $scope.showMentorFeedback = true;
+                            $scope.giveFeedback = false;
+                            $scope.showNoFeedbackByMentor = true;
+                            $scope.mentorFeedback = $scope.sessionList[index].Feedbacks__r[i];
+                            $scope.mentorDescription = $scope.sessionList[index].Feedbacks__r[i].Description__c;
+                            $scope.mentorRating = $scope.sessionList[index].Feedbacks__r[i].Mentor_Rating__c;
+                            
+                        }
+                        if($scope.sessionList[index].Feedbacks__r[i].Feedback_given_by__c == "MENTEE"){
+                            //$scope.disableInput = true;
+                            $scope.showMenteeFeedback = true;
+                            $scope.MenteeFeedback = true;
+                            $scope.giveFeedback = false;
+                            $scope.menteeFeedback = $scope.sessionList[index].Feedbacks__r[i];
+                            $scope.menteeDescription = $scope.sessionList[index].Feedbacks__r[i].Description__c;
+                            $scope.menteeRating = $scope.sessionList[index].Feedbacks__r[i].Mentee_Rating__c;
+                        }
+                        
+                        
+                    }
+                    
+                    
+                }else{
+                    $scope.showMentorFeedback = false ;
+                    $scope.disableInput = false;
+                    $scope.showSubmitButton = true;
+                    $scope.showNoFeedbackByMentor = false;
+                    $scope.giveFeedback = true;
+                    $scope.MenteeFeedback = false;
+                    $scope.showHelpPage = false;
+                    $scope.showMentorDetails = false;
+                }
+                if($scope.menteeFeedback.length == 0){
+                    $scope.disableInput = false;
+                    $scope.showSubmitButton = true;
+                    $scope.showMenteeFeedback = false;
+                    $scope.giveFeedback = true;
+                    $scope.MenteeFeedback = false;
+                    $scope.showHelpPage = false;
+                    $scope.showMentorDetails = false;
+                    
+                }
+            }
+            $scope.firstRate = 0;
+            $scope.mentorRating;
+            $scope.menteeRating;
+            $scope.readOnly = true;
+            
+            $scope.onMentorRating = function(rating){
+                $scope.menteeRating = rating;
+                
+            }; 
+            $scope.submitFeedBack = function (){
+                $scope.session;
+                console.log('$scope.Description'+$scope.Description);
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.submitFeedBack}',
+                    $scope.session.Id,$scope.menteeDescription,$scope.menteeRating,
+                    function(result,event){
+                        if(event.status){
+                            $scope.getSessionDetail();
+                            $scope.disableInput = true;
+                            $scope.showSubmitButton = false;
+                            $scope.$apply();
+                            Swal.fire(
+                                '',
+                                'Submitted feedback successfully!',
+                                'success'
+                            )
+                            document.getElementById('feedbackPopup').style.display='none';
+                        }
+                        else if (event.type==='exception'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }
+                        $scope.showSpinner = false;
+                    },
+                    {escape:true}
+                );
+                
+            }
+            
+            $scope.applyForProgram = function(programId){
+                console.log('$scope.Description'+$scope.Description);
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.insertMentorMenteeAssociation}',
+                    menteeId,programId,	
+                    function(result,event){
+                        $scope.showSpinner = false;
+                        if(event.status){
+                            swal("Applied sucessfully!", "", "success");
+                        }
+                        else if (event.type==='exception'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }
+                    },
+                    {escape:true}
+                );  
+            }
+            
+            $scope.redirectURL = function(pageName){
+                let mainURL = window.location.origin+'/mentorship';
+                window.location.replace(mainURL + "/"+pageName+"?Id="+menteeId);
+            }
+            
+            $scope.signOut = function(pageName){
+                $scope.activeTab=7;
+                $scope.burgerToggle=false;
+                $scope.showSpinner = true;
+                let mainURL = window.location.origin+'/mentorship/studentLogin';
+                window.location.replace(mainURL);
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.mentorSignOut}',
+                    $scope.menteeDetail.Id,
+                    function(result, event){
+                        $scope.showSpinner = false;
+                        if(event.status){
+                            let mainURL = window.location.origin+'/mentorship/studentLogin';
+                            window.location.replace(mainURL);
+                        }               
+                    },
+                    {escape: true}
+                );
+            }
+            
+            $scope.uploadProfilePic = function(menteeId){
+                $scope.showSpinner = true;
+                uploadProfilePic(menteeId);
+            }
+            
+            $scope.saveMenteeDetails = function(){
+                $scope.showSpinner = true;
+                for(var i=0;i<$scope.finalListtoDisp.length;i++){
+                    debugger;
+                    if($scope.finalListtoDisp[i].selected == true){
+                        if(!$scope.modulesSelected.includes($scope.finalListtoDisp[i].Name)){
+                            $scope.modulesSelected.push($scope.finalListtoDisp[i].Name);
+                        }
+                    }
+                }
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.updateMenteeDetails}',
+                    $scope.menteeDetail,$scope.modulesSelected,
+                    function(result, event){
+                        $scope.showSpinner = false;
+                        if(event.status){
+                            swal("Saved sucessfully!", "", "success");
+                            $scope.editable = false; 
+                            $scope.showHomepage = true;
+                            $scope.modulesSelected = [];
+                            $scope.$apply();
+                        }               
+                    },
+                    {escape: true}
+                );  
+                
+            }
+            
+            $scope.markMenteeSelfAssesment = function(){
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.markSelfAssesment}',
+                    $scope.menteeDetail.Id,
+                    function(result, event){
+                        $scope.showSpinner = false;
+                        if(event.status){
+                            
+                            $scope.showSpinner = false;
+                        }   
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                    },
+                    {escape: true}
+                );  
+                
+            }
+            
+            
+            $scope.saveResult = function(){
+                $scope.selfAssessmentAnswers =[];
+                $scope.selfAssessmentQuestions.map(selfs=>{
+                    	delete selfs.show;
+                    });
+                debugger;
+                console.log($scope.selfAssessmentQuestions);
+                for(var i=0; i< $scope.selfAssessmentQuestions.length;i++){
+                    for(var j=0; j< $scope.selfAssessmentQuestions[i].allQuestions.length;j++){
+                        if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Type__c == 'Number'){
+                            if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c == null || $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c == undefined ||window.isNaN($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c)){
+                         Swal.fire('Please complete Pre Self Assesment', '', 'info')
+                            return;
+                        }
+                        }
+                        
+                        if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c != null || $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c != undefined || window.isNaN($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c)){
+                            var responseVar = {"SelfAssessmentQuestion":$scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Id};
+                            
+                            if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRes != null && $scope.selfAssessmentQuestions[i].allQuestions[j].questionRes != undefined){
+                                responseVar.respId = $scope.selfAssessmentQuestions[i].allQuestions[j].questionRes.Id;
+                            }
+                            
+                            if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Type__c == 'Picklist')
+                                responseVar.AnswerPicklist = $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c;
+                            if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Type__c == 'Checkbox')
+                                responseVar.AnswerCheckbox = $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c;
+                            if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Type__c == 'Text')
+                                responseVar.AnswerText = $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c;
+                            if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Type__c == 'Number'){
+                                responseVar.AnswerNumber = $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c;
+                                if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c > 5){
+                                    Swal.fire('please rate yourself on scale of 5', '', 'info')    
+                                    return;
+                                }
+                            }
+                                
+                            
+                            
+                            // Handle for Integer - And generically think how to solve for all data type without multiple if
+                            if($scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.Type__c == 'Date'){
+                                var dateVal = $scope.selfAssessmentQuestions[i].allQuestions[j].questionRec.FinalAnswer__c;
+                                var date = dateVal.getDate();
+                                var month = dateVal.getMonth();
+                                var year = dateVal.getFullYear();
+                                responseVar.AnswerDate = date;
+                                responseVar.AnswerMonth = month;
+                                responseVar.AnswerYear = year;
+                            }
+                            $scope.selfAssessmentAnswers.push(responseVar);
+                        }else{
+                            Swal.fire('Please complete Pre Self Assesment', '', 'info')
+                            return;
+                        }
+                    }
+                }
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MenteePortal_Controller.insertSelfAssessmentAnswers}',
+                    $scope.selfAssessmentAnswers,menteeId,
+                    function(result,event){
+                        $scope.showSpinner = false;
+                        if(event.status && result=='sucess'){
+                            //let timerInterval
+                            swal("Pre SelfAssesment submitted sucessfully!", "", "success");
+                            $scope.markMenteeSelfAssesment();
+                            $scope.homepage();
+                        }
+                        else if (event.type==='exception'){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: 'Oops Something went wrong please refresh Page',
+                            })
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Internal error',
+                                text: result,
+                            })
+                        }
+                    },
+                    {escape:true});
+            }
+            $scope.onChange = function(textVal, typeVal,nameVal){ 
+                if(typeVal == 'Picklist'){
+                    $scope.selfAssessmentAnswers.push({"SelfAssessmentQuestion":nameVal,"AnswerPicklist":textVal});
+                }
+                if(typeVal == 'Checkbox'){
+                    $scope.selfAssessmentAnswers.push({"SelfAssessmentQuestion":nameVal,"AnswerCheckbox":textVal});
+                }
+                if(typeVal == 'Text'){
+                    $scope.selfAssessmentAnswers.push({"SelfAssessmentQuestion":nameVal,"AnswerText":textVal});
+                }
+                if(typeVal == 'Date'){
+                    var date = textVal.getDate();
+                    var month = textVal.getMonth();
+                    var year = textVal.getFullYear();
+                    $scope.selfAssessmentAnswers.push({"SelfAssessmentQuestion":nameVal,"AnswerDate":date,'AnswerMonth':month,'AnswerYear':year});
+                }
+            }
+            $scope.optionValues ;
+            
+            
+            $scope.selfAssesmentDetails = function(){
+                $scope.activeTab=3;
+                $scope.burgerToggle=false;
+                $scope.showProgramDetail = false;
+                $scope.showSessionListing = false;
+                $scope.showDetails = false;
+                $scope.editable = false;
+                $scope.showHomepage = false;
+                $scope.showMentorFeedback = false;
+                $scope.showSelfAssesment = true;
+                $scope.showHelpPage = false;
+                $scope.showMentorDetails = false;
+            }
+            $scope.MentorFeedback = false;
+            $scope.MenteeFeedback = false;
+            $scope.closeFeedback = function(){
+                $scope.MentorFeedback = false;
+                $scope.MenteeFeedback = false;
+                document.getElementById('feedbackPopup').style.display='none';
+            }
+            
+            // Added by Vighnesh MN to get all session details 21/07/2022
+
+            $scope.mentorshipAssociationDetails = [];
+            $scope.scheduledSesssions = 0;
+            $scope.completedSesssions = 0;
+            $scope.totalSesssions = 0;
+            $scope.upcomingSessions = [];
+            $scope.assignedMentorCount = 0;
+            $scope.getAllSessionDetails = function () {
+                    MenteePortal_Controller.getAllSessionDetails(menteeId, function (result, event) {
+                        if (event.status && result != null) {
+                            $scope.mentorshipAssociationDetails = result;
+                            for(var i=0;i<$scope.mentorshipAssociationDetails.length;i++){
+                                if($scope.mentorshipAssociationDetails[i].Mentor__c != undefined){
+                                    $scope.assignedMentorCount++;
+                                }
+                                if($scope.mentorshipAssociationDetails[i].Sessions__r != undefined){
+                                    $scope.totalSesssions += $scope.mentorshipAssociationDetails[i].Sessions__r.length;
+                                    for(var j=0;j<$scope.mentorshipAssociationDetails[i].Sessions__r.length;j++){
+                                        if($scope.mentorshipAssociationDetails[i].Sessions__r[j].Status__c == "Completed"){
+                                            $scope.completedSesssions++;
+                                        }else if($scope.mentorshipAssociationDetails[i].Sessions__r[j].Status__c == "Created"){
+                                            $scope.scheduledSesssions++;
+                                            $scope.upcomingSessions.push($scope.mentorshipAssociationDetails[i].Sessions__r[j]);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if($scope.upcomingSessions.length > 0){
+                                for(var i=0;i<$scope.upcomingSessions.length;i++){
+                                    var sessionDate = new Date($scope.upcomingSessions[i].Date__c);
+                                    if($scope.recentSession != undefined){
+                                        var recentSessionDate = new Date($scope.recentSession.Date__c);
+                                        if(sessionDate.getDate() < recentSessionDate.getDate() && sessionDate.getMonth() < recentSessionDate.getMonth()){
+                                            $scope.recentSession = $scope.upcomingSessions[i];
+                                        }
+                                    }else{
+                                        $scope.recentSession = $scope.upcomingSessions[i];
+                                    }
+                                }
+                                var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                                var endTime = new Date($scope.recentSession.End_time__c);
+                                var strtTime = new Date($scope.recentSession.Time__c);
+                                var recSessionDate = new Date($scope.recentSession.Date__c);
+                                $scope.recSessionDay = days[ recSessionDate.getDay() ];
+
+                                var strtMin = strtTime.getMinutes();
+                                var endMin = endTime.getMinutes();
+                                if(strtMin == 0){
+                                    strtMin = "00";
+                                }
+                                if(endMin == 0){
+                                    endMin ="00";
+                                }
+                                $scope.recentSessionDetails = strtTime.getHours()+":"+strtMin+" - "+endTime.getHours()+":"+endMin;
+                            }
+                        }
+ 
+                    }, { escape: false })
+                }
+
+                $scope.getAllSessionDetails();
+            
+
+            $scope.feedbackByMentee = function(){
+                $scope.MentorFeedback = false;  
+                $scope.showAllMenteeFeedback = true;
+            }
+            $scope.showNoFeedbackByMentor = false;
+            $scope.showFeedbackByMentor = function(){
+                $scope.MentorFeedback = true;
+                $scope.showAllMenteeFeedback = false;
+            }
+            
+            $scope.closeDocumentPopup = function(){
+                document.getElementById('docsPopup').style.display='none';
+                
+            }
+            $scope.downloadDoc = function(attid){
+            downloadDoc(attid);
+        }
+            $scope.docUploadPopup = function(session){
+                debugger;
+                $scope.selectedSession = session;
+                document.getElementById('docsPopup').style.display='block'
+                }
+        });
+            var counter=0;
+    function downloadDoc(attid) {
+        let anchorTagA = document.createElement('a');
+        anchorTagA.href = '{!$Label.Mentorship_Site_URL}' + 'servlet/servlet.FileDownload?file=' + attid;
+        anchorTagA.download = 'downloadDoc';
+        anchorTagA.click();
+        
+    }
+        </script>
+    </div>
+</body>
+</apex:page>

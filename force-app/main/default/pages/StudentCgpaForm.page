@@ -1,0 +1,302 @@
+<apex:page showHeader="false" standardStylesheets="false" controller="StudentCgpaForm_Controller">
+    <head>
+        <c:MentorshipScripts />
+        <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-animate.min.js')}"/>  
+        <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-aria.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/angular-sanitize.min.js')}"/>  
+        <apex:includeScript value="{!URLFOR($Resource.mentorship_resource, '/js/libs/ui-bootstrap-tpls.min.js')}"/>  
+        <apex:stylesheet value="{!URLFOR($Resource.mentorship_resource, '/styles/w3.min.css')}"/>
+        
+        <style>
+            body {font-family: Arial, Helvetica, sans-serif;}
+            * {box-sizing: border-box;}
+            
+            .form-inline {  
+            display: flex;
+            align-items: center;
+            }
+            
+            .form-inline label {
+            margin: 5px 10px 5px 0;
+            }
+            
+            
+            .submit button {
+            padding: 10px 20px;
+            background-color: dodgerblue;
+            border: 1px solid #ddd;
+            color: white;
+            cursor: pointer;
+            }
+            
+            .form-inline button:hover {
+            background-color: royalblue;
+            }
+            
+            .cgpSection{
+            width: 30% !important;
+            margin-left: 18% !important;
+            }
+            
+            @media (max-width: 800px) {
+            .form-inline input {
+            margin: 10px 0;
+            }
+            
+            .form-inline {
+            flex-direction: column;
+            align-items: stretch;
+            }
+            .cgpSection{
+            width: 100%!important;
+            margin-left: 2%!important;
+            }
+            }
+            
+            
+            .formDiv {
+            width: 97%;
+            float: left;
+            margin-bottom: 30px;
+            margin-left: 1.5%;
+            border: 2px solid #032559;
+            padding-bottom: 15px;
+            }
+            .formheadings{
+            width: 100%;
+            float: left;
+            margin: 0;
+            padding: 10px 0px 10px 0;
+            background: #032559;
+            color: #fff;
+            }
+            
+            .formTags,.tagnames{
+            margin:0;
+            padding:0px 0px;
+            color: #032559;
+            font-size:10pt;
+            }
+            .tags{
+            color: #f38b05
+            }
+            .row{
+            width: 50%;
+            float: left;
+            padding: 1%;
+            margin-left: 0px;
+            }
+            
+            .tdInput{
+            width: 75%;
+            min-height: 30px;
+            border: 1px solid rgba(99, 97, 121, 0.49);
+            border-radius: 5px;
+            padding: 0;
+            resize: none;
+            padding-left: 8px;
+            }
+            .buttons {
+            border-radius: 3px;
+            height: 30px;
+            color: #fff;
+            font-size: 11pt;
+            border: none;
+            cursor: pointer;
+            min-width: 10%;
+            background: #ff793c;
+            max-width: 100%;
+            }
+            @media screen and (max-width: 600px){
+            .row {
+            width: 90%;
+            float: left;
+            padding: 3%;
+            margin-left: 5px;
+            }
+            .navbar {
+            display:none;
+            }
+            }
+            
+        </style>
+        
+    </head>
+    <body ng-app="cgpaFormApp" ng-controller="cgpaFormController">
+       
+        <div style="width:80%;margin-left:10%;">
+            
+            <div class="formDiv" style="margin-top:70px;">
+                <h4 class="formheadings" align="center">
+                    Basic Information    
+                </h4>
+                <div style="width:73%;float:left">
+                    <div class="row">
+                        <h4 class="tagnames" >
+                            Name: 
+                            <span class="tags">{{studentDetail.Name}}</span>
+                        </h4>
+                    </div>
+                    <div class="row">
+                        <h4 class="tagnames" >
+                            Student Id:
+                            <span class="tags">{{studentDetail.FFE_ID__c}}</span>
+                        </h4>
+                    </div>
+                    <div class="row">
+                        <h4 class="tagnames" >
+                            Course: 
+                            <span class="tags">{{studentDetail.Course__c}}</span>
+                        </h4>
+                    </div>
+                    
+                    <div class="row">
+                        <h4 class="tagnames" >
+                            Year of study: 
+                            <span class="tags">{{studentDetail.Current_year__c}}</span>
+                        </h4>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="formDiv" style="margin-top:70px;">
+                <h4 class="formheadings" align="center">
+                    CGPA Details    
+                </h4>
+                <div style="width:100%;float:left">
+                    <div class="row cgpSection" ng-repeat="data in datawrapper" style="">
+                        <h4 class="tagnames" >
+                            {{data.label}}: 
+                                <div>
+                                 <div style="margin-top:2%;">
+                                    CGPA : 
+                                    </div><input class="tdInput"  type="number" style="" ng-model="data.finalAnswer"  ng-keyup="getCgpa(data.finalAnswer)" ng-disabled="data.finalAnswerPercentage != undefined || data.finalAnswerPercentage != null"/>   
+                                </div>
+                            <div style="margin-top:2%;">
+                                OR 
+                               <div style="margin-top:2%;">
+                                   Percentage :<input type="number" class="tdInput" ng-model="data.finalAnswerPercentage"  ng-keyup="getPercentage(data.finalAnswerPercentage)" ng-disabled="data.finalAnswer != undefined"/>&nbsp;%   
+                                </div> 
+                                {{values.field_0}}
+                                {{values.field_1}}
+                            </div>
+                        </h4>
+                    </div>
+                   
+                    
+                    <div style="margin-top:5%;text-align-last: center;">
+                        <input type="button" class="buttons" value="Submit" ng-click="submitCgpaData()" /> 
+                    </div>   
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        <script>
+        var app = angular.module('cgpaFormApp', []);
+        app.controller('cgpaFormController', function ($scope) {
+            debugger;
+            var studentId = '{!$CurrentPage.parameters.d}';
+            
+            $scope.getStudentDetails = function () {
+                debugger;
+                $scope.showSpinner = true;
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.StudentCgpaForm_Controller.getStudentDetails}',
+                    studentId,
+                    function (result, event) {
+                        
+                        if (event.status) {
+                            $scope.studentDetail = result.conRec;
+                            $scope.datawrapper = result.dataWrapper;
+                            debugger;
+                        }
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                    }, {
+                        escape: true
+                    }
+                );
+                
+            }  
+            $scope.getStudentDetails();    
+            
+            
+            $scope.submitCgpaData = function(){
+            	 $scope.showSpinner = true;
+                for(var i=0;i<$scope.datawrapper.length;i++){
+                    delete $scope.datawrapper[i].$$hashKey;
+                    if($scope.datawrapper[i].finalAnswer > 10){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Max CGPA should be 10',
+                        })
+                        return;
+                    }
+                    if($scope.datawrapper[i].finalAnswerPercentage > 100){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Max Percentage should be 100%',
+                        })
+                        return;
+                    }
+                	if(($scope.datawrapper[i].finalAnswer == undefined || $scope.datawrapper[i].finalAnswer == "") && ($scope.datawrapper[i].finalAnswerPercentage == undefined || $scope.datawrapper[i].finalAnswerPercentage == "")){
+                        return;
+                    }
+                }
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.StudentCgpaForm_Controller.submitCgpaData}',
+                    $scope.datawrapper,$scope.studentDetail.Id,
+                    function (result, event) {
+                        
+                        if (event.status) {
+                            Swal.fire(
+                                '',
+                                'Submitted successfully!',
+                                'success'
+                            )
+                            let mainURL = window.location.origin+'/application';
+                            window.location.replace(mainURL);
+                            debugger;
+                        }
+                        $scope.showSpinner = false;
+                        $scope.$apply();
+                    }, {
+                        escape: true
+                    }
+                );
+                
+            }
+            
+            $scope.getPercentage = function(param){
+            	debugger;
+                if(param >= 100){
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Max Percentage should be 100%',
+                        })
+                    return;
+                }
+                //   $scope.datawrapper[index].finalAnswer = param;
+            }
+            
+            $scope.getCgpa = function(param){
+            	debugger;
+                 if(param >= 10){
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Max CGPA should be 10',
+                        })
+                    return;
+                }
+            }
+        })
+        </script>
+    </body>
+</apex:page>

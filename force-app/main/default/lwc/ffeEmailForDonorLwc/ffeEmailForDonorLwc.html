@@ -1,0 +1,57 @@
+<template>
+    
+    <div class="slds-box" style="position:relative;">
+        <div if:true={showSpinner} >
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <template if:true={showError}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">error</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="Description of icon when needed">
+                  
+                </span>
+                <h2>{errormessage}</h2>
+            </div>
+        </template>
+        <template if:true={showSuccess}>
+            <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                <span class="slds-assistive-text">warning</span>
+                <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                  
+                </span>
+                <h2>Email sent successfully.</h2>
+            </div>
+        </template>
+        <h3 class="slds-section__title slds-theme_shade">Send Email</h3>
+        <div class="slds-form">
+            <div class="slds-form-element slds-form-element_stacked">
+                <div class="slds-form-element__control">
+                    <!-- <lightning-combobox options={financialYearOptions} value={financialYearSelected} onchange={handleYearChange} label='Financial Year :' ></lightning-combobox> -->
+                    <!-- <h3>Financial year:</h3> -->
+                    <label class="slds-form-element__label" for="unique-id-of-input">Financial year:</label>
+                    <c-ffe-multi-select-picklist-lwc options={financialYearOptions} label='Send Email' onvaluechange={handleYearChange} ></c-ffe-multi-select-picklist-lwc>
+                </div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <div class="slds-form-element__control">
+                  <lightning-textarea label="Enter Email id(s) :" onchange={handleEmailIdChange} ></lightning-textarea>
+                </div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <div class="slds-form-element__control">
+                  <lightning-input label="Enter Email Subject :" onchange={handleEmailSubjectChange} ></lightning-input>
+                </div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <div class="slds-form-element__control">
+                  <lightning-textarea label="Enter Message for Email :" onchange={handleEmailMessageChange} ></lightning-textarea>
+                </div>
+            </div>
+            <div class="slds-align_absolute-center slds-form-element slds-form-element_stacked">
+                <lightning-button label='Send' onclick={handleSendClick}></lightning-button>
+            </div>
+        </div>
+    </div>
+</template>

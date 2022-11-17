@@ -1,0 +1,35 @@
+@page {
+    size: letter;
+    
+    @bottom-left {
+    content: element(footer);
+    }
+    @top-center {
+    content: element(header);
+    }
+    }
+    
+    div.footer {
+    /*display: block;*/
+    padding-bottom: 9px;
+    position: running(footer);
+    }
+    
+    div.header {
+    padding:5px;
+    height:100px !important;
+    position: running(header);
+    }
+    
+    .pagenumber:before {
+    content: counter(page);
+    }
+    .pagecount:before {
+    content: counter(pages);
+    }
+    
+    
+    .page-break {
+    display:block;
+    page-break-after:always;
+    }

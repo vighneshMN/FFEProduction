@@ -1,0 +1,785 @@
+<template>
+<!--    <lightning-record-view-form
+        record-id={recordId}
+        object-api-name="Contact"
+    >
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Student Basic Info">Student Basic Info</span>
+            </h3>    
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="RecordTypeId">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Facilitator_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Name">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="ScholarshipAmount__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="FFE_ID__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Internal_Status__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Current_year__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Active_Scholarship_Application__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="AccountId">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Rejection_Reason__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Gender__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Financial_year__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Birthdate">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="MobilePhone">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Previous_FFE_ID__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Aadhar_number__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Email_Invite_Sent__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="AWS_Link__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Email_Invite_Sent_Date__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Total_Point_s__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Salesforce_ID__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Comments__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Mentoring_Required_del__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Facilitator_Assigned_Date__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Academic_start_year__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="LDAP_ID__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="From_IITBAA__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Is_KYC_Verified__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Has_Mentor__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Priority__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Placement Information">Placement Information</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Company_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Placement_Info__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Designation__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Other__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="CTC__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Location__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Referred by facilitator">Referred by facilitator</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Refered_by_Facilitator_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Refered_by_Facilitator_Id__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Previous Academic Details">Previous Academic Details</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X10th_Year_Passed__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X12th_Year_Passed__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Xth_ExamBoard__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X12th_ExamBoard__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X10th_Marks_Obtained__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X12th_Marks_Obtained__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X10th_Maximum_Marks__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X10th__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X12th__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X10th_Medium_Of_Instruction__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X12th_Medium_Of_Instruction__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X10th_Type__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X12th_Type__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Entrance Test information">Entrance Test information</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Entrance_Test_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Entrance_Exam_Maximum_Marks__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Entrance_Exam_Taken_In_Year__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Entrance_Test_Rank__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Entrance_Test_Marks__c">
+                    </lightning-output-field>
+                </lightning-layout-item>    
+            </lightning-layout> 
+        </div>       
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="AMCAT Baseline">AMCAT Baseline</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Aptitude_Analytical_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Aptitude_Logical_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="English_Written_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="English_Spoken_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="AMCAT Midline">AMCAT Midline</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Aptitude_Analytical_Score_post__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Aptitude_Logical_Score_post__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="English_Written_Score_post__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="English_Spoken_Score_post__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>        
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="AMCAT Endline">AMCAT Endline</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Endline_Aptitude_Analytical_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Endline_Aptitude_Logical_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Endline_English_Written_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Endline_English_Spoken_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Engineering Academic Score">Engineering Academic Score</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Endline_Aptitude_Analytical_Score__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester1__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester2__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester3__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester4__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester5__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester6__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester7__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester8__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester9__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Semester10__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Medical Academic Scores">Medical Academic Scores</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="MBBS_Year_1__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="MBBS_Year_2__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="MBBS_Year_3_Part_1__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="MBBS_Year_3_Part_2__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout> 
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Course/College Particulars">Course/College Particulars</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="College_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="College_Other__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="College_City__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Course__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="College_State__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="College_Type__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Branch_Other__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="College_Rating__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Family Information">Family Information</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Father_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Mother_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Father_Age__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Mother_Age__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Father_Education__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Mother_Education__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Father_Occupation__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Mother_Occupation__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parent_Mobile__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parent_Phone__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Annual_Family_Income__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Certificate_Expiry_Date__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Current_Annual_Family_Income__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Family Information">Family Information</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Bank_Account_Holder_s_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="X11_character_IFSC_Code_of_the_Branch__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Full_Bank_Account_No_With_all_digits__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Is_IFSC_Code_Verified__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Bank_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="IFSC_Service_Error__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Branch_Address__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Bank_State__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Bank_City__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Bank_Pincode__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Type_Of_Bank_Account__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Bank_Branch_Phone_No__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Other_Type_Bank_Account__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>           
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="About Student and Family">About Student and Family</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="What_is_your_ambition_in_life__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Tell_us_some_things_about_yourself__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Who_has_inspired_you_the_most_until_now__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Describe_your_family_s_income__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="When_you_start_earning_how_you_help__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="COVID-19 Relief Disbursement (Parents Bank Details)">COVID-19 Relief Disbursement (Parents Bank Details)</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Bank_Account_Holders_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Par_Full_Bank_Account_No_With_all_digits__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Bank_Name__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Bank_City__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Bank_State__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="P_IFSC_Code_11_Char__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="P_Branch_Address__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Type_of_Bank_Account__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Bank_Pincode__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Bank_Branch_Phone__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Parents_Account_Verified__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Relief_Amount_Disbursed__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Date_of_Relief_Disbursement__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="COVID_19_Relief_Donor__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Relief_Donation_Remarks__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="COVID-19 Relief Disbursement (Parents Bank Details)">COVID-19 Relief Disbursement (Parents Bank Details)</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_Video_Link__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_FFE_Scholarship_and_Impact__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_SchoolLife__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_Future_Plans__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_GuidanceProvider__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_Dreams_and_Responsibilities__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_How_would_you_help_other_Students__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="TYS_CollegeAssessment__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Other Information">Other Information</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Do_you_have_Facebook_login__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Do_you_have_Google_login__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Facebook_login_ID__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Google_login_ID__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Linkedin_Profile_Link__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+        <div class="slds-section slds-is-open slds-p-around_x-small">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="System Information">System Information</span>
+            </h3>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="CreatedById">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="LastModifiedById">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Login_Hash_Code__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="External_Id_dm__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="Student_ID__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="6">
+                    <lightning-output-field field-name="IsMapped__c">
+                    </lightning-output-field>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>    
+    </lightning-record-view-form>
+
+    <c-ffe-related-list 
+        sobject-api-name="Application__c"
+        related-field-api-name="Student__c"
+        fields="Name,Internal_Status__c,Course_Name__c,RecordType.name,RecordTypeId"
+        columns={applicationColumns}
+        sorted-by ="Name"
+        record-id={recordId}
+    >
+    </c-ffe-related-list>
+    <c-ffe-related-list 
+        sobject-api-name="Donor_Application_Mapping__c"
+        related-field-api-name="Student__c"
+        fields="Name,Donor__c,Financial_Year__c"
+        columns={donorApplicationColumns}
+        sorted-by ="Name"
+        record-id={recordId}
+    >
+    </c-ffe-related-list>
+    <c-ffe-related-list 
+        sobject-api-name="Opportunity"
+        related-field-api-name="npsp__Primary_Contact__c"
+        fields="Name,Amount,Amount_USD__c,Donation_Program__c,StageName,Type,CreatedDate,Payment_Order__c,CloseDate"
+        columns={donationColumns}
+        sorted-by ="Name"
+        record-id={recordId}
+    >
+    </c-ffe-related-list>-->
+</template>

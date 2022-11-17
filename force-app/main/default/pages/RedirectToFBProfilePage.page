@@ -1,0 +1,35 @@
+<apex:page controller="AP_Application_CTRL" showHeader="false" sidebar="false" action="{!checkUserAuth}">
+    <script>
+    debugger;
+    console.log("{!recordType}");
+    if("{!isMentorshipSite}" == 'true' && "{!isMentorExist}" == 'false'){
+        let email = encodeURIComponent('{!FbId}');
+        let firstName = encodeURIComponent('{!name}');
+        let siteURL="{!$Label.Mentorship_Site_URL}"
+        window.location.replace(siteURL+'RegistrationFromFacebook?gemail='+email+'&first_name='+firstName);
+    }
+     if("{!recordType}" === "Mentor" ){
+        if("{!isMentorExist}"==='true'){
+            window.location.href='/mentorship/MentorLoginPortal?login=true';    
+        }
+        else{
+            let email = encodeURIComponent('{!FbId}');
+            let firstName = encodeURIComponent('{!name}');
+            window.location.href='/mentorship/RegistrationFromFacebook?gemail='+email+'&first_name='+firstName;    
+        }
+    }
+    else if("{!recordType}" === 'Student' && "{!isMentorshipSite}" == 'false'){
+        window.location.href='/application/studentProfile?d={!hasCodeUpdate}#/profile';
+    }
+        else if("{!recordType}" === 'Facilitator' && "{!isMentorshipSite}" == 'false'){
+            window.location.href='/application/facilitatorProfile?d={!hasCodeUpdate}';
+            //https://ffe.secure.force.com/application/FacilitatorProfile?d=QyuLs1UH0H1626097539883
+        }
+            else {
+                debugger;
+                let email = encodeURIComponent('{!FbId}');
+                let firstName = encodeURIComponent('{!name}');
+                window.location.href='/application';
+            }
+    </script>
+</apex:page>

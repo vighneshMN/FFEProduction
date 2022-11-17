@@ -1,0 +1,145 @@
+<template>
+    
+    <div class="slds-m-top_small" style="margin-bottom:20px">
+        <div class="searchRow">
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                   State
+                </h3>
+                <div class="mdContPopup" >
+                    <lightning-combobox
+                        name="state"
+                        value={stateSelected}
+                        placeholder="Select State"
+                        options={listOfStates}
+                        onchange={handleValueChange} ></lightning-combobox>
+                </div>
+            </div>
+            <div class="searchColPopup">
+                <h3 class="searchTagsPopup" align="right">
+                    City
+                </h3>
+                <div class="mdContPopup" >
+                    <lightning-combobox
+                        name="city"
+                        value={citySelected}
+                        placeholder="Select City"
+                        options={listOfCities}
+                        onchange={handleCityValueChange}
+                         ></lightning-combobox>
+                </div>
+            </div>
+        </div>
+        <c-ffe-popup-lwc></c-ffe-popup-lwc>
+        <div class="searchRow" align="center" style="margin-top: 16px;">
+            
+                    <lightning-button 
+                        variant="brand"
+                        label="Search by Mailing Address" 
+                        title="Search by Mailing Address" 
+                        onclick={handleSearch} 
+                        class="slds-m-left_x-small buttons"></lightning-button>
+                
+                    <lightning-button  
+                        variant="brand"
+                        label="Search by Current Address" 
+                        title="Search by Current Address" 
+                        onclick={handleSearch} 
+                        class="slds-m-left_x-small buttons"></lightning-button>
+                
+                    <lightning-button 
+                        variant="brand"
+                        label="Clear" 
+                        title="Clear" 
+                        onclick={handleClear} 
+                        class="slds-m-left_x-small buttons"></lightning-button>
+                
+        </div>
+        <template if:false={showStudentTable}>
+            No students available for assignment.
+        </template>
+        <template if:true={showStudentTable}>
+            List of Students:
+            <lightning-datatable 
+                data={listOfStudents} 
+                columns={columns} 
+                key-field="Name"
+                hide-checkbox-column="true"
+                onrowaction={handleRowAction}>
+            </lightning-datatable>
+        </template>
+        <template if:true={error}>
+            {error}
+        </template>
+        <template if:true={isModalOpen}>
+            <!-- Modal/Popup Box LWC starts here -->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header slds-modal__header_empty">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                          <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                          </svg>
+                          <span class="slds-assistive-text">Close</span>
+                        </button>
+                      </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                        <h3 class="searchTagsPopup" align="right">
+                            City
+                        </h3>
+                        <div class="mdContPopup" >
+                            <lightning-combobox
+                                name="city"
+                                value={citySelected}
+                                placeholder="Select City"
+                                options={listOfCities}
+                                onchange={handleCityValueChangeFromModal}
+                                 ></lightning-combobox>
+                        </div>
+                        <h3 class="searchTagsPopup" align="right">
+                            Verification Type
+                        </h3>
+                        <div class="mdContPopup" >
+                            <lightning-combobox
+                                name="verification"
+                                value={verificationSelected}
+                                placeholder="Select VerificationType"
+                                options={listOfVerificationType}
+                                onchange={handleVerificationChange}
+                                 ></lightning-combobox>
+                        </div>
+                        <div>
+                            <template if:false={showFacilitatorTable}>
+                                No Facilitators available.
+                            </template>
+                            <template if:true={showFacilitatorTable}>
+                                List of Facilitators:
+                                <lightning-datatable 
+                                    data={listOffacilitators} 
+                                    columns={facilitatorcolumns} 
+                                    key-field="Name"
+                                    max-row-selection="1"
+                                    onrowselection={handleFacRowSelection}
+                                    >
+                                </lightning-datatable>
+                            </template>
+                            <template if:true={facilitatorserror}>
+                                {facilitatorserror}
+                            </template>
+                        </div>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <template if:true={showFacilitatorTable}>
+                        <button class="slds-button slds-button_brand" onclick={handleFacilitatorRowAction} title="Create Facilitator Mapping">Create Facilitator Mapping</button>
+                        </template>
+                        <button class="slds-button slds-button_brand" onclick={closeModal} title="Cancel">Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,85 @@
+<apex:page controller="DeclarationFormController" showHeader="false" applyBodyTag="false" applyHtmlTag="false" renderAs="pdf" cache="true" readOnly="true">
+    <head>
+        <style>
+            .student {
+                font-size: 13pt;
+            }
+
+            .amount {
+                border-collapse: collapse;
+                font-size: 13pt;
+                border: 1px solid black;
+            }
+
+            .border {
+                padding:8px;
+                border: 1px solid black;
+            }
+        </style>
+        
+    </head>
+
+    <center><h3>FOUNDATION FOR EXCELLENCE</h3></center>
+    <center><h3>STUDENT EXPENSES: SELF DECLARATION FORM FOR FY 2021-22</h3></center>
+    <br/><br/>
+    <table class="student"  width="100%">
+        <tbody>
+            <tr>
+                <td width="20%" >Name:</td>
+                <td width="80%" align="left" >{!application.Student__r.Name}</td>
+            </tr>
+            <tr>
+                <td width="20%" >FFEUID:</td>
+                <td width="80%" align="left" >{!application.Student__r.FFE_ID__c}</td>
+            </tr>
+            <tr>
+                <td width="20%" >Course:</td>
+                <td width="80%" align="left" >{!application.Course_Name__c}</td>
+            </tr>
+            <tr>
+                <td width="20%" >College Name:</td>
+                <td width="80%" align="left" >{!application.College_Name__c}</td>
+            </tr> 
+        </tbody>            
+    </table>
+    <br/>
+    <br/>
+
+    <table class="amount border" width="100%">
+        <thead >
+            <th class="border" style="text-align:center;">Particulars</th>
+            <th class="border" style="text-align:center;">Amount <br/>(INR)</th>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td width="80%" class="border">Total Scholarship Amount received from FFE-TransUnion CIBIL</td>
+                <td width="20%" class="border" style="text-align:center;">{!application.Amount_Requested__c}</td>
+            </tr>
+        </tbody>            
+    </table>
+    <br/><br/>
+        <div>
+        Are you receiving scholarship / Financial Assistance from any other source other than FFE?
+    
+            &nbsp;<p> Yes <img src="/img/checkbox_unchecked.gif"/>&nbsp; &nbsp;No <img src="/img/checkbox_unchecked.gif"/></p><br/>
+            If YES, then Name of the Scholarship: ______________<br/><br/>
+            Amount received: __________________
+       </div>
+    <br/><br/>
+    <div>
+        Is your parent/sibling working in TransUnion CIBIL Ltd.?
+    
+            &nbsp;<p> Yes <img src="/img/checkbox_unchecked.gif"/>&nbsp; &nbsp;No <img src="/img/checkbox_unchecked.gif"/></p>
+       </div>
+    <p style="font-size:13pt;">
+        I, _____________________________ do hereby declare that the I have received ________ INR as Scholarship from FFE-TransUnion CIBIL and is used for educational expenses only and confirm that all the information provided above is correct to the best of my knowledge.</p><br/>
+    <p style="font-size:13pt;">
+        _______________________________<br/> 
+        (Student Signature) 
+    </p><br/>
+    <p style="font-size:13pt;">
+        Date: <br/>
+
+    </p>
+</apex:page>

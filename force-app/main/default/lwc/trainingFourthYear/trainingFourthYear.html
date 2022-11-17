@@ -1,0 +1,128 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 12-31-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+ <template if:true={preandpostassesendline}>
+    <table>
+        <thead>
+            <tr  class="rowsHistory thRow">
+                <th>FFE UID</th>
+                <th>Student Name</th>
+                <!-- <th colspan="2">Location</th> -->
+                <th>Aptitude Analytical Score</th>
+                <th>Aptitude Logical Score</th>
+                <th>English Spoken Score</th>
+                <th>English Written Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={studentlist} for:item="map">
+              <tr key={map.FFE_ID__c}>
+                <td>{map.FFE_ID__c}</td>
+                <td>{map.Name}</td>
+                
+                <td>{map.Endline_Aptitude_Analytical_Score__c}</td>
+                <td>{map.Endline_Aptitude_Logical_Score__c}</td>
+                <td>{map.Endline_English_Spoken_Score__c}</td>
+                <td>{map.Endline_English_Written_Score__c}</td>
+            </tr></template>
+        </tbody>       
+    </table>
+    
+ </template>  
+ <template if:true={fourthyearhr}>
+    <table>
+        <thead>
+            <tr class="rowsHistory thRow">
+                <th>FFE UID</th>
+                <th>Student Name</th>
+                <th>Location</th>
+                <th>Vendor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={studenthrlist} for:item="map">
+            <tr key={map.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}</td>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.Name}</td>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.MailingCity}</td>
+                <td><a href={map.vendorURL} target="_blank">{map.vendorName}</a></td> 
+            </tr>
+        </template>
+        </tbody>       
+    </table>
+    
+ </template> 
+ <template if:true={fourthyeartech}>
+    <table>
+        <thead>
+            <tr class="rowsHistory thRow">
+                <th>FFE UID</th>
+                <th>Student Name</th>
+                <th>Location</th>
+                <th>Vendor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={studentfourthtechlist} for:item="map"> 
+            <tr align="center" key={map.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}</td>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.Name}</td>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.MailingCity}</td>
+                <td><a href={map.vendorURL} target="_blank">{map.vendorName}</a></td> 
+            </tr></template>
+        </tbody>       
+    </table>
+ </template>
+ <template if:true={fourthyeartechandhr}>
+    <table>
+        <thead>
+            <tr class="rowsHistory thRow">
+                <th>FFE UID</th>
+                <th>Student Name</th>
+                <th>Location</th>
+                <th>Completed</th>
+                <th>Vendors</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={studentfourthrtechlist} for:item="map">
+            <tr align="center" key={map.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.FFE_ID__c}</td>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.Name}</td>
+                <td>{map.students.Student_Training_Mapping__r.Student_ID__r.MailingCity}</td>
+                <td>{map.students.Completion_Flag__c}</td>
+                <td><span>{map.vendorName}
+                    <br/></span></td>
+            </tr></template>
+        </tbody> 
+        </table> 
+ </template>
+ <template if:true={displayplacementdata}>
+    <table>
+        <thead>
+            <tr class="rowsHistory thRow">
+                <th>FFE UID</th>
+                <th>Student Name</th>
+                <th>Company Name</th>
+                <th>Location</th>
+                <th>CTC (PA)</th>
+            </tr>
+        </thead>
+        <tbody><template for:each={studentplacementlist} for:item="map">
+            <tr align="center" key={map.FFE_ID__c}>
+                <td>{map.FFE_ID__c}</td>
+                <td>{map.Name}</td>
+                <td>{map.Company_Name__c}</td>
+                <td>{map.Location__c}</td>
+                <td>{map.CTC__c}</td>
+            </tr></template>
+        </tbody>       
+    </table>
+    
+ </template>
+</template>

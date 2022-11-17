@@ -1,0 +1,7 @@
+.modalcontent {
+    overflow:visible; 
+    overflow-y:visible;
+}
+.modal {
+    position:absolute; 
+}

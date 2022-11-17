@@ -1,0 +1,14 @@
+.slds-box{
+    background: #032559;
+}
+.h3{
+    color:#fff;
+    text-align: center;
+}
+label {
+    float: left;
+    margin-right: 10px;
+    color: #032559;
+    font-size: 10pt;
+    font-family: 'Source Sans Pro', sans-serif;
+}

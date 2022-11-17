@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>3rd Year BPharm</label>
+    <protected>false</protected>
+    <values>
+        <field>Course__c</field>
+        <value xsi:type="xsd:string">BPharm</value>
+    </values>
+    <values>
+        <field>Semester__c</field>
+        <value xsi:type="xsd:string">BPharm_Semester_1__c,BPharm_Semester_2__c,BPharm_Semester_3__c,BPharm_Semester_4__c,BPharm_Semester_5__c,BPharm_Semester_6__c</value>
+    </values>
+    <values>
+        <field>Year__c</field>
+        <value xsi:type="xsd:string">3rd Year</value>
+    </values>
+</CustomMetadata>

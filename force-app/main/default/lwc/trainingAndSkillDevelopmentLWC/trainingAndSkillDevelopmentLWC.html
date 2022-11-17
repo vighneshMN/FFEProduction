@@ -1,0 +1,178 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 12-29-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+   <!--Spinner-->
+   <div if:true={showLoadSpinner} class="spinner">
+    <lightning-spinner
+        variant="brand"
+        size="large"
+        alternative-text="Loading...">
+    </lightning-spinner>
+</div>
+   <lightning-card>
+    <div style="float:right;position: relative;top: 35px;margin-top: 16px;">
+        <div class="searchRow" align="center" style="margin-top: 16px;margin-right: 60px;">
+            <input type="button" style="background-color:#032559;border-radius: 0px;color:white;" value=" Back to Training Summary" class="buttons" onclick={backToSummary} />
+        </div>
+    </div>
+
+        <div class="slds-box slds-box_x-small" style="background: #032559;">
+            <div class="slds-text-heading_medium slds-align_absolute-center" style="color:rgb(15, 15, 15)">
+                <h3 style=" color:#fff;
+                text-align: center">Training Summary</h3>
+            </div>
+        </div>
+        <div class="slds-form_horizontal slds-grid slds-wrap slds-align_absolute-center">
+          
+            <div class="slds-col slds-size_1-of-2 searchCol slds-p-bottom_none">
+                <label for="appTypeField" style="padding-left: 50px;padding-top:13px;float:left;margin-right: 10px;
+                color: #032559;
+                font-size: 10pt;
+                font-family: 'Source Sans Pro', sans-serif;">Select Year</label>
+                <lightning-combobox 
+                    label=""
+                    name="yearSelected"
+                    value={value}
+                    options={yearsOfStudy} 
+                    onchange={handleYearChange}></lightning-combobox>
+                  
+                </div></div>
+                <lightning-card if:true={yearIsSelected}>
+                <div class="searchDiv" style="margin-top:0px;margin-left: 120px;" >
+                    <div class="searchRow" style="color:#032559;font-size:14pt;font-weight: bold">
+                        2nd Year Training Cohort<br/>&nbsp;
+                    </div>
+                    
+                    <div class="searchRow">
+                        <table style="border-collapse: collapse;border: 1px solid black;width:34%;">
+                            <tr>
+                                <th style="border: 1px solid black;text-align: left;">AMCAT Baseline</th>
+                                <th style="border: 1px solid black;width:20%">{secondYearAmcatPreandPostLenght}</th>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid black;text-align: left;">English APP Students</th>
+                                <th style="border: 1px solid black;">{secondYearEnglishLength}</th>
+                            </tr> <tr>
+                                <th style="border: 1px solid black;text-align: left;">Aptitude APP Students</th>
+                                <th style="border: 1px solid black;">{secondYearAptitudeLength}</th>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid black;text-align: left;">Aspiring Students</th>
+                                <th style="border: 1px solid black;">{secondYearAspiringLength}</th>
+                            </tr></table></div>
+                            <div class="searchRow" style="color:#032559;font-size:14pt;font-weight: bold">
+                                &nbsp;<br/>3rd Year Training Cohort<br/>&nbsp;
+                            </div>
+                            
+                            <div class="searchRow">
+                                <table style="border-collapse: collapse;border: 1px solid black;width:34%;">
+                                    <tr>
+                                        <th style="border: 1px solid black;text-align: left;">AMCAT Midline</th>
+                                        <th style="border: 1px solid black;width:20%">{midline}</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="border: 1px solid black;text-align: left;">Hi Touch English</th>
+                                        <th style="border: 1px solid black;width:20%">{getThirdYearDataEnglish}</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="border: 1px solid black;text-align: left;">Aspirational</th>
+                                        <th style="border: 1px solid black;">{getThirdYearDataIT}</th>
+                                    </tr>
+                                   
+                                    <tr>
+                                        <th style="border: 1px solid black;text-align: left;">Mock Interview</th>
+                                        <th style="border: 1px solid black;">{mockInterViewCount}</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            
+                            <div class="searchRow" style="color:#032559;font-size:14pt;font-weight: bold">
+                                &nbsp;<br/>4th Year Training Cohort<br/>&nbsp;
+                            </div>
+                            
+                            <div class="searchRow">
+                                <table style="border-collapse: collapse;border: 1px solid black;width:34%;">
+                                    <tr>
+                                        <th style="border: 1px solid black;text-align: left;">AMCAT Endline</th>
+                                        <th style="border: 1px solid black;width:20%">{endline}</th>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th style="border: 1px solid black;text-align: left;">Mock Interviews (HR/Tech)</th>
+                                        <th style="border: 1px solid black;width:20%">{getfourthYearDataHRAndTech}</th>
+                                    </tr></table></div></div>
+           </lightning-card> 
+           
+            <template if:true={secondyear}>
+                <lightning-tabset>
+                    <lightning-tab label="AMCAT Baseline" value = 0 onactive={showTabcontent}>
+                       
+                    </lightning-tab>
+                    <lightning-tab label="English APP Students" value = 1 onactive={showTabcontent}>
+                       
+                    </lightning-tab>
+                    <lightning-tab label="Aptitude APP Students" value = 2 onactive={showTabcontent}>
+                       
+                    </lightning-tab>
+                    <lightning-tab label="Aspiring Students" value = 3 onactive={showTabcontent}>
+                       
+                    </lightning-tab>
+                </lightning-tabset>
+                
+            
+           
+               <c-Training-And-Skill-Second-Year displayalldata={displaySecondYearAllData} studentwithall={studentwithTrainingListAll}
+               displayaptitudedata={displaySecondYearAptitudeData} studentwithaptitude={studentwithTrainingListAptitude}
+               studentwithtraininglist={studentwithTrainingList} studentlist={studentList} preandpostasses={preandpostAsses} displayenglishdata={displaySecondYearEnglishData}></c-Training-And-Skill-Second-Year>
+                
+        </template>
+
+        
+        <template if:true={thirdyear}>
+            <lightning-tabset>
+                <lightning-tab label="AMCAT Midline" value = 0 onactive={showTabcontent}>
+                   
+                </lightning-tab>
+                <lightning-tab label="Hi Touch English" value = 1 onactive={showTabcontent}>
+                   
+                </lightning-tab>
+                <lightning-tab label="Aspirational" value = 2 onactive={showTabcontent}>
+                   
+                </lightning-tab>
+                <lightning-tab label="Mock Interviews" value = 3 onactive={showTabcontent}>
+                   
+                </lightning-tab>
+            </lightning-tabset>
+            <c-Training-Third-Year preandpostassesmidline={preandpostAsses_midline}
+            thirdyeareng={thirdYearEng} studentlist={studentList}
+            tgirdyearit={tgirdYearIT} studentenglist={studentThirdYearEngList}
+             mocklist={mockList} mocktable={mocktable} studentit={studentThirdYearIT}></c-Training-Third-Year>
+           
+              </template>
+              <template if:true={fourthyear}>
+                <lightning-tabset>
+                    <lightning-tab label="AMCAT Endline" value = 0 onactive={showTabcontent}>
+                       
+                    </lightning-tab>
+                    <lightning-tab label="Mock Interview (HR/Tech)" value = 1 onactive={showTabcontent}>
+                       
+                    </lightning-tab>
+                    
+                </lightning-tabset>
+                <c-training-Fourth-Year studentplacementlist={studentPlacementList} displayplacementdata={displayPlacementData} fourthyeartechandhr={fourthYearTechandHR} studentfourthrtechlist={studentfourthYearHRTechList}
+                fourthyeartech={fourthYearTech} studentfourthtechlist={studentfourthYearTechList} fourthyearhr={fourthYearHR} studenthrlist={studentfourthYearHRList}
+                 studentlist={studentList} preandpostassesendline={preandpostAsses_endline}></c-training-Fourth-Year>
+              </template>
+            <template if:false={isemptyMessage}>
+                <p style="float: left;text-align: center;width: 100%;margin-top: 30px;color:OrangeRed;">
+                    No students available for the selected Option.
+                </p>
+            </template>
+         </lightning-card>
+</template>

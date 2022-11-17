@@ -1,0 +1,105 @@
+<template>
+    <c-ffe-popup-lwc></c-ffe-popup-lwc>
+    <template if:true={refund}>
+        <template if:true={errormessage}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">error</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="Description of icon when needed">
+                  <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#error"></use>
+                  </svg>
+                </span>
+                <h2>{errormessage}</h2>
+              </div>
+        </template>
+        <lightning-card  title="Refund Info">
+            <div class="slds-p-horizontal_small"> 
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="form-element-01">Application</label>
+                    <div class="slds-form-element__control">
+                        <a href={applicationLink} target="_blank">
+                        <lightning-formatted-text label="Application" value={refund.Application__r.Name}></lightning-formatted-text>
+                        </a>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <span>
+                            <lightning-input type="number" name="input1" label="Refunded Amount" onchange={handleRefundChange} value={refundedAmount} ></lightning-input>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            <lightning-input type="number" name="input2" label="Refund Transaction No." onchange={handleRefundChange} value={refundTransactionNo}></lightning-input>
+                        </span>
+                    </div>
+                </div>            
+            </div>
+            <div slot="footer">
+                <lightning-card  title="Associated Fund Utilization">
+                    <div class="slds-p-horizontal_small slds-scrollable_x"> 
+                        <table aria-describedby="conatact-list" class="slds-table  slds-table_bordered ">
+                            <!--Header of the table-->
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="slds-size_1-of-6 " scope="col">
+                                        <div class="slds-truncate " title="Donor">Donor</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6 " scope="col">
+                                        <div class="slds-truncate " title="General Accounting Unit">General Accounting Unit</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6 " scope="col">
+                                        <div class="slds-truncate " title="Donor Balance">Donor Balance</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6" scope="col">
+                                        <div class="slds-truncate " title="Disbursed Amount">Disbursed Amount</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6" scope="col">
+                                        <div class="slds-truncate " title="Refunded Amount">Refunded Amount</div>
+                                    </th>
+                                    <th class="slds-size_1-of-6" scope="col">
+                                        <div class="slds-truncate " title=""></div>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <!--Body of the table-->
+                            <tbody>
+                                <template for:each={fundUtilization} for:item="item" for:index="indexVar">
+                                    <tr key={item.Id} class="slds-hint-parent">
+                                        <td class="slds-size_1-of-6">
+                                            <div><a href={item.DonorLink} target="_blank">{item.DonorName}</a></div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div><a href={item.GAUnitLink} target="_blank">{item.GAUnitName}</a></div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div><a href={item.DBLink} target="_blank">{item.DBName}</a></div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div>{item.Disbursed_Amount__c}</div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div>
+                                                <lightning-input type="number" name="input1" variant="label-hidden" data-id={item.rowNumber} onchange={handleRefundAmtChange} value={item.Refunded_Amount__c} ></lightning-input>
+                                            </div>
+                                        </td>
+                                        <td class="slds-size_1-of-6">
+                                            <div class="buttonMenu">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>           
+                    </div>
+                    <div slot="footer">
+                        <button class="slds-button slds-button_brand" onclick={okClick} title="Save">Save</button>
+                        <button class="slds-button slds-button_neutral" onclick={cancelClick} title="Cancel">Cancel</button>
+                        
+                    </div>
+                </lightning-card>
+            </div>
+        </lightning-card>
+    </template>
+</template>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>4th_Year_Law</label>
+    <protected>false</protected>
+    <values>
+        <field>Course__c</field>
+        <value xsi:type="xsd:string">Law</value>
+    </values>
+    <values>
+        <field>Semester__c</field>
+        <value xsi:type="xsd:string">Law_Semester_1__c,Law_Semester_2__c,Law_Semester_3__c,Law_Semester_4__c,Law_Semester_5__c,Law_Semester_6__c,Law_Semester_7__c,Law_Semester_8__c</value>
+    </values>
+    <values>
+        <field>Year__c</field>
+        <value xsi:type="xsd:string">4th Year</value>
+    </values>
+</CustomMetadata>

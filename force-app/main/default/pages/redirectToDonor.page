@@ -1,0 +1,8 @@
+<apex:page sidebar="false" showHeader="false" controller="DN_DonorProfile_CTRL" action="{!checkUserAuth}" >
+    <script>
+    	debugger;
+    console.log("{!hasCode}");
+    window.location.href="/donor/donorProfile?d={!hasCode}";///donor/donorProfile?d=1eepjb7d691626070170141;
+    //donor/donorProfile?d=BTZDigSIBK1626086288142#/donorViewProfile
+    </script>
+</apex:page>

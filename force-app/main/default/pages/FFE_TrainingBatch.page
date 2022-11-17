@@ -1,0 +1,4 @@
+<apex:page standardController="Training_Master__c" recordSetVar="train" extensions="FFEBatchController" >
+<apex:includeLightning />
+        
+</apex:page>

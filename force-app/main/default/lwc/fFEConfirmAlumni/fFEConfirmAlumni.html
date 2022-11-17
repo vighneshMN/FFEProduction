@@ -1,0 +1,13 @@
+<template>
+    <lightning-card title="Confirm Alumni Email" >
+       
+        <template if:true={showDialog}>
+            <h2>Current Email address will be replaced by {alternateEmail} Click Confirm to Continue else Close the window to cancel</h2>
+            <lightning-button label="Confirm" slot="actions" onclick={handleConfirm} name="confirm"></lightning-button>
+            <lightning-button label="Cancel" slot="actions" onclick={handleCancel} name="cancel"></lightning-button>
+        </template>
+        <template if:false={showDialog}>
+            <h2 >Email and Alternate Emails are same</h2>
+        </template>
+     </lightning-card>
+</template>

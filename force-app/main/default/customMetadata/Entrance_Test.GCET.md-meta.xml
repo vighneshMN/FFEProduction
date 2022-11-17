@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>GCET</label>
+    <protected>false</protected>
+    <values>
+        <field>BALLB_Qualifying_Rank__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>BE_BTech_MTech_Qualifying_Rank__c</field>
+        <value xsi:type="xsd:double">1000.0</value>
+    </values>
+    <values>
+        <field>BPharm_Qualifying_Rank__c</field>
+        <value xsi:type="xsd:double">1000.0</value>
+    </values>
+    <values>
+        <field>Course__c</field>
+        <value xsi:type="xsd:string">BE/B.Tech;Bpharm</value>
+    </values>
+    <values>
+        <field>Entrance_Test_Name__c</field>
+        <value xsi:type="xsd:string">Goa Common Entrance Test (GCET)</value>
+    </values>
+    <values>
+        <field>JEE_Advance_All_India_Rank__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>JEE_Advance_Category_Rank__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>JEE_Main_CRL_Rank__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>MBBS_Qualifying_Rank__c</field>
+        <value xsi:type="xsd:double">150.0</value>
+    </values>
+</CustomMetadata>

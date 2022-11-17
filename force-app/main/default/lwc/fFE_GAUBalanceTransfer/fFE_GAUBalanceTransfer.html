@@ -1,0 +1,19 @@
+<template>
+    <template if:false={refund}>
+        <lightning-card title="Message">
+            <b>Amount cannot be refunded. Thank You!!</b>
+        </lightning-card>
+    </template>
+    <template if:true={refund}>
+        <lightning-card title="Message">
+            <b>Do you want to continue with Refund ?</b>
+            
+        </lightning-card>
+        <lightning-button class="slds-m-left_x-small" onclick={handleYes} label="Yes"></lightning-button>
+            <lightning-button class="slds-m-left_x-small" onclick={handleNo} label="No"></lightning-button>
+    </template>
+    
+    <div style="display: none;">
+        {recordId}
+    </div>
+</template>

@@ -1,0 +1,48 @@
+.buttons{
+    border-radius:3px;
+    height: 30px;
+    color: #fff;
+    font-size: 11pt;
+    border: none;
+    cursor: pointer;
+    min-width: 10%;
+    background: #ff793c;
+    max-width:100%;
+    margin-left: 2px;
+}
+.buttonDiv{
+    width:100%;
+    float:left;
+    padding-top: 10px;
+}
+.searchTags{
+    float:left;
+    margin-right:10px;
+    color: #032559;
+    font-size:11pt;
+}
+.historyTable{
+    margin: 10px 0;
+    float:left;
+    width:100%;
+    table-layout:fixed;
+    border: 1px solid #dddddd;
+    border-collapse: collapse;
+    background: #fff;
+}
+.slds-modal__container {
+    max-width: 90rem !important;
+    width: 96% !important;
+}
+.rowsHistory th, .rowsHistory td{
+    word-wrap: break-word;
+    border: 1px solid #dddddd;
+    padding: 8px 4px;
+    font-size: 10pt;
+}
+.rowsHistory th{
+    color: #fff;
+}
+.thRow{
+    background: #032559;
+}

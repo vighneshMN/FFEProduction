@@ -1,0 +1,46 @@
+<template>
+    <div class="slds-p-around_x-small" style="position:relative; height:270px">
+        <div if:true={showError} class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+            <span class="slds-assistive-text">error</span>
+            <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="Description of icon when needed">
+            </span>
+            <h2>{errorMessage}</h2>
+        </div>
+        <h3 class="slds-section__title slds-theme_shade">
+            <span class="slds-truncate slds-p-horizontal_small" title="Student Details">Student Details</span>
+        </h3>
+        <div if:true={showSpinner} >
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item padding="around-small" size="6">
+                <div>
+                    <lightning-combobox options={gauNamesOptions} value={gauNameSelected} onchange={handleGauChange} label='Select GAU' ></lightning-combobox>
+                </div> 
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <div>
+                    <lightning-combobox options={financialYearOptions} value={financialYearSelected} onchange={handleFinancialYearChange} label='Select Financial Year' ></lightning-combobox>
+                </div> 
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="12">
+                <div class="slds-align_absolute-center">
+                    <lightning-button label='Search' onclick={handleSearchClick}></lightning-button>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <div if:true={showtable} class="slds-p-around_x-small">
+            <lightning-datatable
+                key-field="stdid"
+                data={studentAttachmentList}
+                columns={columns}>
+        </lightning-datatable>
+        <div class="slds-align_absolute-center slds-p-top_x-small">
+            <lightning-button label='Download' onclick={handleDownloadClick}></lightning-button>
+        </div>
+        </div>
+    </div>
+        
+</template>

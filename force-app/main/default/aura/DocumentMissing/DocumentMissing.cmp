@@ -1,0 +1,26 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" controller="DocumentMissingController" access="global" >
+	<!--Declare Event Handlers-->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" description="Call doInit function on component load to get picklist values"/>
+     
+    <!--Declare Attributes-->
+    <aura:attribute name="DocumentList" type="List" default="[]" description="Genre Document Values"/>
+    <aura:attribute name="selectedDocumentList" type="List" default="[]" description="Selected Document Picklist Values"/>
+     
+    <div class="slds-m-around_xx-large">
+        <lightning:dualListbox aura:id="selectDocument"
+                               name="Document"
+                               label="Select Document(s)"
+                               sourceLabel="Available Document"
+                               selectedLabel="Selected Document"
+                               options="{!v.DocumentList }"
+                               value="{!v.selectedDocumentList}"
+                               onchange="{!c.handleDocumentChange}"/>
+        
+    </div>
+    <lightning:textarea aura:id="remarks" name="input3" label="Enter Remark" placeholder="Please Enter Remark here..."/>
+    <br></br>
+    <div class="slds-float_right">
+    <lightning:button variant="brand" label="Submit" onclick="{!c.getSelectedDocument}" />
+    </div>
+    
+</aura:component>

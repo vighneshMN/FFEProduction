@@ -1,0 +1,54 @@
+<template>
+    <c-ffe-popup-lwc></c-ffe-popup-lwc>
+    <template if:true={showDetails}>
+        <header class="slds-p-around_xxx-small slds-modal__header">
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Enter Amount Splits</h2>
+        </header>
+        <lightning-input type="checkbox" class="slds-p-left_x-small" label="Special Donor" checked={specialDonor} onchange={setSpecialDonor}></lightning-input>
+        <div class="slds-p-left_x-small">Actual Amount filled by student</div>
+        <div class="slds-p-horizontal_small">
+            <lightning-record-view-form  record-id={recordId} object-api-name="Application__c">
+                <lightning-output-field class="slds-m-around_none" variant="label-inline" field-name="Student_College_Fees__c">
+                </lightning-output-field>
+                <lightning-output-field class="slds-m-around_none" variant="label-inline" field-name="Student_Hostel_Mess_Expenses__c">
+                </lightning-output-field>
+                <lightning-output-field class="slds-m-around_none" variant="label-inline" field-name="Student_Books_Expenses__c">
+                </lightning-output-field>
+                <lightning-output-field class="slds-m-around_none" variant="label-inline" field-name="Student_Transportation_Expenses__c">
+                </lightning-output-field>
+                <lightning-output-field class="slds-m-around_none" variant="label-inline" field-name="Student_Uniform_Expenses__c">
+                </lightning-output-field>
+            </lightning-record-view-form> 
+        </div>
+            
+        <template if:true={specialDonor}>
+            <div class="slds-p-left_x-small">Amount to be filled by FFE Staff</div>
+                <div class="slds-p-horizontal_small">
+                    <lightning-input label="Tution Fees" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" type="number" variant="label-inline" data-field="Calc_Tuition_Fees__c" value ={appRecord.fields.Calc_Tuition_Fees__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="Other Tution Fees" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Calc_Other_Fees__c" value ={appRecord.fields.Calc_Other_Fees__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="Hostel Establishment Fees" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Calc_Hostel_Establishment_Fees__c" value ={appRecord.fields.Calc_Hostel_Establishment_Fees__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="Average Mess Fees (Per Month)" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Calc_Average_Mess_Fees_per_month__c" value ={appRecord.fields.Calc_Average_Mess_Fees_per_month__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="Transportation Expenses" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Calc_Transportation_Expenses__c" value ={appRecord.fields.Calc_Transportation_Expenses__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="Books Expenses" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Calc_Book_Expenses__c" value ={appRecord.fields.Calc_Book_Expenses__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="SFH Expenses" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Calc_Uniform_Expenses__c" value ={appRecord.fields.Calc_Uniform_Expenses__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="Others" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Calc_Others__c" value ={appRecord.fields.Calc_Others__c.value} onchange={handleChange}></lightning-input>
+                    <lightning-input label="Total Amount" type="number" class="slds-m-around_none slds-p-bottom_none slds-p-top_xxx-small allinput" variant="label-inline" data-field="Amount_Requested__c" value ={requestedAmount} read-only="true"></lightning-input>     
+                </div>
+            </template>
+            <template if:false={specialDonor}>
+                <div class="slds-p-left_x-small" > 
+                <lightning-combobox
+                    name="Scholarship Amount"
+                    label="Scholarship Amount"
+                    value={scholarshipAmount}
+                    options={priceList}
+                    variant="label-inline"                    
+                    onchange={handleChangeInOption} ></lightning-combobox>
+                </div>
+            </template>
+            <footer class="slds-p-around_xx-small slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick={handleSubmit} title="submit">Submit</button>
+            </footer>
+
+    </template>
+</template>
