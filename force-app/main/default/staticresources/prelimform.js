@@ -283,23 +283,23 @@ app.controller('preapplication', function($scope, $timeout, $window, $location,$
         var age;
         if($scope.donorOtherSubCat){
             if($scope.student.Source_of_information_Referred_by__c != undefined){
-                if($scope.student.Source_of_information_Referred_by__c == "Amazon" && $scope.student.Reffered_by_Subcategory__c == undefined){
+                if($scope.student.Source_of_information_Referred_by__c == "Amazon" && ($scope.student.Reffered_by_Subcategory__c == undefined || $scope.student.Reffered_by_Subcategory__c == "")){
                     swal({title:'',text:"Enter Source of information / Referred by Subcategory"});
                     return;
                 }
-                if($scope.student.Source_of_information_Referred_by__c == "Social Media" && $scope.student.Social_Media__c == undefined){
+                if($scope.student.Source_of_information_Referred_by__c == "Social Media" && ($scope.student.Social_Media__c == undefined || $scope.student.Social_Media__c == "")){
                     swal({title:'',text:"Enter Social Media"});
                     return;
                 }
-                if($scope.student.Source_of_information_Referred_by__c == "Word of mouth / Online channels" && $scope.student.Word_of_mouth_Online_channels__c == undefined){
+                if($scope.student.Source_of_information_Referred_by__c == "Word of mouth / Online channels" && ($scope.student.Word_of_mouth_Online_channels__c == undefined || $scope.student.Word_of_mouth_Online_channels__c == "" )){
                     swal({title:'',text:"Enter Word of mouth / Online channels"});
                     return;
                 }
-                if($scope.student.Source_of_information_Referred_by__c == "NGOs" && $scope.student.NGOs__c == undefined){
+                if($scope.student.Source_of_information_Referred_by__c == "NGOs" && ($scope.student.NGOs__c == undefined || $scope.student.NGOs__c == "" )){
                     swal({title:'',text:"Enter NGOs"});
                     return;
                 }
-                if($scope.student.Source_of_information_Referred_by__c == "Other Sources" && $scope.student.Other_Sources__c == undefined){
+                if($scope.student.Source_of_information_Referred_by__c == "Other Sources" && ($scope.student.Other_Sources__c == undefined || $scope.student.Other_Sources__c == "" )){
                     swal({title:'',text:"Enter Other Sources"});
                     return;
                 }
